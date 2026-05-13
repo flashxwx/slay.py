@@ -1,7 +1,13 @@
 slay.py (not official)
-=======
+======================
 
 A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one written in Python.
+
+Disclaimer
+----------
+This project is developed solely to provide a better gaming experience for Slay.one players.
+The author is not responsible for any actions that violate the game's rules or Terms of Service.
+Users assume all risks associated with the use of this software.
 
 Key Features
 ------------
