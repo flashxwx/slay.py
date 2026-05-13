@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slay.py"
+description = "Slay.one API Wrapper in Python"
+readme = { file = "README.txt" }
+license = { file = "LICENSE" }
+authors = [{ name="flash (Discord: flashqwq)" }]
+
+requires-python = ">= 3.12"
+dependencies = [
+    "certifi>=2026.4.22",
+    "requests>=2.34.0",
+    "urllib3>=2.7.0",
+    "websocket-client>=1.9.0",
+]
+
+dynamic = ["version"]
+
+[tool.setuptools]
+packages = ["slay"]
+
+[tool.setuptools_scm]
