@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "slay.py"
 description = "Slay.one API Wrapper in Python"
-readme = { file = "README.md" }
+readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name="flash (Discord: flashqwq)" }]
 
