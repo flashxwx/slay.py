@@ -27,11 +27,13 @@
                    pattern=".+" required>
 
 
-            <h2>Submodules</h2>
-            <ul>
-                    <li><a href="data/request.html">request</a></li>
-                    <li><a href="data/info.html">info</a></li>
-            </ul>
+
+            <h2>API Documentation</h2>
+                <ul class="memberlist">
+            <li>
+                    <a class="function" href="#export">export</a>
+            </li>
+    </ul>
 
 
 
@@ -49,15 +51,47 @@
     </h1>
 
                 
-                        <input id="mod-data-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+                        <input id="mod-_utils-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
-                        <label class="view-source-button" for="mod-data-view-source"><span>View Source</span></label>
+                        <label class="view-source-button" for="mod-_utils-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">]</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">import</span> <span class="nn">sys</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="n">definition</span><span class="p">):</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">4</span></a>    <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="vm">__module__</span><span class="p">]</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">5</span></a>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;__all__&quot;</span><span class="p">):</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">6</span></a>        <span class="n">module</span><span class="o">.</span><span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">definition</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">7</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">8</span></a>        <span class="n">module</span><span class="o">.</span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">9</span></a>    <span class="k">return</span> <span class="n">definition</span>
 </span></pre></div>
 
 
             </section>
+                <section id="export">
+                            <input id="export-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">export</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">definition</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="export-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#export"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="export-4"><a href="#export-4"><span class="linenos"> 4</span></a><span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="n">definition</span><span class="p">):</span>
+</span><span id="export-5"><a href="#export-5"><span class="linenos"> 5</span></a>    <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="vm">__module__</span><span class="p">]</span>
+</span><span id="export-6"><a href="#export-6"><span class="linenos"> 6</span></a>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;__all__&quot;</span><span class="p">):</span>
+</span><span id="export-7"><a href="#export-7"><span class="linenos"> 7</span></a>        <span class="n">module</span><span class="o">.</span><span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">definition</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="export-8"><a href="#export-8"><span class="linenos"> 8</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="export-9"><a href="#export-9"><span class="linenos"> 9</span></a>        <span class="n">module</span><span class="o">.</span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
+</span><span id="export-10"><a href="#export-10"><span class="linenos">10</span></a>    <span class="k">return</span> <span class="n">definition</span>
+</span></pre></div>
+
+
+    
+
+                </section>
     </main>
 <script>
     function escapeHTML(html) {

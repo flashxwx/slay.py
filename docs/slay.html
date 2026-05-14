@@ -24,9 +24,8 @@
 
             <h2>Submodules</h2>
             <ul>
-                    <li><a href="slay/data.html">data</a></li>
                     <li><a href="slay/server.html">server</a></li>
-                    <li><a href="slay/utils.html">utils</a></li>
+                    <li><a href="slay/data.html">data</a></li>
             </ul>
 
 
@@ -51,12 +50,16 @@
 
                         <label class="view-source-button" for="mod-slay-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a><span class="sd">hello, slayers.</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos">4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos">5</span></a><span class="kn">from</span> <span class="nn">slay.server</span> <span class="kn">import</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">Socket</span><span class="p">,</span> <span class="n">start_connections</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos">6</span></a><span class="kn">from</span> <span class="nn">slay.data</span> <span class="kn">import</span> <span class="n">request</span> <span class="k">as</span> <span class="n">Request</span><span class="p">,</span> <span class="n">info</span> <span class="k">as</span> <span class="n">Info</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="sd">hello, slayers.</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;server&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">]</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span> <span class="nn">slay.server</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>    <span class="n">Connection</span><span class="p">,</span> <span class="n">Socket</span><span class="p">,</span> <span class="n">PlayerProfile</span><span class="p">,</span> <span class="n">getPlayerProfile</span><span class="p">,</span> <span class="n">start_connections</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="p">)</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span> <span class="nn">slay.data</span> <span class="kn">import</span> <span class="n">request</span> <span class="k">as</span> <span class="n">Request</span><span class="p">,</span> <span class="n">info</span> <span class="k">as</span> <span class="n">Info</span>
 </span></pre></div>
 
 

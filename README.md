@@ -2,12 +2,14 @@ slay.py (not official)
 ======================
 
 A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one written in Python.
+More details in [Documentation](https://syflash.codeberg.page/slay.py/docs)
 
 Disclaimer
 ----------
-This project is developed solely to provide a better gaming experience for Slay.one players.
-The author is not responsible for any actions that violate the game's rules or Terms of Service.
-Users assume all risks associated with the use of this software.
+This project is an independent, open-source initiative aimed at enhancing the technical experience for the Slay.one community.
+Please be advised that using this library may be contrary to the game's official Terms and Conditions (particularly regarding non-browser access and automation).
+The author is not affiliated with the game providers and assumes no responsibility for any account-related consequences or rules violations resulting from the use of this software;
+users do so entirely at their own risk and are encouraged to use it responsibly.
 
 Key Features
 ------------
@@ -18,8 +20,10 @@ Key Features
 Installing
 ----------
 **Python 3.12 or higher is required**
+
+To install or upgrade to the latest version, run the following command:
 ```
-Coming soon.
+pip install -U git+https://codeberg.org/syflash/slay.py.git
 ```
 Quick Examples
 --------------
@@ -92,7 +96,16 @@ slay_eu.set_event_callback_dict(
 slay_eu.open()
 ```
 
+To get the player profile, please refer to the below following code:
+```python
+import slay
+
+player_profile: slay.PlayerProfile = slay.get_player_profile(1562079) # Replace the arguement to player id.
+
+print(player_profile)
+```
+
 Links
 -----
-- Documentation (Coming Soon)
+- [Documentation](https://syflash.codeberg.page/slay.py/docs)
 - [Slay.one](https://slay.one)
