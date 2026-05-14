@@ -25,3 +25,7 @@ include = ["slay*"]
 namespaces = true
 
 [tool.setuptools_scm]
+
+[project.urls]
+"Documentation" = "https://syflash.codeberg.page/slay.py/docs"
+"Repository" = "https://codeberg.org/syflash/slay.py"
