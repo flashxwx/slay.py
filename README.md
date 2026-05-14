@@ -25,6 +25,11 @@ To install or upgrade to the latest version, run the following command:
 ```
 pip install -U git+https://codeberg.org/syflash/slay.py.git
 ```
+To uninstall slay.py, run the following command:
+```
+pip uninstall slay.py
+```
+
 Quick Examples
 --------------
 Method 1 (Recommended, because you can hover on `on_open` to see what arguements will be called back.)
@@ -96,7 +101,7 @@ slay_eu.set_event_callback_dict(
 slay_eu.open()
 ```
 
-To get the player profile, please refer to the below following code:
+To get the player profile, please refer to the following codes:
 ```python
 import slay
 
