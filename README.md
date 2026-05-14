@@ -1,6 +1,10 @@
 slay.py (not official)
 ======================
 
+> This project is version 0.x.x currently,
+> so it can be very unstable, every patch version update of it might not compatible to the previous version.
+> All will be stable after releasing version 1.x.x, stay tuned.
+
 A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one written in Python.
 More details in [Documentation](https://syflash.codeberg.page/slay.py/docs)
 
@@ -30,75 +34,28 @@ To uninstall slay.py, run the following command:
 pip uninstall slay.py
 ```
 
-Quick Examples
+Quick Example
 --------------
-Method 1 (Recommended, because you can hover on `on_open` to see what arguements will be called back.)
 
+Note: First arguement of every event callback is `Connection` object.
 ```python
-import slay
+from slay import Connection, Socket, Request, Info
 
-slay_eu = slay.Connection(slay.Socket.EU)
+eu_server = Connection(Socket.EU)
 
-@slay_eu.on_open
-def _():
-    slay_eu.send(slay.Request.GameList())
+@eu_server.on_open
+def _(connection: Connection):
+    slay_eu.send(Request.GameList())
 
-@slay_eu.on_game_list
-def _(game_list: list[slay.Info.GameProfile]):
+@eu_server.on_game_list
+def _(connection: Connection, game_list: list[Info.GameProfile]):
     if len(game_list) == 0:
         print("There's no game room currently.")
 
     for game in game_list:
         print(f"Mode: {game.mode.name}, Map: {game.map_name}, Player Amount: {game.player_amount}")
 
-slay_eu.open()
-```
-
-Method 2 (This one doesn't provide type annotation for callback arguements but it might looks neat for some people)
-
-```python
-import slay
-
-slay_eu = slay.Connection(slay.Socket.EU)
-
-@slay_eu.event
-def on_open():
-    slay_eu.send(slay.Request.GameList())
-
-@slay_eu.event
-def on_game_list(game_list: list[slay.Info.GameProfile]):
-    if len(game_list) == 0:
-        print("There's no game room currently.")
-
-    for game in game_list:
-        print(f"Mode: {game.mode.name}, Map: {game.map_name}, Player Amount: {game.player_amount}")
-
-slay_eu.open()
-```
-
-
-Method 3 (I implemented this because of a mistake, I kept it because of thinking it might be useful for some cases. This one got type annotations, but might not be maintained as first priority.)
-
-```python
-import slay
-
-slay_eu = slay.Connection(slay.Socket.EU)
-
-def on_open():
-    slay_eu.send(slay.Request.GameList())
-
-def on_game_list(game_list: list[slay.Info.GameProfile]):
-    if len(game_list) == 0:
-        print("There's no game room currently.")
-
-    for game in game_list:
-        print(f"Mode: {game.mode.name}, Map: {game.map_name}, Player Amount: {game.player_amount}")
-
-slay_eu.set_event_callback_dict(
-    {"on_open": on_open, "on_game_list": on_game_list}
-)
-
-slay_eu.open()
+eu_server.open()
 ```
 
 To get the player profile, please refer to the following codes:
@@ -108,6 +65,47 @@ import slay
 player_profile: slay.PlayerProfile = slay.get_player_profile(1562079) # Replace the arguement to player id.
 
 print(player_profile)
+```
+
+Methods of Event Registration
+-----------------------------
+
+Method 1 (Recommended, because you can hover on `on_open` to see what arguements will be called back.)
+```python
+@server.on_open
+def _(connection: Connection):
+    ...
+```
+
+Method 2 (This one doesn't provide type annotation for callback arguements but it might looks neat for some people)
+```python
+@server.event
+def on_open(connection: Connection):
+    ...
+```
+
+Method 3 (I implemented this because of a mistake, I kept it because of thinking it might be useful for some cases. This one got type annotations, but might not be maintained as first priority.)
+```python
+def on_open(connection: Connection):
+    ...
+
+server.set_event_callback_dict({"on_open": on_open})
+```
+
+Method 4 (This one got type annotations since it's variety of method 1.)
+```python
+def on_open(connnection: Connection):
+    ...
+
+server.on_open(on_open)
+```
+
+Method 5 (This one got type annotations since it's variety of method 1.)
+```python
+def on_open(connnection: Connection):
+    ...
+
+server.on_open = on_open
 ```
 
 Links
