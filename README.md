@@ -112,4 +112,5 @@ server.on_open = on_open
 Links
 -----
 - [Documentation](https://syflash.codeberg.page/slay.py/docs)
+- [Discord Server](https://discord.gg/DV8df6c3dr)
 - [Slay.one](https://slay.one)
