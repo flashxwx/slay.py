@@ -1,9 +1,11 @@
-import time, logging, socket, requests, json
+import time, logging, socket, requests, json, traceback
 from urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-from typing import Callable, TypedDict, ParamSpec, Generic, Iterable
+from typing import (
+    Callable, TypedDict, ParamSpec, Generic, Iterable, Concatenate
+)
 from enum import Enum
 
 from threading import Thread, Lock
@@ -52,8 +54,8 @@ class Socket(Enum):
 
 CallbackArguements = ParamSpec("args")
 
-SingleCallback = Callable[CallbackArguements, None]
-CallbackList = list[Callable[CallbackArguements, None]]
+SingleCallback= Callable[Concatenate["Connection", CallbackArguements], None]
+CallbackList = list[SingleCallback]
 
 Callback = SingleCallback[CallbackArguements] | CallbackList[CallbackArguements]
 
@@ -69,12 +71,12 @@ class EventCallbackDict(TypedDict, total=False):
 class EventRegistrar(Generic[CallbackArguements]):
     def __init__(self):
         self.name = ""
-        self.connection = None
+        self.connection: "Connection" = None
 
     def __call__(
-        self, cover: Callable[CallbackArguements, None] | bool = False
+        self, cover: SingleCallback | bool = False
     ):
-        def set_event_callback(function: Callable[CallbackArguements, None]):
+        def set_event_callback(function: SingleCallback):
             if self.name == "event":
                 self.name = function.__name__
 
@@ -112,10 +114,26 @@ websocket_dont_reopen_codes = {
 
 @export
 class Connection:
-    def __setattr__(self, name, value):
+    logger = logging.getLogger("slay.Connection")
+
+    def __setattr__(self, name: str, value):
         if isinstance(value, EventRegistrar):
             value.name = name
             value.connection = self
+        
+        if name.startswith("on_"):
+            try:
+                old_value: EventRegistrar | any = self.__getattribute__(name)
+            except:
+                super().__setattr__(name, value)
+                return
+
+            if (
+                isinstance(value, Callable)
+                and old_value and isinstance(old_value, EventRegistrar)
+            ):
+                old_value(cover=True)(value)
+                return
 
         super().__setattr__(name, value)
 
@@ -123,12 +141,7 @@ class Connection:
         self,
         socket: Socket,
         category: str = "",
-        log_handlers: list[logging.Handler] = [],
-        log_level: int = logging.INFO,
-        log_file_path: str = "",
-        log_formatter_for_stream: logging.Formatter = None,
-        log_formatter_for_file: logging.Formatter = None,
-        event_callback_dict: EventCallbackDict = {},
+        event_callback_dict: EventCallbackDict = None,
     ):
         self.socket = socket
         self.category = category if category else socket.name
@@ -144,7 +157,6 @@ class Connection:
         
         connection_max_sequence_dict[self.category] = self.sequence
 
-        self.logger = logging.getLogger("slay.Connection")
         self.log_adapter = logging.LoggerAdapter(
             self.logger,
             {
@@ -154,42 +166,10 @@ class Connection:
             }
         )
 
-        self.logger.setLevel(log_level)
-        self.log_file_path = log_file_path
-
-        default_log_format = (
-            "%(asctime)s %(levelname)s %(name)s"
-            + " [%(socket)s][%(category)s][%(sequence)d] - %(message)s"
-        )
-
-        self.log_formatter_for_stream = (
-            log_formatter_for_stream if log_formatter_for_stream
-            else logging.Formatter(
-                default_log_format
-                + " (\033]8;{};file://%(pathname)s\033\\"
-                + "%(filename)s\033]8;;\033\\"
-                + ":\033]8;{};file://%(pathname)s#%(lineno)d\033\\"
-                + "%(lineno)d\033]8;;\033\\)"
-            )
-        )
-
-        self.log_formatter_for_file = (
-            log_formatter_for_file if log_formatter_for_file
-            else logging.Formatter(
-                default_log_format+" (%(pathname)s:%(lineno)s)"
-            )
-        )
-
-        if len(log_handlers) == 0:
-            self.__setup_default_logger()
-        else:
-            for handler in log_handlers:
-                self.logger.addHandler(handler)
-
-        self.event_callback_dict = event_callback_dict
+        self.event_callback_dict = {}
     
         self.websocket: WebSocketApp | None = None
-        self.websocket_error: WebSocketException = None
+        self.websocket_error: WebSocketException = WebSocketException()
 
         self.status = 0
         """ 0: closed, 1: opening, 2: opened, 3: closing """
@@ -216,28 +196,25 @@ class Connection:
         self.on_game_init = EventRegistrar[Info.GameInitial]()
         self.on_player_join = EventRegistrar[Info.NewPlayer]()
         self.on_player_leave = EventRegistrar[Info.InGameId]()
-    
-    def __setup_default_logger(self):
-        streamHandler = logging.StreamHandler()
-        streamHandler.setFormatter(self.log_formatter_for_stream)
 
-        self.logger.addHandler(streamHandler)
+    def setup_log_file(path: str):
+        fileHandler = logging.FileHandler(path, encoding="utf-8")
 
-        if self.log_file_path:
-            fileHandler = logging.FileHandler(
-                self.log_file_path, encoding="utf-8"
-            )
+        fileHandler.setFormatter(
+            "%(asctime)s %(levelname)s %(name)s"
+            + " [%(socket)s][%(category)s][%(sequence)d] - %(message)s"
+            + " (%(pathname)s:%(lineno)s)"
+        )
 
-            fileHandler.setFormatter(self.log_formatter_for_file)
-
-            self.logger.addHandler(fileHandler)
+        Connection.logger.addHandler(fileHandler)
     
     def set_event_callback_dict(self, event_callback_dict: EventCallbackDict):
         """ Each event callback can be a single callable object
             or a list of callable object
         """
 
-        self.event_callback_dict = event_callback_dict
+        if isinstance(event_callback_dict, dict):
+            self.event_callback_dict = event_callback_dict
     
     def start(
         self,
@@ -260,9 +237,7 @@ class Connection:
 
     def __loop_for_reopen(self, reopen_interval: int):
         while self.__reopen_attempts != 0:
-            if self.__is_dont_reopen_code:
-                break
-            
+
             self.log_adapter.info(
                 f"Trying to reopen in {reopen_interval} seconds"
             )
@@ -275,11 +250,17 @@ class Connection:
             self.status = 0
             self.open()
 
+            if self.__is_dont_reopen_code:
+                break
+
             if self.__reopen_attempts < 0:
                 continue
 
             self.__reopen_attempts -= 1
         else:
+            if self.__is_dont_reopen_code:
+                return
+
             self.log_adapter.critical(str(self.websocket_error.args[1]))
 
     def open(self, new_thread: bool = False):
@@ -356,13 +337,11 @@ class Connection:
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
 
-        self.__trigger_event_callback("on_open")
-
         self.log_adapter.info("Connection has been opened.")
 
-    def __on_message(self, websocket: WebSocketApp, message: str):
-        self.__trigger_event_callback("on_message", message)
+        self.__trigger_event_callback("on_open")
 
+    def __on_message(self, websocket: WebSocketApp, message: str):
         if self.socket == Socket.SOCIAL:
             event_name, response = parse_response_message("social", message)
         else:
@@ -378,23 +357,25 @@ class Connection:
         if event_name == "on_id":
             self.__reopen_attempts = self.___reopen_attempts
 
+        self.__trigger_event_callback("on_message", message)
         self.__trigger_event_callback(event_name, response)
 
     def __on_error(self, websocket: WebSocketApp, error: WebSocketException):
-        self.__trigger_event_callback("on_error", error)
-
         self.websocket_error = error
 
-        if hasattr(error, "args"):
+        self.__trigger_event_callback("on_error", error)
+
+    def __on_close(self, websocket: WebSocketApp, code: int, message: str):
+        error = self.websocket_error
+
+        if hasattr(self.websocket_error, "args"):
             if len(error.args) == 0:
                 self.websocket_error.args = (None, None)
-                return
             
-            if len(error.args) == 2:
+            elif len(error.args) == 2:
                 self.log_adapter.error(f"{error.args[1]}")
-                return
 
-            if error.args[0] == "Connection to remote host was lost.":
+            elif error.args[0] == "Connection to remote host was lost.":
                 self.log_adapter.error(str(error))
                 self.websocket_error.args = (-1,) + error.args
             else:
@@ -404,17 +385,16 @@ class Connection:
             self.log_adapter.error(str(error))
             self.websocket_error.args = (-1, str(error))
 
-    def __on_close(self, websocket: WebSocketApp, code: int, message: str):
         code, message = self.websocket_error.args
 
         self.status = 0
-
-        self.__trigger_event_callback("on_close", code, message)
 
         self.log_adapter.info("Connection has been closed.")
 
         if code in websocket_dont_reopen_codes:
             self.__is_dont_reopen_code = True
+
+        self.__trigger_event_callback("on_close", code, message)
     
     def __trigger_event_callback(
         self, event_name: str, *args: any, **kwargs: any
@@ -425,11 +405,11 @@ class Connection:
             return
 
         if isinstance(event_callback, Callable):
-            event_callback(*args, **kwargs)
+            event_callback(self, *args, **kwargs)
             return
 
         for callback in event_callback:
-            callback(*args, **kwargs)
+            callback(self, *args, **kwargs)
 
 @export
 class PlayerProfile(TypedDict):
@@ -498,3 +478,19 @@ def start_connections(
         
         if end_function:
             end_function()
+
+# init logger of `Connection`
+
+Connection.logger.setLevel(logging.INFO)
+
+streamHandler = logging.StreamHandler()
+streamHandler.setFormatter(logging.Formatter(
+    "%(asctime)s %(levelname)s %(name)s"
+    + " [%(socket)s][%(category)s][%(sequence)d] - %(message)s"
+    + " (\033]8;{};file://%(pathname)s\033\\"
+    + "%(filename)s\033]8;;\033\\"
+    + ":\033]8;{};file://%(pathname)s#%(lineno)d\033\\"
+    + "%(lineno)d\033]8;;\033\\)"
+))
+
+Connection.logger.addHandler(streamHandler)
