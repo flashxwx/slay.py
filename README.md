@@ -1,5 +1,6 @@
 slay.py (not official)
 ======================
+[![Latest Release](https://badge.gitloft.org/api/service/codeberg/release/syflash/slay.py)](https://codeberg.org/syflash/slay.py/releases/)
 
 > This project is version 0.x.x currently,
 > so it can be very unstable, every patch version update of it might not compatible to the previous version.
