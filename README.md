@@ -26,9 +26,13 @@ Installing
 ----------
 **Python 3.12 or higher is required**
 
-To install or upgrade to the latest version, run the following command:
+To install or upgrade to the latest **stable** version, run the following command:
 ```
 pip install -U git+https://codeberg.org/syflash/slay.py.git@stable
+```
+To install or upgrade to the latest version, run the following command (could be unstable, but latest feature ready.):
+```
+pip install -U git+https://codeberg.org/syflash/slay.py.git
 ```
 To uninstall slay.py, run the following command:
 ```

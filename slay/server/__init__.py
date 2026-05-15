@@ -7,7 +7,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 from slay.utils import export
 
-__all__ = ["connection", "socket"]
+__all__ = ["connection", "connections", "socket"]
 
 @export
 class PlayerProfile(TypedDict):

@@ -80,9 +80,10 @@ class Connection:
             }
         )
 
-        self.event_callback_dict = (
-            event_callback_dict if event_callback_dict else {}
-        )
+        if event_callback_dict:
+            self.set_event_callback_dict(event_callback_dict)
+        else:
+            self.event_callback_dict: CallbackDict = {}
     
         self.websocket: WebSocketApp | None = None
         self.websocket_error: WebSocketException = WebSocketException()
@@ -93,6 +94,8 @@ class Connection:
         self.__is_dont_reopen_code = False
         self.__reopen_attempts = 0
         self.___reopen_attempts = 0
+
+        # Callback Registrars
 
         self.on_open = CallbackRegistrar()
         self.on_message = CallbackRegistrar[str]()
@@ -124,13 +127,13 @@ class Connection:
 
         Connection.logger.addHandler(fileHandler)
     
-    def set_event_callback_dict(self, event_callback_dict: CallbackDict):
+    def set_event_callback_dict(self, callback_dict: CallbackDict):
         """ Each event callback can be a single callable object
             or a list of callable object
         """
 
-        if isinstance(event_callback_dict, dict):
-            self.event_callback_dict = event_callback_dict
+        if isinstance(callback_dict, dict):
+            self.event_callback_dict = callback_dict
     
     def start(
         self,
