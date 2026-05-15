@@ -113,9 +113,15 @@ class Connections:
         finally:
             for connection in self.list:
                 connection.close()
-            
+
             if end_function:
                 end_function()
     
     def close(self):
+        if not self.keep_loop_alive:
+            for connection in self.list:
+                connection.close()
+
+            return
+
         self.keep_loop_alive = False
