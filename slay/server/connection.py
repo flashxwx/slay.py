@@ -1,12 +1,7 @@
-import time, logging, socket, requests, json, traceback
-from urllib3.exceptions import InsecureRequestWarning
+import time, logging, socket, traceback
 
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-from typing import (
-    Callable, TypedDict, ParamSpec, Generic, Iterable, Concatenate
-)
-from enum import Enum
+from typing import Callable
 
 from threading import Thread, Lock
 
@@ -19,92 +14,11 @@ ssl_context.check_hostname = False
 ssl_context.verify_mode = 0
 
 import slay.data.info as Info
+from slay.server.socket import Socket
+from slay.server.event import CallbackRegistrar, CallbackDict
 from slay.data.response import parse_response_message
 
 from slay.utils import export
-
-@export
-class Socket(Enum):
-    SOCIAL = ("eu.slay.one", "54.37.204.175", 62202, 1)
-    EU = ("eu.slay.one", "54.37.204.175", 62203, 0)
-    AM = ("na.slay.one", "51.79.86.227", 62203, 0)
-    ASIA = ("asia.slay.one", "51.79.251.73", 62203, 0)
-
-    @property
-    def domain_name(self) -> str:
-        return self.value[0]
-
-    @property
-    def ip_addr(self) -> str:
-        return self.value[1]
-
-    @property
-    def port(self) -> str:
-        return self.value[2]
-    
-    @property
-    def type(self) -> str:
-        value = self.value[3]
-
-        if value == 0: return "Game Server Socket"
-        elif value == 1: return "Social Server Socket"
-
-    def __str__(self) -> str:
-        return self.name
-
-CallbackArguements = ParamSpec("args")
-
-SingleCallback= Callable[Concatenate["Connection", CallbackArguements], None]
-CallbackList = list[SingleCallback]
-
-Callback = SingleCallback[CallbackArguements] | CallbackList[CallbackArguements]
-
-class EventCallbackDict(TypedDict, total=False):
-    on_open: Callback[...]
-    on_message: Callback[str]
-    on_error: Callback[WebSocketException]
-    on_close: Callback[int, str]
-    """ args: code, message. """
-    on_id: Callback[int]
-    on_game_list: Callback[list[Info.GameProfile]]
-
-class EventRegistrar(Generic[CallbackArguements]):
-    def __init__(self):
-        self.name = ""
-        self.connection: "Connection" = None
-
-    def __call__(
-        self, cover: SingleCallback | bool = False
-    ):
-        def set_event_callback(function: SingleCallback):
-            if self.name == "event":
-                self.name = function.__name__
-
-            event_callback_dict = self.connection.event_callback_dict
-
-            event_callback = event_callback_dict.get(self.name)
-
-            if (not event_callback) or cover:
-                event_callback_dict[self.name] = function
-                return
-            
-            if isinstance(event_callback, list):
-                event_callback.append(function)
-                return
-            
-            event_callback_dict[self.name] = [event_callback, function]
-
-            return function
-
-        if isinstance(cover, Callable):
-            function = cover
-            cover = False
-
-            set_event_callback(function)
-
-            return function
-        
-        return set_event_callback
 
 connection_max_sequence_dict = {}
 
@@ -117,20 +31,20 @@ class Connection:
     logger = logging.getLogger("slay.Connection")
 
     def __setattr__(self, name: str, value):
-        if isinstance(value, EventRegistrar):
+        if isinstance(value, CallbackRegistrar):
             value.name = name
-            value.connection = self
+            value.connection_obj = self
         
         if name.startswith("on_"):
             try:
-                old_value: EventRegistrar | any = self.__getattribute__(name)
+                old_value: CallbackRegistrar | any = self.__getattribute__(name)
             except:
                 super().__setattr__(name, value)
                 return
 
             if (
                 isinstance(value, Callable)
-                and old_value and isinstance(old_value, EventRegistrar)
+                and old_value and isinstance(old_value, CallbackRegistrar)
             ):
                 old_value(cover=True)(value)
                 return
@@ -141,7 +55,7 @@ class Connection:
         self,
         socket: Socket,
         category: str = "",
-        event_callback_dict: EventCallbackDict = None,
+        event_callback_dict: CallbackDict = None,
     ):
         self.socket = socket
         self.category = category if category else socket.name
@@ -166,7 +80,9 @@ class Connection:
             }
         )
 
-        self.event_callback_dict = {}
+        self.event_callback_dict = (
+            event_callback_dict if event_callback_dict else {}
+        )
     
         self.websocket: WebSocketApp | None = None
         self.websocket_error: WebSocketException = WebSocketException()
@@ -178,37 +94,37 @@ class Connection:
         self.__reopen_attempts = 0
         self.___reopen_attempts = 0
 
-        self.on_open = EventRegistrar()
-        self.on_message = EventRegistrar[str]()
-        self.on_error = EventRegistrar[WebSocketException]()
-        self.on_close = EventRegistrar[int, str]()
+        self.on_open = CallbackRegistrar()
+        self.on_message = CallbackRegistrar[str]()
+        self.on_error = CallbackRegistrar[WebSocketException]()
+        self.on_close = CallbackRegistrar[int, str]()
         """ args: code, message. """
-        self.event = EventRegistrar()
+        self.event = CallbackRegistrar()
 
         if socket == Socket.SOCIAL:
-            self.on_global_chat_history = EventRegistrar[
+            self.on_global_chat_history = CallbackRegistrar[
                 Info.GlobalChatHistoryDict
             ]()
             return
 
-        self.on_id = EventRegistrar[int]()
-        self.on_game_list = EventRegistrar[list[Info.GameProfile]]()
-        self.on_game_init = EventRegistrar[Info.GameInitial]()
-        self.on_player_join = EventRegistrar[Info.NewPlayer]()
-        self.on_player_leave = EventRegistrar[Info.InGameId]()
+        self.on_id = CallbackRegistrar[int]()
+        self.on_game_list = CallbackRegistrar[list[Info.GameProfile]]()
+        self.on_game_init = CallbackRegistrar[Info.GameInitial]()
+        self.on_player_join = CallbackRegistrar[Info.NewPlayer]()
+        self.on_player_leave = CallbackRegistrar[Info.InGameId]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")
 
-        fileHandler.setFormatter(
+        fileHandler.setFormatter(logging.Formatter(
             "%(asctime)s %(levelname)s %(name)s"
             + " [%(socket)s][%(category)s][%(sequence)d] - %(message)s"
             + " (%(pathname)s:%(lineno)s)"
-        )
+        ))
 
         Connection.logger.addHandler(fileHandler)
     
-    def set_event_callback_dict(self, event_callback_dict: EventCallbackDict):
+    def set_event_callback_dict(self, event_callback_dict: CallbackDict):
         """ Each event callback can be a single callable object
             or a list of callable object
         """
@@ -410,76 +326,6 @@ class Connection:
 
         for callback in event_callback:
             callback(self, *args, **kwargs)
-
-@export
-class PlayerProfile(TypedDict):
-    """ Type of player infomation. """
-
-    id: int
-    name: str
-    xp: int
-    elo: int | float
-    clan_tag: str
-    kills: int
-    deaths: int
-    timeOfCreation: int
-    timeOfLastLogin: int
-    personal_text: str
-    ts_nick: int
-    name_color_select: int
-    isLegacy: int
-    hat: int
-    killedWithGunCounter: list[int]
-    elo2: int | float
-    elo3: int | float
-    online: bool
-
-@export
-def get_player_profile(id: int, timeout: int = 10) -> PlayerProfile:
-    response = requests.get(
-        f"https://54.37.204.175:3000/user/{id}", verify=False, timeout=timeout
-    )
-
-    if not response.ok:
-        return None
-    
-    playerInfo = json.loads(response.text)
-    playerInfo["killedWithGunCounter"] = json.loads(
-        playerInfo["killedWithGunCounter"]
-    )
-
-    return playerInfo
-
-@export
-def start_connections(
-    connections: Iterable[Connection],
-    loop_function: Callable = None,
-    end_function: Callable = None,
-    sleep_time: int = 10,
-    reopen_attempts: int = 0,
-    reopen_interval: int = 10
-):
-    for connection in connections:
-        connection.start(True, reopen_attempts, reopen_interval)
-
-    try:
-        while True:
-            if loop_function:
-                loop_function()
-
-            time.sleep(sleep_time)
-
-    except KeyboardInterrupt:
-        ...
-
-    finally:
-        for connection in connections:
-            connection.close()
-        
-        if end_function:
-            end_function()
-
-# init logger of `Connection`
 
 Connection.logger.setLevel(logging.INFO)
 
