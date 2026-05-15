@@ -29,3 +29,4 @@ namespaces = true
 [project.urls]
 "Documentation" = "https://syflash.codeberg.page/slay.py/docs"
 "Repository" = "https://codeberg.org/syflash/slay.py"
+"Discord Server" = "https://discord.gg/DV8df6c3dr"
