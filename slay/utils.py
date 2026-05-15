@@ -1,5 +1,15 @@
 import sys
 
+class Pipe:
+    def __init__(self, *converters):
+        self.converters = converters
+
+    def __call__(self, value):
+        for converter in self.converters:
+            value = converter(value)
+        
+        return value
+
 def export(definition):
     module = sys.modules[definition.__module__]
     if hasattr(module, "__all__"):

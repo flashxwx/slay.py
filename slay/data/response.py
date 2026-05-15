@@ -1,7 +1,7 @@
 import json
 
 from itertools import cycle
-from typing import get_args
+from typing import get_args, get_origin, Annotated
 
 import slay.data.info as Info
 
@@ -82,6 +82,9 @@ def parse_single_info_string(string: str, info_class: type):
     for datum_type, datum_str in zip(
         info_class.__annotations__.values(), string.split("$")
     ):
+        if get_origin(datum_type) is Annotated:
+            datum_type = get_args(datum_type)[1]
+
         info_buffer.append(datum_type(datum_str))
         
         info_counter += 1
@@ -102,6 +105,9 @@ def parse_listed_info_string(string: str, info_class: type):
     for datum_type, datum_str in zip(
         cycle(info_class.__annotations__.values()), splitted_body
     ):
+        if get_origin(datum_type) is Annotated:
+            datum_type = get_args(datum_type)[1]
+
         info_buffer.append(datum_type(datum_str))
         info_counter += 1
 
@@ -128,6 +134,9 @@ def parse_listed_object_info_string(string: str):
     for datum_type, datum_str in zip(
         cycle(Info.Object.__annotations__.values()), splitted_body
     ):
+        if get_origin(datum_type) is Annotated:
+            datum_type = get_args(datum_type)[1]
+
         if info_counter == splitted_body_last_index:
             splitted_datum_str = datum_str.split("_")
             

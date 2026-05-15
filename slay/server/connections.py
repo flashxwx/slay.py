@@ -52,7 +52,7 @@ class Connections:
         if event_callback_dict:
             self.set_event_callback_dict(event_callback_dict)
 
-        self.keep_alive = False
+        self.keep_loop_alive: bool = False
 
         # Callback Registrars
 
@@ -85,26 +85,30 @@ class Connections:
     
     def start(
         self,
+        disable_loop: bool = False,
         loop_function: Callable = None,
         end_function: Callable = None,
         sleep_time: int = 10,
         reopen_attempts: int = 0,
         reopen_interval: int = 10
     ):
-        self.keep_alive = True
-
         for connection in self.list:
             connection.start(True, reopen_attempts, reopen_interval)
 
+        if disable_loop:
+            return
+        
+        self.keep_loop_alive = True
+
         try:
-            while self.keep_alive:
+            while self.keep_loop_alive:
                 if loop_function:
                     loop_function()
 
                 time.sleep(sleep_time)
 
         except KeyboardInterrupt:
-            ...
+            self.keep_loop_alive = False
 
         finally:
             for connection in self.list:
@@ -114,4 +118,4 @@ class Connections:
                 end_function()
     
     def close(self):
-        self.keep_alive = False
+        self.keep_loop_alive = False

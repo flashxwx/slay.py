@@ -1,0 +1,23 @@
+from enum import Enum
+
+class NicknameColor(Enum):
+    BOT = 50
+    GUEST = 100
+    PLAYER = 200
+    VETERAN = 210
+    ELITE = 300
+    STEAM = 400
+    WARDEN = 501
+    BLUE_AND_PINK = 502
+    RAINBOW = 503
+    NEON_LIME = 508
+    VIOLET_FLAME = 509
+    CHERRY_MINT = 511
+    PRISM_DASH = 514
+    BLACK_ICE = 515
+    LAVA_LAMP = 516
+    GHOST_SIGNAL = 517
+    COPPER_VERDIGRIS = 520
+    RUBY_STATIC = 523
+    MOD = 800
+    ADMIN = 1000

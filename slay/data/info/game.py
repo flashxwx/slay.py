@@ -1,29 +1,24 @@
-from typing import NamedTuple
+from typing import NamedTuple, Annotated
 from enum import Enum
+
+from slay.data.info import NicknameColor
+from slay.utils import Pipe
 
 ConnectionId = int
 InGameId = int
 
 class GameMode(Enum):
-    TeamDeathMatch = 1
-    CaptureTheFlag = 2
-    DeathMatch = 4
-    Infection = 5
-
-    @classmethod
-    def _missing_(cls, value):
-        try:
-            return cls(int(value))
-        except:
-            ...
-        return super()._missing_(value)
+    TEAM_DEATHMATCH = 1
+    CAPTURE_THE_FLAG = 2
+    DEATHMATCH = 4
+    INFECTION = 5
 
 class GameProfile(NamedTuple):
     game_id: int
     map_name: str
     player_amount: int
     max_player_amount: int
-    mode: GameMode
+    mode: Annotated[GameMode, Pipe(int, GameMode)]
     map_height: int
     map_witdh: int
     tag: str
@@ -31,7 +26,7 @@ class GameProfile(NamedTuple):
 
 class Game(NamedTuple):
     map_data: str
-    mode: GameMode
+    mode: Annotated[GameMode, Pipe(int, GameMode)]
     max_round_ticks: int
     current_tick: int
     team_1_scores: int
@@ -74,7 +69,7 @@ class Player(NamedTuple):
     is_zombie_boss: int
     id: str
     db_id: int
-    nickname_color_id: int
+    nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
 class SummonedZombie(NamedTuple):
     in_game_id: int
