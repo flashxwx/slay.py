@@ -28,7 +28,7 @@ Installing
 
 To install or upgrade to the latest version, run the following command:
 ```
-pip install -U git+https://codeberg.org/syflash/slay.py.git
+pip install -U git+https://codeberg.org/syflash/slay.py.git@stable
 ```
 To uninstall slay.py, run the following command:
 ```
