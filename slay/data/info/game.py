@@ -91,7 +91,7 @@ class UsedAmmoRespawn(NamedTuple):
 
 class ObjectDetail(NamedTuple):
     ticks_left_to_live: int
-    weapon_id: int
+    weapon_id: int = -1
 
 class Object(NamedTuple):
     in_game_id: int
