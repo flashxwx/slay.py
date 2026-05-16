@@ -89,6 +89,10 @@ class UsedAmmoRespawn(NamedTuple):
     ticks_left_to_respawn: int
     """ Have to minus 2 to get the actual ticks left to respawn """
 
+class ObjectDetail(NamedTuple):
+    ticks_left_to_live: int
+    weapon_id: int
+
 class Object(NamedTuple):
     in_game_id: int
     x: float
@@ -99,8 +103,7 @@ class Object(NamedTuple):
     max_hp: float
     ticks_to_live: int
     aoe_value: float
-    ticks_left_to_live: int
-    weapon_id: int
+    detail: ObjectDetail
 
 class MovableObject(NamedTuple):
     in_game_id: int

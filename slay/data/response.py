@@ -141,14 +141,7 @@ def parse_listed_object_info_string(string: str):
         if info_counter == splitted_body_last_index:
             splitted_datum_str = datum_str.split("_")
             
-            info_buffer.append(
-                int(splitted_datum_str[0])
-            )
-
-            info_buffer.append(
-                int(splitted_datum_str[1])
-                if len(splitted_datum_str) == 2 else 0
-            )
+            info_buffer.append(datum_type(*splitted_datum_str))
 
             info_counter += 1
         else:
