@@ -40,6 +40,7 @@ class Game(NamedTuple):
     current_tick: int
     """ To ensure compatibility with the old replay version (<=1) """
     game_id: int
+    """ To ensure compatibility with the old replay version (<=1) """
 
 class Player(NamedTuple):
     in_game_id: int
@@ -56,14 +57,14 @@ class Player(NamedTuple):
     skin_id: int
     team_id: int
     is_invisible: int
-    max_hp: int
+    max_hp: float
     hp_regeneration_rate: float
     clan_tag: str
     authentication_level: int
-    souls: int
+    souls: float
     mp_regeneration_rate: float
     invisible_costing_rate: float
-    elo_score: float
+    elo_score: int
     is_zombie: int
     is_fake_corpse: int
     is_zombie_boss: int
@@ -73,15 +74,15 @@ class Player(NamedTuple):
 
 class SummonedZombie(NamedTuple):
     in_game_id: int
-    x: int
-    y: int
+    x: float
+    y: float
     hp: float
-    moving_to_x: int
-    moving_to_y: int
-    max_hp: int
-    hp_regeneration_rate: int
+    moving_to_x: float
+    moving_to_y: float
+    max_hp: float
+    hp_regeneration_rate: float
     randomizer: float
-    image_scale: int
+    image_scale: float
     name: str
 
 class UsedAmmoRespawn(NamedTuple):
