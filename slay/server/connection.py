@@ -292,6 +292,12 @@ class Connection:
     def __on_error(self, websocket: WebSocketApp, error: WebSocketException):
         self.websocket_error = error
 
+        error_str = ''.join(
+            traceback.format_exception(type(error), error, error.__traceback__)
+        )
+
+        self.log_adapter.error(error_str)
+
         self.__trigger_event_callback("on_error", error)
 
     def __on_close(self, websocket: WebSocketApp, code: int, message: str):
@@ -300,18 +306,12 @@ class Connection:
         if hasattr(self.websocket_error, "args"):
             if len(error.args) == 0:
                 self.websocket_error.args = (None, None)
-            
-            elif len(error.args) == 2:
-                self.log_adapter.error(f"{error.args[1]}")
 
             elif error.args[0] == "Connection to remote host was lost.":
-                self.log_adapter.error(str(error))
                 self.websocket_error.args = (-1,) + error.args
             else:
-                self.log_adapter.error(str(error))
                 self.websocket_error.args = (-1, str(error))
         else:
-            self.log_adapter.error(str(error))
             self.websocket_error.args = (-1, str(error))
 
         code, message = self.websocket_error.args
