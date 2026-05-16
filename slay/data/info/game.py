@@ -1,7 +1,7 @@
 from typing import NamedTuple, Annotated
 from enum import Enum
 
-from slay.data.info import NicknameColor
+from slay.data.info.decorate import NicknameColor
 from slay.utils import Pipe
 
 ConnectionId = int
