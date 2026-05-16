@@ -64,7 +64,7 @@ class Player(NamedTuple):
     souls: float
     mp_regeneration_rate: float
     invisible_costing_rate: float
-    elo_score: int
+    score: float
     is_zombie: int
     is_fake_corpse: int
     is_zombie_boss: int
