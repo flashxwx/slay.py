@@ -6,3 +6,6 @@ def GameList():
 
 def JoinGame(id: int):
     return f"join-game${id}"
+
+def LeaveGame():
+    return "leave-game"

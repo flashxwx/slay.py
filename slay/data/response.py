@@ -12,7 +12,8 @@ response_dict: dict[str, tuple[str, type, int]] = {
     "gL": ("on_game_list", Info.GameProfile, 2),
     "init": ("on_game_init", Info.GameInitial, 3),
     "nP": ("on_player_join", Info.NewPlayer, 1),
-    "pL": ("on_player_leave", Info.InGameId, 0)
+    "pL": ("on_player_leave", Info.InGameId, 0),
+    "stats": ("on_game_stats", Info.GameStats, 1)
 }
 """ message_type: event_name, response_class, parsing_mode
 

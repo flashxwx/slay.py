@@ -115,6 +115,7 @@ class Connection:
         self.on_game_init = CallbackRegistrar[Info.GameInitial]()
         self.on_player_join = CallbackRegistrar[Info.NewPlayer]()
         self.on_player_leave = CallbackRegistrar[Info.InGameId]()
+        self.on_game_stats = CallbackRegistrar[Info.GameStats]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")

@@ -144,3 +144,17 @@ class NewPlayer(NamedTuple):
     uid: int
     world_elo: float
     nickname_color_id: int
+
+class GameStats(NamedTuple):
+    xp_gained: int
+    elo_gained: int
+    gold_gained: int
+    kills: int
+    deaths: int
+    xp: int
+    elo: int
+    gold: int
+    souls: int
+    show: int
+    exit: int
+    chestId: int

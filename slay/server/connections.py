@@ -73,6 +73,7 @@ class Connections:
         self.on_game_init = CallbackRegistrar[Info.GameInitial]()
         self.on_player_join = CallbackRegistrar[Info.NewPlayer]()
         self.on_player_leave = CallbackRegistrar[Info.InGameId]()
+        self.on_game_stats = CallbackRegistrar[Info.GameStats]()
     
     def set_event_callback_dict(self, callback_dict: CallbackDict):
         """ Each event callback can be a single callable object
