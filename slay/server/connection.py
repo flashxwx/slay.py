@@ -290,6 +290,9 @@ class Connection:
         self.__trigger_event_callback(event_name, response)
 
     def __on_error(self, websocket: WebSocketApp, error: WebSocketException):
+        if error.args[0] == "'NoneType' object has no attribute 'sock'":
+            return
+
         self.websocket_error = error
 
         error_str = ''.join(
