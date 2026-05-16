@@ -253,6 +253,15 @@ class Connection:
         
         self.__is_dont_reopen_code = True
         self.websocket.close()
+    
+    def wait_seconds(self, total: int, interval: float = 1) -> bool:
+        for _ in range(int(total/interval)):
+            if self.websocket.sock == None:
+                return False
+
+            time.sleep(interval)
+
+        return True
 
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
