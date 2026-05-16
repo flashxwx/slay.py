@@ -7,6 +7,12 @@ from slay.utils import Pipe
 ConnectionId = int
 InGameId = int
 
+def PlayerId(string: str):
+    try:
+        return int(string)
+    except:
+        return -1
+
 class GameMode(Enum):
     TEAM_DEATHMATCH = 1
     CAPTURE_THE_FLAG = 2
@@ -68,7 +74,7 @@ class Player(NamedTuple):
     is_zombie: int
     is_fake_corpse: int
     is_zombie_boss: int
-    id: int
+    id: PlayerId
     db_id: int
     nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
