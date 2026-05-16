@@ -122,12 +122,12 @@ class Corpse(NamedTuple):
 
 class GameInitial(NamedTuple):
     game_data: Game
-    player_infos: list[Player]
-    summoned_zombie_infos: list[SummonedZombie]
-    used_ammo_respawn_infos: list[UsedAmmoRespawn]
-    object_infos: list[Object]
-    movable_object_infos: list[MovableObject]
-    corpse_infos: list[Corpse]
+    players: list[Player]
+    summoned_zombies: list[SummonedZombie]
+    used_ammo_respawns: list[UsedAmmoRespawn]
+    objects: list[Object]
+    movable_objects: list[MovableObject]
+    corpses: list[Corpse]
 
 class NewPlayer(NamedTuple):
     in_game_id: int
