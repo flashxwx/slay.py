@@ -14,7 +14,7 @@ class GameMode(Enum):
     INFECTION = 5
 
 class GameProfile(NamedTuple):
-    game_id: int
+    id: int
     map_name: str
     player_amount: int
     max_player_amount: int
@@ -68,7 +68,7 @@ class Player(NamedTuple):
     is_zombie: int
     is_fake_corpse: int
     is_zombie_boss: int
-    id: str
+    id: int
     db_id: int
     nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
