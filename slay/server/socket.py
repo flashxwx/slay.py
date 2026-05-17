@@ -4,10 +4,10 @@ from slay.utils import export
 
 @export
 class Socket(Enum):
-    SOCIAL = ("eu.slay.one", "54.37.204.175", 62202, 1)
-    EU = ("eu.slay.one", "54.37.204.175", 62203, 0)
-    AM = ("na.slay.one", "51.79.86.227", 62203, 0)
-    ASIA = ("asia.slay.one", "51.79.251.73", 62203, 0)
+    SOCIAL = ("eu.slay.one", "54.37.204.175", 62202, 1, 3)
+    EU = ("eu.slay.one", "54.37.204.175", 62203, 0, 1)
+    AM = ("na.slay.one", "51.79.86.227", 62203, 0, 2)
+    ASIA = ("asia.slay.one", "51.79.251.73", 62203, 0, 3)
 
     @property
     def domain_name(self) -> str:
@@ -27,6 +27,10 @@ class Socket(Enum):
 
         if value == 0: return "Game Server Socket"
         elif value == 1: return "Social Server Socket"
+    
+    @property
+    def index(self) -> int:
+        return self.value[4]
 
     def __str__(self) -> str:
         return self.name
