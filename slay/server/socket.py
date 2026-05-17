@@ -5,9 +5,9 @@ from slay.utils import export
 @export
 class Socket(Enum):
     SOCIAL = ("eu.slay.one", "54.37.204.175", 62202, 1, 3)
-    EU = ("eu.slay.one", "54.37.204.175", 62203, 0, 1)
-    AM = ("na.slay.one", "51.79.86.227", 62203, 0, 2)
-    ASIA = ("asia.slay.one", "51.79.251.73", 62203, 0, 3)
+    EU = ("eu.slay.one", "54.37.204.175", 62203, 0, 0)
+    AM = ("na.slay.one", "51.79.86.227", 62203, 0, 1)
+    ASIA = ("asia.slay.one", "51.79.251.73", 62203, 0, 2)
 
     @property
     def domain_name(self) -> str:
