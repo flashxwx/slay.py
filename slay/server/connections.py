@@ -108,7 +108,7 @@ class Connections:
 
                 time.sleep(sleep_time)
 
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, SystemExit):
             self.keep_loop_alive = False
 
         finally:
