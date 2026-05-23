@@ -94,7 +94,7 @@ class Connection:
         self.__is_dont_reopen_code = False
         self.__reopen_attempts = 0
         self.___reopen_attempts = 0
-        self.__close_event = Event
+        self.__close_event = Event()
 
         # Callback Registrars
 
