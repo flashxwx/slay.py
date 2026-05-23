@@ -6,7 +6,7 @@ slay.py (not official)
 > so it can be very unstable, every patch version update of it might not compatible to the previous version.
 > All will be stable after releasing version 1.x.x, stay tuned.
 
-A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one written in Python.
+A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one servers written in Python.
 More details in [Documentation](https://syflash.codeberg.page/slay.py/docs)
 
 Disclaimer

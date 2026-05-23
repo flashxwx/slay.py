@@ -3,7 +3,7 @@ import time, logging, socket, traceback
 
 from typing import Callable
 
-from threading import Thread, Lock
+from threading import Thread, Lock, Event
 
 from websocket import WebSocketApp, WebSocketException
 
@@ -94,6 +94,7 @@ class Connection:
         self.__is_dont_reopen_code = False
         self.__reopen_attempts = 0
         self.___reopen_attempts = 0
+        self.__close_event = Event
 
         # Callback Registrars
 
@@ -254,17 +255,30 @@ class Connection:
         self.__is_dont_reopen_code = True
         self.websocket.close()
     
-    def wait_seconds(self, total: int, interval: float = 1) -> bool:
-        for _ in range(int(total/interval)):
-            if self.websocket.sock == None:
-                return False
+    def wait(self, seconds: float) -> bool:
+        is_closed = self.__close_event.wait(seconds)
+        
+        if is_closed:
+            return True
+        else:
+            return True
 
-            time.sleep(interval)
+    def wait_until(self, timestamp: float) -> bool:
+        remaining = timestamp - time.time()
 
-        return True
+        while not self.__close_event.is_set():
+            remaining = timestamp - time.time()
+
+            if remaining <= 0:
+                return True
+
+            self.__close_event.wait(remaining)
+
+        return False
 
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
+        self.__close_event.clear()
 
         self.log_adapter.info("Connection has been opened.")
 
@@ -320,6 +334,7 @@ class Connection:
         code, message = self.websocket_error.args
 
         self.status = 0
+        self.__close_event.set()
 
         self.log_adapter.info("Connection has been closed.")
 
