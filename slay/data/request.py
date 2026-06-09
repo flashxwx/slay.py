@@ -9,3 +9,6 @@ def JoinGame(id: int):
 
 def LeaveGame():
     return "leave-game"
+
+def LogIn(username: str, password: str):
+    return f"login${username}${password}"
