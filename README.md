@@ -22,6 +22,10 @@ Key Features
 - Encrypted connection for safety.
 - Useful tools ready for conveniences.
 
+Real Use Cases
+--------------
+- Kbps Discord Bot
+
 Installing
 ----------
 **Python 3.12 or higher is required**

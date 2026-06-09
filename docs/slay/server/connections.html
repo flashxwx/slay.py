@@ -46,7 +46,7 @@
                                 <a class="variable" href="#Connections.list">list</a>
                         </li>
                         <li>
-                                <a class="variable" href="#Connections.keep_alive">keep_alive</a>
+                                <a class="variable" href="#Connections.keep_loop_alive">keep_loop_alive</a>
                         </li>
                         <li>
                                 <a class="variable" href="#Connections.on_open">on_open</a>
@@ -77,6 +77,9 @@
                         </li>
                         <li>
                                 <a class="variable" href="#Connections.on_player_leave">on_player_leave</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Connections.on_game_stats">on_game_stats</a>
                         </li>
                         <li>
                                 <a class="function" href="#Connections.set_event_callback_dict">set_event_callback_dict</a>
@@ -166,7 +169,7 @@
 </span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>        <span class="k">if</span> <span class="n">event_callback_dict</span><span class="p">:</span>
 </span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">set_event_callback_dict</span><span class="p">(</span><span class="n">event_callback_dict</span><span class="p">)</span>
 </span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 </span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
 </span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>        <span class="c1"># Callback Registrars</span>
 </span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>
@@ -187,48 +190,59 @@
 </span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_game_init</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameInitial</span><span class="p">]()</span>
 </span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_player_join</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">NewPlayer</span><span class="p">]()</span>
 </span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_player_leave</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">InGameId</span><span class="p">]()</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>    
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>    <span class="k">def</span> <span class="nf">set_event_callback_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_dict</span><span class="p">:</span> <span class="n">CallbackDict</span><span class="p">):</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot; Each event callback can be a single callable object</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">            or a list of callable object</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">event_callback_dict</span> <span class="o">=</span> <span class="n">callback_dict</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>    
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>        <span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>        <span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>        <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>        <span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>    <span class="p">):</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_game_stats</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameStats</span><span class="p">]()</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>    
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>    <span class="k">def</span> <span class="nf">set_event_callback_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_dict</span><span class="p">:</span> <span class="n">CallbackDict</span><span class="p">):</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot; Each event callback can be a single callable object</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">            or a list of callable object</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">event_callback_dict</span> <span class="o">=</span> <span class="n">callback_dict</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>    
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>        <span class="n">disable_loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>        <span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>        <span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>        <span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>        <span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>    <span class="p">):</span>
 </span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>        <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
 </span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>            <span class="n">connection</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">reopen_attempts</span><span class="p">,</span> <span class="n">reopen_interval</span><span class="p">)</span>
 </span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span><span class="p">:</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>                <span class="k">if</span> <span class="n">loop_function</span><span class="p">:</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>                    <span class="n">loop_function</span><span class="p">()</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="k">if</span> <span class="n">disable_loop</span><span class="p">:</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>            <span class="k">return</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>        
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="o">...</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>                <span class="k">if</span> <span class="n">loop_function</span><span class="p">:</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>                    <span class="n">loop_function</span><span class="p">()</span>
 </span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>        <span class="k">finally</span><span class="p">:</span>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>            
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>            <span class="k">if</span> <span class="n">end_function</span><span class="p">:</span>
-</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>                <span class="n">end_function</span><span class="p">()</span>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>    
-</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">):</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>        <span class="k">finally</span><span class="p">:</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>            <span class="k">if</span> <span class="n">end_function</span><span class="p">:</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>                <span class="n">end_function</span><span class="p">()</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>    
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>            <span class="k">return</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">False</span>
 </span></pre></div>
 
 
@@ -287,7 +301,7 @@
 </span><span id="Connections-53"><a href="#Connections-53"><span class="linenos"> 53</span></a>        <span class="k">if</span> <span class="n">event_callback_dict</span><span class="p">:</span>
 </span><span id="Connections-54"><a href="#Connections-54"><span class="linenos"> 54</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">set_event_callback_dict</span><span class="p">(</span><span class="n">event_callback_dict</span><span class="p">)</span>
 </span><span id="Connections-55"><a href="#Connections-55"><span class="linenos"> 55</span></a>
-</span><span id="Connections-56"><a href="#Connections-56"><span class="linenos"> 56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Connections-56"><a href="#Connections-56"><span class="linenos"> 56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 </span><span id="Connections-57"><a href="#Connections-57"><span class="linenos"> 57</span></a>
 </span><span id="Connections-58"><a href="#Connections-58"><span class="linenos"> 58</span></a>        <span class="c1"># Callback Registrars</span>
 </span><span id="Connections-59"><a href="#Connections-59"><span class="linenos"> 59</span></a>
@@ -308,48 +322,59 @@
 </span><span id="Connections-74"><a href="#Connections-74"><span class="linenos"> 74</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_game_init</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameInitial</span><span class="p">]()</span>
 </span><span id="Connections-75"><a href="#Connections-75"><span class="linenos"> 75</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_player_join</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">NewPlayer</span><span class="p">]()</span>
 </span><span id="Connections-76"><a href="#Connections-76"><span class="linenos"> 76</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_player_leave</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">InGameId</span><span class="p">]()</span>
-</span><span id="Connections-77"><a href="#Connections-77"><span class="linenos"> 77</span></a>    
-</span><span id="Connections-78"><a href="#Connections-78"><span class="linenos"> 78</span></a>    <span class="k">def</span> <span class="nf">set_event_callback_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_dict</span><span class="p">:</span> <span class="n">CallbackDict</span><span class="p">):</span>
-</span><span id="Connections-79"><a href="#Connections-79"><span class="linenos"> 79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot; Each event callback can be a single callable object</span>
-</span><span id="Connections-80"><a href="#Connections-80"><span class="linenos"> 80</span></a><span class="sd">            or a list of callable object</span>
-</span><span id="Connections-81"><a href="#Connections-81"><span class="linenos"> 81</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Connections-82"><a href="#Connections-82"><span class="linenos"> 82</span></a>
-</span><span id="Connections-83"><a href="#Connections-83"><span class="linenos"> 83</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-</span><span id="Connections-84"><a href="#Connections-84"><span class="linenos"> 84</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
-</span><span id="Connections-85"><a href="#Connections-85"><span class="linenos"> 85</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">event_callback_dict</span> <span class="o">=</span> <span class="n">callback_dict</span>
-</span><span id="Connections-86"><a href="#Connections-86"><span class="linenos"> 86</span></a>    
-</span><span id="Connections-87"><a href="#Connections-87"><span class="linenos"> 87</span></a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
-</span><span id="Connections-88"><a href="#Connections-88"><span class="linenos"> 88</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="Connections-89"><a href="#Connections-89"><span class="linenos"> 89</span></a>        <span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="Connections-90"><a href="#Connections-90"><span class="linenos"> 90</span></a>        <span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="Connections-91"><a href="#Connections-91"><span class="linenos"> 91</span></a>        <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-</span><span id="Connections-92"><a href="#Connections-92"><span class="linenos"> 92</span></a>        <span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="Connections-93"><a href="#Connections-93"><span class="linenos"> 93</span></a>        <span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span id="Connections-94"><a href="#Connections-94"><span class="linenos"> 94</span></a>    <span class="p">):</span>
-</span><span id="Connections-95"><a href="#Connections-95"><span class="linenos"> 95</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Connections-96"><a href="#Connections-96"><span class="linenos"> 96</span></a>
+</span><span id="Connections-77"><a href="#Connections-77"><span class="linenos"> 77</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_game_stats</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameStats</span><span class="p">]()</span>
+</span><span id="Connections-78"><a href="#Connections-78"><span class="linenos"> 78</span></a>    
+</span><span id="Connections-79"><a href="#Connections-79"><span class="linenos"> 79</span></a>    <span class="k">def</span> <span class="nf">set_event_callback_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_dict</span><span class="p">:</span> <span class="n">CallbackDict</span><span class="p">):</span>
+</span><span id="Connections-80"><a href="#Connections-80"><span class="linenos"> 80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot; Each event callback can be a single callable object</span>
+</span><span id="Connections-81"><a href="#Connections-81"><span class="linenos"> 81</span></a><span class="sd">            or a list of callable object</span>
+</span><span id="Connections-82"><a href="#Connections-82"><span class="linenos"> 82</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Connections-83"><a href="#Connections-83"><span class="linenos"> 83</span></a>
+</span><span id="Connections-84"><a href="#Connections-84"><span class="linenos"> 84</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="Connections-85"><a href="#Connections-85"><span class="linenos"> 85</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="Connections-86"><a href="#Connections-86"><span class="linenos"> 86</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">event_callback_dict</span> <span class="o">=</span> <span class="n">callback_dict</span>
+</span><span id="Connections-87"><a href="#Connections-87"><span class="linenos"> 87</span></a>    
+</span><span id="Connections-88"><a href="#Connections-88"><span class="linenos"> 88</span></a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
+</span><span id="Connections-89"><a href="#Connections-89"><span class="linenos"> 89</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="Connections-90"><a href="#Connections-90"><span class="linenos"> 90</span></a>        <span class="n">disable_loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="Connections-91"><a href="#Connections-91"><span class="linenos"> 91</span></a>        <span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="Connections-92"><a href="#Connections-92"><span class="linenos"> 92</span></a>        <span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="Connections-93"><a href="#Connections-93"><span class="linenos"> 93</span></a>        <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="Connections-94"><a href="#Connections-94"><span class="linenos"> 94</span></a>        <span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="Connections-95"><a href="#Connections-95"><span class="linenos"> 95</span></a>        <span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span id="Connections-96"><a href="#Connections-96"><span class="linenos"> 96</span></a>    <span class="p">):</span>
 </span><span id="Connections-97"><a href="#Connections-97"><span class="linenos"> 97</span></a>        <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
 </span><span id="Connections-98"><a href="#Connections-98"><span class="linenos"> 98</span></a>            <span class="n">connection</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">reopen_attempts</span><span class="p">,</span> <span class="n">reopen_interval</span><span class="p">)</span>
 </span><span id="Connections-99"><a href="#Connections-99"><span class="linenos"> 99</span></a>
-</span><span id="Connections-100"><a href="#Connections-100"><span class="linenos">100</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="Connections-101"><a href="#Connections-101"><span class="linenos">101</span></a>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span><span class="p">:</span>
-</span><span id="Connections-102"><a href="#Connections-102"><span class="linenos">102</span></a>                <span class="k">if</span> <span class="n">loop_function</span><span class="p">:</span>
-</span><span id="Connections-103"><a href="#Connections-103"><span class="linenos">103</span></a>                    <span class="n">loop_function</span><span class="p">()</span>
+</span><span id="Connections-100"><a href="#Connections-100"><span class="linenos">100</span></a>        <span class="k">if</span> <span class="n">disable_loop</span><span class="p">:</span>
+</span><span id="Connections-101"><a href="#Connections-101"><span class="linenos">101</span></a>            <span class="k">return</span>
+</span><span id="Connections-102"><a href="#Connections-102"><span class="linenos">102</span></a>        
+</span><span id="Connections-103"><a href="#Connections-103"><span class="linenos">103</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="Connections-104"><a href="#Connections-104"><span class="linenos">104</span></a>
-</span><span id="Connections-105"><a href="#Connections-105"><span class="linenos">105</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
-</span><span id="Connections-106"><a href="#Connections-106"><span class="linenos">106</span></a>
-</span><span id="Connections-107"><a href="#Connections-107"><span class="linenos">107</span></a>        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-</span><span id="Connections-108"><a href="#Connections-108"><span class="linenos">108</span></a>            <span class="o">...</span>
+</span><span id="Connections-105"><a href="#Connections-105"><span class="linenos">105</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="Connections-106"><a href="#Connections-106"><span class="linenos">106</span></a>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span>
+</span><span id="Connections-107"><a href="#Connections-107"><span class="linenos">107</span></a>                <span class="k">if</span> <span class="n">loop_function</span><span class="p">:</span>
+</span><span id="Connections-108"><a href="#Connections-108"><span class="linenos">108</span></a>                    <span class="n">loop_function</span><span class="p">()</span>
 </span><span id="Connections-109"><a href="#Connections-109"><span class="linenos">109</span></a>
-</span><span id="Connections-110"><a href="#Connections-110"><span class="linenos">110</span></a>        <span class="k">finally</span><span class="p">:</span>
-</span><span id="Connections-111"><a href="#Connections-111"><span class="linenos">111</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
-</span><span id="Connections-112"><a href="#Connections-112"><span class="linenos">112</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span id="Connections-113"><a href="#Connections-113"><span class="linenos">113</span></a>            
-</span><span id="Connections-114"><a href="#Connections-114"><span class="linenos">114</span></a>            <span class="k">if</span> <span class="n">end_function</span><span class="p">:</span>
-</span><span id="Connections-115"><a href="#Connections-115"><span class="linenos">115</span></a>                <span class="n">end_function</span><span class="p">()</span>
-</span><span id="Connections-116"><a href="#Connections-116"><span class="linenos">116</span></a>    
-</span><span id="Connections-117"><a href="#Connections-117"><span class="linenos">117</span></a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Connections-118"><a href="#Connections-118"><span class="linenos">118</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Connections-110"><a href="#Connections-110"><span class="linenos">110</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
+</span><span id="Connections-111"><a href="#Connections-111"><span class="linenos">111</span></a>
+</span><span id="Connections-112"><a href="#Connections-112"><span class="linenos">112</span></a>        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">):</span>
+</span><span id="Connections-113"><a href="#Connections-113"><span class="linenos">113</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Connections-114"><a href="#Connections-114"><span class="linenos">114</span></a>
+</span><span id="Connections-115"><a href="#Connections-115"><span class="linenos">115</span></a>        <span class="k">finally</span><span class="p">:</span>
+</span><span id="Connections-116"><a href="#Connections-116"><span class="linenos">116</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="Connections-117"><a href="#Connections-117"><span class="linenos">117</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span id="Connections-118"><a href="#Connections-118"><span class="linenos">118</span></a>
+</span><span id="Connections-119"><a href="#Connections-119"><span class="linenos">119</span></a>            <span class="k">if</span> <span class="n">end_function</span><span class="p">:</span>
+</span><span id="Connections-120"><a href="#Connections-120"><span class="linenos">120</span></a>                <span class="n">end_function</span><span class="p">()</span>
+</span><span id="Connections-121"><a href="#Connections-121"><span class="linenos">121</span></a>    
+</span><span id="Connections-122"><a href="#Connections-122"><span class="linenos">122</span></a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Connections-123"><a href="#Connections-123"><span class="linenos">123</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span>
+</span><span id="Connections-124"><a href="#Connections-124"><span class="linenos">124</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="Connections-125"><a href="#Connections-125"><span class="linenos">125</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span id="Connections-126"><a href="#Connections-126"><span class="linenos">126</span></a>
+</span><span id="Connections-127"><a href="#Connections-127"><span class="linenos">127</span></a>            <span class="k">return</span>
+</span><span id="Connections-128"><a href="#Connections-128"><span class="linenos">128</span></a>
+</span><span id="Connections-129"><a href="#Connections-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">False</span>
 </span></pre></div>
 
 
@@ -384,7 +409,7 @@
 </span><span id="Connections.__init__-53"><a href="#Connections.__init__-53"><span class="linenos">53</span></a>        <span class="k">if</span> <span class="n">event_callback_dict</span><span class="p">:</span>
 </span><span id="Connections.__init__-54"><a href="#Connections.__init__-54"><span class="linenos">54</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">set_event_callback_dict</span><span class="p">(</span><span class="n">event_callback_dict</span><span class="p">)</span>
 </span><span id="Connections.__init__-55"><a href="#Connections.__init__-55"><span class="linenos">55</span></a>
-</span><span id="Connections.__init__-56"><a href="#Connections.__init__-56"><span class="linenos">56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Connections.__init__-56"><a href="#Connections.__init__-56"><span class="linenos">56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 </span><span id="Connections.__init__-57"><a href="#Connections.__init__-57"><span class="linenos">57</span></a>
 </span><span id="Connections.__init__-58"><a href="#Connections.__init__-58"><span class="linenos">58</span></a>        <span class="c1"># Callback Registrars</span>
 </span><span id="Connections.__init__-59"><a href="#Connections.__init__-59"><span class="linenos">59</span></a>
@@ -405,6 +430,7 @@
 </span><span id="Connections.__init__-74"><a href="#Connections.__init__-74"><span class="linenos">74</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_game_init</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameInitial</span><span class="p">]()</span>
 </span><span id="Connections.__init__-75"><a href="#Connections.__init__-75"><span class="linenos">75</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_player_join</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">NewPlayer</span><span class="p">]()</span>
 </span><span id="Connections.__init__-76"><a href="#Connections.__init__-76"><span class="linenos">76</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_player_leave</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">InGameId</span><span class="p">]()</span>
+</span><span id="Connections.__init__-77"><a href="#Connections.__init__-77"><span class="linenos">77</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">on_game_stats</span> <span class="o">=</span> <span class="n">CallbackRegistrar</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameStats</span><span class="p">]()</span>
 </span></pre></div>
 
 
@@ -444,13 +470,13 @@
     
 
                             </div>
-                            <div id="Connections.keep_alive" class="classattr">
+                            <div id="Connections.keep_loop_alive" class="classattr">
                                 <div class="attr variable">
-            <span class="name">keep_alive</span>
+            <span class="name">keep_loop_alive</span><span class="annotation">: bool</span>
 
         
     </div>
-    <a class="headerlink" href="#Connections.keep_alive"></a>
+    <a class="headerlink" href="#Connections.keep_loop_alive"></a>
     
     
 
@@ -567,6 +593,17 @@
     
 
                             </div>
+                            <div id="Connections.on_game_stats" class="classattr">
+                                <div class="attr variable">
+            <span class="name">on_game_stats</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Connections.on_game_stats"></a>
+    
+    
+
+                            </div>
                             <div id="Connections.set_event_callback_dict" class="classattr">
                                         <input id="Connections.set_event_callback_dict-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -578,14 +615,14 @@
 
     </div>
     <a class="headerlink" href="#Connections.set_event_callback_dict"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Connections.set_event_callback_dict-78"><a href="#Connections.set_event_callback_dict-78"><span class="linenos">78</span></a>    <span class="k">def</span> <span class="nf">set_event_callback_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_dict</span><span class="p">:</span> <span class="n">CallbackDict</span><span class="p">):</span>
-</span><span id="Connections.set_event_callback_dict-79"><a href="#Connections.set_event_callback_dict-79"><span class="linenos">79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot; Each event callback can be a single callable object</span>
-</span><span id="Connections.set_event_callback_dict-80"><a href="#Connections.set_event_callback_dict-80"><span class="linenos">80</span></a><span class="sd">            or a list of callable object</span>
-</span><span id="Connections.set_event_callback_dict-81"><a href="#Connections.set_event_callback_dict-81"><span class="linenos">81</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Connections.set_event_callback_dict-82"><a href="#Connections.set_event_callback_dict-82"><span class="linenos">82</span></a>
-</span><span id="Connections.set_event_callback_dict-83"><a href="#Connections.set_event_callback_dict-83"><span class="linenos">83</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-</span><span id="Connections.set_event_callback_dict-84"><a href="#Connections.set_event_callback_dict-84"><span class="linenos">84</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
-</span><span id="Connections.set_event_callback_dict-85"><a href="#Connections.set_event_callback_dict-85"><span class="linenos">85</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">event_callback_dict</span> <span class="o">=</span> <span class="n">callback_dict</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Connections.set_event_callback_dict-79"><a href="#Connections.set_event_callback_dict-79"><span class="linenos">79</span></a>    <span class="k">def</span> <span class="nf">set_event_callback_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_dict</span><span class="p">:</span> <span class="n">CallbackDict</span><span class="p">):</span>
+</span><span id="Connections.set_event_callback_dict-80"><a href="#Connections.set_event_callback_dict-80"><span class="linenos">80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot; Each event callback can be a single callable object</span>
+</span><span id="Connections.set_event_callback_dict-81"><a href="#Connections.set_event_callback_dict-81"><span class="linenos">81</span></a><span class="sd">            or a list of callable object</span>
+</span><span id="Connections.set_event_callback_dict-82"><a href="#Connections.set_event_callback_dict-82"><span class="linenos">82</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Connections.set_event_callback_dict-83"><a href="#Connections.set_event_callback_dict-83"><span class="linenos">83</span></a>
+</span><span id="Connections.set_event_callback_dict-84"><a href="#Connections.set_event_callback_dict-84"><span class="linenos">84</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="Connections.set_event_callback_dict-85"><a href="#Connections.set_event_callback_dict-85"><span class="linenos">85</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="Connections.set_event_callback_dict-86"><a href="#Connections.set_event_callback_dict-86"><span class="linenos">86</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">event_callback_dict</span> <span class="o">=</span> <span class="n">callback_dict</span>
 </span></pre></div>
 
 
@@ -600,41 +637,45 @@ or a list of callable object</p>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">start</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>,</span><span class="param">	<span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>,</span><span class="param">	<span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span></span><span class="return-annotation">):</span></span>
+        <span class="name">start</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">disable_loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>,</span><span class="param">	<span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>,</span><span class="param">	<span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>,</span><span class="param">	<span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span></span><span class="return-annotation">):</span></span>
 
                 <label class="view-source-button" for="Connections.start-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#Connections.start"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Connections.start-87"><a href="#Connections.start-87"><span class="linenos"> 87</span></a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
-</span><span id="Connections.start-88"><a href="#Connections.start-88"><span class="linenos"> 88</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="Connections.start-89"><a href="#Connections.start-89"><span class="linenos"> 89</span></a>        <span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="Connections.start-90"><a href="#Connections.start-90"><span class="linenos"> 90</span></a>        <span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="Connections.start-91"><a href="#Connections.start-91"><span class="linenos"> 91</span></a>        <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-</span><span id="Connections.start-92"><a href="#Connections.start-92"><span class="linenos"> 92</span></a>        <span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="Connections.start-93"><a href="#Connections.start-93"><span class="linenos"> 93</span></a>        <span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span id="Connections.start-94"><a href="#Connections.start-94"><span class="linenos"> 94</span></a>    <span class="p">):</span>
-</span><span id="Connections.start-95"><a href="#Connections.start-95"><span class="linenos"> 95</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Connections.start-96"><a href="#Connections.start-96"><span class="linenos"> 96</span></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Connections.start-88"><a href="#Connections.start-88"><span class="linenos"> 88</span></a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
+</span><span id="Connections.start-89"><a href="#Connections.start-89"><span class="linenos"> 89</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="Connections.start-90"><a href="#Connections.start-90"><span class="linenos"> 90</span></a>        <span class="n">disable_loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="Connections.start-91"><a href="#Connections.start-91"><span class="linenos"> 91</span></a>        <span class="n">loop_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="Connections.start-92"><a href="#Connections.start-92"><span class="linenos"> 92</span></a>        <span class="n">end_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="Connections.start-93"><a href="#Connections.start-93"><span class="linenos"> 93</span></a>        <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="Connections.start-94"><a href="#Connections.start-94"><span class="linenos"> 94</span></a>        <span class="n">reopen_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="Connections.start-95"><a href="#Connections.start-95"><span class="linenos"> 95</span></a>        <span class="n">reopen_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span id="Connections.start-96"><a href="#Connections.start-96"><span class="linenos"> 96</span></a>    <span class="p">):</span>
 </span><span id="Connections.start-97"><a href="#Connections.start-97"><span class="linenos"> 97</span></a>        <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
 </span><span id="Connections.start-98"><a href="#Connections.start-98"><span class="linenos"> 98</span></a>            <span class="n">connection</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">reopen_attempts</span><span class="p">,</span> <span class="n">reopen_interval</span><span class="p">)</span>
 </span><span id="Connections.start-99"><a href="#Connections.start-99"><span class="linenos"> 99</span></a>
-</span><span id="Connections.start-100"><a href="#Connections.start-100"><span class="linenos">100</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="Connections.start-101"><a href="#Connections.start-101"><span class="linenos">101</span></a>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span><span class="p">:</span>
-</span><span id="Connections.start-102"><a href="#Connections.start-102"><span class="linenos">102</span></a>                <span class="k">if</span> <span class="n">loop_function</span><span class="p">:</span>
-</span><span id="Connections.start-103"><a href="#Connections.start-103"><span class="linenos">103</span></a>                    <span class="n">loop_function</span><span class="p">()</span>
+</span><span id="Connections.start-100"><a href="#Connections.start-100"><span class="linenos">100</span></a>        <span class="k">if</span> <span class="n">disable_loop</span><span class="p">:</span>
+</span><span id="Connections.start-101"><a href="#Connections.start-101"><span class="linenos">101</span></a>            <span class="k">return</span>
+</span><span id="Connections.start-102"><a href="#Connections.start-102"><span class="linenos">102</span></a>        
+</span><span id="Connections.start-103"><a href="#Connections.start-103"><span class="linenos">103</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="Connections.start-104"><a href="#Connections.start-104"><span class="linenos">104</span></a>
-</span><span id="Connections.start-105"><a href="#Connections.start-105"><span class="linenos">105</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
-</span><span id="Connections.start-106"><a href="#Connections.start-106"><span class="linenos">106</span></a>
-</span><span id="Connections.start-107"><a href="#Connections.start-107"><span class="linenos">107</span></a>        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-</span><span id="Connections.start-108"><a href="#Connections.start-108"><span class="linenos">108</span></a>            <span class="o">...</span>
+</span><span id="Connections.start-105"><a href="#Connections.start-105"><span class="linenos">105</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="Connections.start-106"><a href="#Connections.start-106"><span class="linenos">106</span></a>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span>
+</span><span id="Connections.start-107"><a href="#Connections.start-107"><span class="linenos">107</span></a>                <span class="k">if</span> <span class="n">loop_function</span><span class="p">:</span>
+</span><span id="Connections.start-108"><a href="#Connections.start-108"><span class="linenos">108</span></a>                    <span class="n">loop_function</span><span class="p">()</span>
 </span><span id="Connections.start-109"><a href="#Connections.start-109"><span class="linenos">109</span></a>
-</span><span id="Connections.start-110"><a href="#Connections.start-110"><span class="linenos">110</span></a>        <span class="k">finally</span><span class="p">:</span>
-</span><span id="Connections.start-111"><a href="#Connections.start-111"><span class="linenos">111</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
-</span><span id="Connections.start-112"><a href="#Connections.start-112"><span class="linenos">112</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span id="Connections.start-113"><a href="#Connections.start-113"><span class="linenos">113</span></a>            
-</span><span id="Connections.start-114"><a href="#Connections.start-114"><span class="linenos">114</span></a>            <span class="k">if</span> <span class="n">end_function</span><span class="p">:</span>
-</span><span id="Connections.start-115"><a href="#Connections.start-115"><span class="linenos">115</span></a>                <span class="n">end_function</span><span class="p">()</span>
+</span><span id="Connections.start-110"><a href="#Connections.start-110"><span class="linenos">110</span></a>                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_time</span><span class="p">)</span>
+</span><span id="Connections.start-111"><a href="#Connections.start-111"><span class="linenos">111</span></a>
+</span><span id="Connections.start-112"><a href="#Connections.start-112"><span class="linenos">112</span></a>        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">):</span>
+</span><span id="Connections.start-113"><a href="#Connections.start-113"><span class="linenos">113</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Connections.start-114"><a href="#Connections.start-114"><span class="linenos">114</span></a>
+</span><span id="Connections.start-115"><a href="#Connections.start-115"><span class="linenos">115</span></a>        <span class="k">finally</span><span class="p">:</span>
+</span><span id="Connections.start-116"><a href="#Connections.start-116"><span class="linenos">116</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="Connections.start-117"><a href="#Connections.start-117"><span class="linenos">117</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span id="Connections.start-118"><a href="#Connections.start-118"><span class="linenos">118</span></a>
+</span><span id="Connections.start-119"><a href="#Connections.start-119"><span class="linenos">119</span></a>            <span class="k">if</span> <span class="n">end_function</span><span class="p">:</span>
+</span><span id="Connections.start-120"><a href="#Connections.start-120"><span class="linenos">120</span></a>                <span class="n">end_function</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -652,8 +693,14 @@ or a list of callable object</p>
 
     </div>
     <a class="headerlink" href="#Connections.close"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Connections.close-117"><a href="#Connections.close-117"><span class="linenos">117</span></a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Connections.close-118"><a href="#Connections.close-118"><span class="linenos">118</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_alive</span> <span class="o">=</span> <span class="kc">False</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Connections.close-122"><a href="#Connections.close-122"><span class="linenos">122</span></a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Connections.close-123"><a href="#Connections.close-123"><span class="linenos">123</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span><span class="p">:</span>
+</span><span id="Connections.close-124"><a href="#Connections.close-124"><span class="linenos">124</span></a>            <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+</span><span id="Connections.close-125"><a href="#Connections.close-125"><span class="linenos">125</span></a>                <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span id="Connections.close-126"><a href="#Connections.close-126"><span class="linenos">126</span></a>
+</span><span id="Connections.close-127"><a href="#Connections.close-127"><span class="linenos">127</span></a>            <span class="k">return</span>
+</span><span id="Connections.close-128"><a href="#Connections.close-128"><span class="linenos">128</span></a>
+</span><span id="Connections.close-129"><a href="#Connections.close-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">keep_loop_alive</span> <span class="o">=</span> <span class="kc">False</span>
 </span></pre></div>
 
 

@@ -117,6 +117,8 @@ class Connection:
         self.on_player_join = CallbackRegistrar[Info.NewPlayer]()
         self.on_player_leave = CallbackRegistrar[Info.InGameId]()
         self.on_game_stats = CallbackRegistrar[Info.GameStats]()
+        self.on_ranked_search_count = \
+            CallbackRegistrar[Info.RankedSearchCount]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")
