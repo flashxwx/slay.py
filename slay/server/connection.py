@@ -23,7 +23,7 @@ from slay.utils import export
 connection_max_sequence_dict = {}
 
 websocket_dont_reopen_codes = {
-    None, 1000, 1001, 1002, 1003, 1008, 1009, 1010, 1011, 4000, 4001, 4003
+    1000, 1001, 1002, 1003, 1008, 1009, 1010, 1011, 4000, 4001, 4003
 }
 
 @export
@@ -161,6 +161,8 @@ class Connection:
 
     def __loop_for_reopen(self, reopen_interval: int):
         while self.__reopen_attempts != 0:
+            if self.__is_dont_reopen_code:
+                break
 
             self.log_adapter.info(
                 f"Trying to reopen in {reopen_interval} seconds"
@@ -339,7 +341,7 @@ class Connection:
         self.status = 0
         self.__close_event.set()
 
-        self.log_adapter.info("Connection has been closed.")
+        self.log_adapter.info(f"Connection has been closed [Code: {code}].")
 
         if code in websocket_dont_reopen_codes:
             self.__is_dont_reopen_code = True
