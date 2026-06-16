@@ -19,6 +19,10 @@ class GameMode(Enum):
     DEATHMATCH = 4
     INFECTION = 5
 
+    @property
+    def id(self) -> int:
+        return self.value
+
 class GameProfile(NamedTuple):
     id: int
     map_name: str

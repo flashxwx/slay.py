@@ -8,7 +8,7 @@ def JoinGameRoom(id: int):
     return f"join-game${id}"
 
 def JoinGame(team_id: int = 1):
-    return
+    return f"joinTeam${team_id}"
 
 def LeaveGame():
     return "leave-game"
@@ -16,7 +16,7 @@ def LeaveGame():
 def LogIn(username: str, password: str):
     return f"login${username}${password}"
 
-def createGame(
+def CreateGame(
     map_id: int,
     round_minutes: int,
     maximum_number_of_bots: int,
