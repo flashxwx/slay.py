@@ -120,6 +120,7 @@ class Connection:
         self.on_ranked_search_count = \
             CallbackRegistrar[Info.RankedSearchCount]()
         self.on_account_logging = CallbackRegistrar[Info.AccountLogging]()
+        self.on_my_in_game_id = CallbackRegistrar[Info.InGameId]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")

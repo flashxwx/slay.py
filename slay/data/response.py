@@ -15,7 +15,8 @@ response_dict: dict[str, tuple[str, type, int]] = {
     "pL": ("on_player_leave", Info.InGameId, 0),
     "stats": ("on_game_stats", Info.GameStats, 1),
     "rsc": ("on_ranked_search_count", Info.RankedSearchCount, 0),
-    "logged": ("on_account_logging", Info.AccountLogging, 1)
+    "logged": ("on_account_logging", Info.AccountLogging, 1),
+    "pid": ("on_my_in_game_id", Info.InGameId, 0)
 }
 """ message_type: event_name, response_class, parsing_mode
 
