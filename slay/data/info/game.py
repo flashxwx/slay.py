@@ -13,6 +13,25 @@ def PlayerId(string: str):
     except:
         return -1
 
+class Ability(Enum):
+    INVISIBILITY = 4
+
+class HeadDirection(Enum):
+    DOWN = 0
+    DOWN_LEFT = 1
+    LEFT = 2
+    UP_LEFT = 3
+    UP = 4
+    UP_RIGHT = 5
+    RIGHT = 6
+    DOWN_RIGHT = 7
+
+class MovingDirection(Enum):
+    UP = 1
+    DOWN = 2
+    LEFT = 3
+    RIGHT = 4
+
 class GameMode(Enum):
     TEAM_DEATHMATCH = 1
     CAPTURE_THE_FLAG = 2
@@ -172,3 +191,32 @@ class GameStats(NamedTuple):
     show: int
     exit: int
     chestId: int
+
+class HP(NamedTuple):
+    victim_in_game_id: int
+    hp: float
+    armor: float
+    need_create_hit_effect: bool
+    projectile_id: int
+    murder_weapon_od: int
+    attacker_in_game_id: int
+    lifesteam_amount: float
+    new_kill_count: int
+    new_death_count: int = None
+    multiple_kill_count: int = None
+    kill_streak: int = None
+    victim_kill_streak: int = None
+    killer_souls: int = None
+    victim_souls: int = None
+    killer_elo: int = None
+    victim_elo: int = None
+    has_splash: bool = None
+    object_x: float = None
+    object_y: float = None
+    object_aoe: float = None
+    object_id: int = None
+    start_x: float = None
+    start_y: float = None
+    vector_x: float = None
+    vector_y: float = None
+    vector_z: float = None

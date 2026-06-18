@@ -1,3 +1,5 @@
+from slay import Info
+
 def GlobalChatHistory(limit: int = 25):
     return f'{{"gcHistory":{{"channel":"global","limit":{limit}}}}}'
 
@@ -15,6 +17,24 @@ def LeaveGame():
 
 def LogIn(username: str, password: str):
     return f"login${username}${password}"
+
+def StartMoving(direction: Info.MovingDirection):
+    return f"kd${direction.value}"
+
+def StopMoving(direction: Info.MovingDirection):
+    return f"ku${direction.value}"
+
+def JoinRandomGameRoom(mode: Info.GameMode):
+    return f"joinRandomGame$undefined${mode.id}"
+
+def UpdateHeadDirection(direction: Info.HeadDirection):
+    return f"dirU${direction.value}"
+
+def UseAbility(ability: Info.Ability):
+    return f"ab${ability.value}"
+
+def Respawn():
+    return "respawn"
 
 def CreateGame(
     map_id: int,

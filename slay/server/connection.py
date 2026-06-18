@@ -121,6 +121,7 @@ class Connection:
             CallbackRegistrar[Info.RankedSearchCount]()
         self.on_account_logging = CallbackRegistrar[Info.AccountLogging]()
         self.on_my_in_game_id = CallbackRegistrar[Info.InGameId]()
+        self.on_hp_update = CallbackRegistrar[Info.HP]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")
@@ -265,7 +266,7 @@ class Connection:
         is_closed = self.__close_event.wait(seconds)
         
         if is_closed:
-            return True
+            return False
         else:
             return True
 
