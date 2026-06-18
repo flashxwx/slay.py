@@ -201,7 +201,7 @@ class HP(NamedTuple):
     murder_weapon_od: int
     attacker_in_game_id: int
     lifesteam_amount: float
-    new_kill_count: int
+    new_kill_count: int = None
     new_death_count: int = None
     multiple_kill_count: int = None
     kill_streak: int = None
