@@ -9,4 +9,4 @@ from slay.server.connections import Connections
 from slay.server.socket import Socket
 from slay.server import PlayerProfile, get_player_profile
 
-from slay.data import request as Request, info as Info
+from slay.data import info as Info, request as Request
