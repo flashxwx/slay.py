@@ -37,10 +37,37 @@
                     <a class="function" href="#GameList">GameList</a>
             </li>
             <li>
+                    <a class="function" href="#JoinGameRoom">JoinGameRoom</a>
+            </li>
+            <li>
                     <a class="function" href="#JoinGame">JoinGame</a>
             </li>
             <li>
                     <a class="function" href="#LeaveGame">LeaveGame</a>
+            </li>
+            <li>
+                    <a class="function" href="#LogIn">LogIn</a>
+            </li>
+            <li>
+                    <a class="function" href="#StartMoving">StartMoving</a>
+            </li>
+            <li>
+                    <a class="function" href="#StopMoving">StopMoving</a>
+            </li>
+            <li>
+                    <a class="function" href="#JoinRandomGameRoom">JoinRandomGameRoom</a>
+            </li>
+            <li>
+                    <a class="function" href="#UpdateHeadDirection">UpdateHeadDirection</a>
+            </li>
+            <li>
+                    <a class="function" href="#UseAbility">UseAbility</a>
+            </li>
+            <li>
+                    <a class="function" href="#Respawn">Respawn</a>
+            </li>
+            <li>
+                    <a class="function" href="#CreateGame">CreateGame</a>
             </li>
     </ul>
 
@@ -64,17 +91,52 @@
 
                         <label class="view-source-button" for="mod-request-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="k">def</span> <span class="nf">GlobalChatHistory</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">):</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="s1">&quot;gcHistory&quot;:</span><span class="se">{{</span><span class="s1">&quot;channel&quot;:&quot;global&quot;,&quot;limit&quot;:</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">&#39;</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="k">def</span> <span class="nf">GameList</span><span class="p">():</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>    <span class="k">return</span> <span class="s2">&quot;req-games-list&quot;</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span> <span class="nn">slay</span> <span class="kn">import</span> <span class="n">Info</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="k">def</span> <span class="nf">GlobalChatHistory</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">):</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="s1">&quot;gcHistory&quot;:</span><span class="se">{{</span><span class="s1">&quot;channel&quot;:&quot;global&quot;,&quot;limit&quot;:</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">&#39;</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="k">def</span> <span class="nf">GameList</span><span class="p">():</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="k">return</span> <span class="s2">&quot;req-games-list&quot;</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="k">def</span> <span class="nf">JoinGameRoom</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinTeam$</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="k">def</span> <span class="nf">LogIn</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;login$</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">def</span> <span class="nf">StartMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;kd$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="k">def</span> <span class="nf">StopMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ku$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="k">def</span> <span class="nf">JoinRandomGameRoom</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">GameMode</span><span class="p">):</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinRandomGame$undefined$</span><span class="si">{</span><span class="n">mode</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="k">def</span> <span class="nf">UpdateHeadDirection</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">HeadDirection</span><span class="p">):</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;dirU$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="k">def</span> <span class="nf">UseAbility</span><span class="p">(</span><span class="n">ability</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">Ability</span><span class="p">):</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ab$</span><span class="si">{</span><span class="n">ability</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="k">def</span> <span class="nf">Respawn</span><span class="p">():</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">return</span> <span class="s2">&quot;respawn&quot;</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="p">):</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -90,8 +152,8 @@
 
     </div>
     <a class="headerlink" href="#GlobalChatHistory"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="GlobalChatHistory-2"><a href="#GlobalChatHistory-2"><span class="linenos">2</span></a><span class="k">def</span> <span class="nf">GlobalChatHistory</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">):</span>
-</span><span id="GlobalChatHistory-3"><a href="#GlobalChatHistory-3"><span class="linenos">3</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="s1">&quot;gcHistory&quot;:</span><span class="se">{{</span><span class="s1">&quot;channel&quot;:&quot;global&quot;,&quot;limit&quot;:</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">&#39;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="GlobalChatHistory-4"><a href="#GlobalChatHistory-4"><span class="linenos">4</span></a><span class="k">def</span> <span class="nf">GlobalChatHistory</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">):</span>
+</span><span id="GlobalChatHistory-5"><a href="#GlobalChatHistory-5"><span class="linenos">5</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="s1">&quot;gcHistory&quot;:</span><span class="se">{{</span><span class="s1">&quot;channel&quot;:&quot;global&quot;,&quot;limit&quot;:</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">&#39;</span>
 </span></pre></div>
 
 
@@ -109,8 +171,27 @@
 
     </div>
     <a class="headerlink" href="#GameList"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="GameList-5"><a href="#GameList-5"><span class="linenos">5</span></a><span class="k">def</span> <span class="nf">GameList</span><span class="p">():</span>
-</span><span id="GameList-6"><a href="#GameList-6"><span class="linenos">6</span></a>    <span class="k">return</span> <span class="s2">&quot;req-games-list&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="GameList-7"><a href="#GameList-7"><span class="linenos">7</span></a><span class="k">def</span> <span class="nf">GameList</span><span class="p">():</span>
+</span><span id="GameList-8"><a href="#GameList-8"><span class="linenos">8</span></a>    <span class="k">return</span> <span class="s2">&quot;req-games-list&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="JoinGameRoom">
+                            <input id="JoinGameRoom-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">JoinGameRoom</span><span class="signature pdoc-code condensed">(<span class="param"><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="JoinGameRoom-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#JoinGameRoom"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinGameRoom-10"><a href="#JoinGameRoom-10"><span class="linenos">10</span></a><span class="k">def</span> <span class="nf">JoinGameRoom</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="JoinGameRoom-11"><a href="#JoinGameRoom-11"><span class="linenos">11</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -122,14 +203,14 @@
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">JoinGame</span><span class="signature pdoc-code condensed">(<span class="param"><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span></span><span class="return-annotation">):</span></span>
+        <span class="name">JoinGame</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">team_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span></span><span class="return-annotation">):</span></span>
 
                 <label class="view-source-button" for="JoinGame-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#JoinGame"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinGame-8"><a href="#JoinGame-8"><span class="linenos">8</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-</span><span id="JoinGame-9"><a href="#JoinGame-9"><span class="linenos">9</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinGame-13"><a href="#JoinGame-13"><span class="linenos">13</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="JoinGame-14"><a href="#JoinGame-14"><span class="linenos">14</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinTeam$</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -147,8 +228,166 @@
 
     </div>
     <a class="headerlink" href="#LeaveGame"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="LeaveGame-11"><a href="#LeaveGame-11"><span class="linenos">11</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
-</span><span id="LeaveGame-12"><a href="#LeaveGame-12"><span class="linenos">12</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="LeaveGame-16"><a href="#LeaveGame-16"><span class="linenos">16</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
+</span><span id="LeaveGame-17"><a href="#LeaveGame-17"><span class="linenos">17</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="LogIn">
+                            <input id="LogIn-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">LogIn</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">username</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">password</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="LogIn-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#LogIn"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="LogIn-19"><a href="#LogIn-19"><span class="linenos">19</span></a><span class="k">def</span> <span class="nf">LogIn</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="LogIn-20"><a href="#LogIn-20"><span class="linenos">20</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;login$</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="StartMoving">
+                            <input id="StartMoving-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">StartMoving</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">direction</span><span class="p">:</span> <span class="n"><a href="info/game.html#MovingDirection">slay.data.info.game.MovingDirection</a></span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="StartMoving-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StartMoving"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StartMoving-22"><a href="#StartMoving-22"><span class="linenos">22</span></a><span class="k">def</span> <span class="nf">StartMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="StartMoving-23"><a href="#StartMoving-23"><span class="linenos">23</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;kd$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="StopMoving">
+                            <input id="StopMoving-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">StopMoving</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">direction</span><span class="p">:</span> <span class="n"><a href="info/game.html#MovingDirection">slay.data.info.game.MovingDirection</a></span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="StopMoving-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StopMoving"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StopMoving-25"><a href="#StopMoving-25"><span class="linenos">25</span></a><span class="k">def</span> <span class="nf">StopMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="StopMoving-26"><a href="#StopMoving-26"><span class="linenos">26</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ku$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="JoinRandomGameRoom">
+                            <input id="JoinRandomGameRoom-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">JoinRandomGameRoom</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">mode</span><span class="p">:</span> <span class="n"><a href="info/game.html#GameMode">slay.data.info.game.GameMode</a></span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="JoinRandomGameRoom-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#JoinRandomGameRoom"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinRandomGameRoom-28"><a href="#JoinRandomGameRoom-28"><span class="linenos">28</span></a><span class="k">def</span> <span class="nf">JoinRandomGameRoom</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">GameMode</span><span class="p">):</span>
+</span><span id="JoinRandomGameRoom-29"><a href="#JoinRandomGameRoom-29"><span class="linenos">29</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinRandomGame$undefined$</span><span class="si">{</span><span class="n">mode</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="UpdateHeadDirection">
+                            <input id="UpdateHeadDirection-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">UpdateHeadDirection</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">direction</span><span class="p">:</span> <span class="n"><a href="info/game.html#HeadDirection">slay.data.info.game.HeadDirection</a></span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="UpdateHeadDirection-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#UpdateHeadDirection"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UpdateHeadDirection-31"><a href="#UpdateHeadDirection-31"><span class="linenos">31</span></a><span class="k">def</span> <span class="nf">UpdateHeadDirection</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">HeadDirection</span><span class="p">):</span>
+</span><span id="UpdateHeadDirection-32"><a href="#UpdateHeadDirection-32"><span class="linenos">32</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;dirU$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="UseAbility">
+                            <input id="UseAbility-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">UseAbility</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">ability</span><span class="p">:</span> <span class="n"><a href="info/game.html#Ability">slay.data.info.game.Ability</a></span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="UseAbility-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#UseAbility"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UseAbility-34"><a href="#UseAbility-34"><span class="linenos">34</span></a><span class="k">def</span> <span class="nf">UseAbility</span><span class="p">(</span><span class="n">ability</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">Ability</span><span class="p">):</span>
+</span><span id="UseAbility-35"><a href="#UseAbility-35"><span class="linenos">35</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ab$</span><span class="si">{</span><span class="n">ability</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="Respawn">
+                            <input id="Respawn-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">Respawn</span><span class="signature pdoc-code condensed">(<span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="Respawn-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Respawn"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Respawn-37"><a href="#Respawn-37"><span class="linenos">37</span></a><span class="k">def</span> <span class="nf">Respawn</span><span class="p">():</span>
+</span><span id="Respawn-38"><a href="#Respawn-38"><span class="linenos">38</span></a>    <span class="k">return</span> <span class="s2">&quot;respawn&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="CreateGame">
+                            <input id="CreateGame-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">CreateGame</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="CreateGame-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#CreateGame"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CreateGame-40"><a href="#CreateGame-40"><span class="linenos">40</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
+</span><span id="CreateGame-41"><a href="#CreateGame-41"><span class="linenos">41</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-42"><a href="#CreateGame-42"><span class="linenos">42</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-43"><a href="#CreateGame-43"><span class="linenos">43</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-44"><a href="#CreateGame-44"><span class="linenos">44</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-45"><a href="#CreateGame-45"><span class="linenos">45</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="CreateGame-46"><a href="#CreateGame-46"><span class="linenos">46</span></a><span class="p">):</span>
+</span><span id="CreateGame-47"><a href="#CreateGame-47"><span class="linenos">47</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 

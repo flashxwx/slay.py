@@ -16,7 +16,7 @@ ssl_context.verify_mode = 0
 import slay.data.info as Info
 from slay.server.socket import Socket
 from slay.server.event import CallbackRegistrar, CallbackDict
-from slay.data.response import parse_response_message
+from slay.data.response import parse_response_message, in_game_update_info_parser
 
 from slay.utils import export
 
@@ -117,11 +117,12 @@ class Connection:
         self.on_player_join = CallbackRegistrar[Info.NewPlayer]()
         self.on_player_leave = CallbackRegistrar[Info.InGameId]()
         self.on_game_stats = CallbackRegistrar[Info.GameStats]()
-        self.on_ranked_search_count = \
-            CallbackRegistrar[Info.RankedSearchCount]()
+        self.on_ranked_search_count = CallbackRegistrar[Info.RankedSearchCount]()
         self.on_account_logging = CallbackRegistrar[Info.AccountLogging]()
         self.on_my_in_game_id = CallbackRegistrar[Info.InGameId]()
         self.on_hp_update = CallbackRegistrar[Info.HP]()
+        self.on_player_respawn = CallbackRegistrar[Info.PlayerRespawn]()
+        self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")
@@ -292,8 +293,16 @@ class Connection:
         self.__trigger_event_callback("on_open")
 
     def __on_message(self, websocket: WebSocketApp, message: str):
+        self.__trigger_event_callback("on_message", message)
+
         if self.socket == Socket.SOCIAL:
             event_name, response = parse_response_message("social", message)
+        
+        elif message[:3] == "upd":
+            for event_name, response in in_game_update_info_parser(message):
+                self.__trigger_event_callback(event_name, response)
+
+            return
         else:
             messageType, _, messageBody = message.partition("$")
 
@@ -307,7 +316,6 @@ class Connection:
         if event_name == "on_id":
             self.__reopen_attempts = self.___reopen_attempts
 
-        self.__trigger_event_callback("on_message", message)
         self.__trigger_event_callback(event_name, response)
 
     def __on_error(self, websocket: WebSocketApp, error: WebSocketException):

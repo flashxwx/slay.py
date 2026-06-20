@@ -1,6 +1,13 @@
-"""
-hello, slayers.
-"""
+import os
+
+def __get_readme():
+    readme_path = os.path.join(os.path.dirname(__file__), "..", "README.md")
+    if os.path.exists(readme_path):
+        with open(readme_path, "r", encoding="utf-8") as f:
+            return f.read()
+    return ""
+
+__doc__ = __get_readme()
 
 __all__ = ["server", "data"]
 

@@ -33,6 +33,90 @@
             <li>
                     <a class="variable" href="#RankedSearchCount">RankedSearchCount</a>
             </li>
+            <li>
+                    <a class="class" href="#AccountLogging">AccountLogging</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#AccountLogging.__init__">AccountLogging</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.nickname">nickname</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.skin_id">skin_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.abilities">abilities</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.golds">golds</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.gems">gems</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.xp">xp</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.is_mod">is_mod</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.is_mod2">is_mod2</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.is_admin">is_admin</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.nickname_color_id">nickname_color_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.unlocked_skin_ids">unlocked_skin_ids</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.clan_tag">clan_tag</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.clan_role">clan_role</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.chests">chests</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.db_id">db_id</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.unlocked_name_color_ids">unlocked_name_color_ids</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.unlocked_emotes">unlocked_emotes</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.kills_of_weapons">kills_of_weapons</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#AccountLogging.ranked_search_count">ranked_search_count</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#Abilities">Abilities</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#UnlockedEmotes">UnlockedEmotes</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#KillsOfWeapons">KillsOfWeapons</a>
+                            <ul class="memberlist">
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -55,9 +139,42 @@
 
                         <label class="view-source-button" for="mod-lobby-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">RankedSearchCount</span> <span class="o">=</span> <span class="nb">int</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Annotated</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">from</span> <span class="nn">slay.utils</span> <span class="kn">import</span> <span class="n">Pipe</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="n">RankedSearchCount</span> <span class="o">=</span> <span class="nb">int</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="k">class</span> <span class="nc">AccountLogging</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="n">skin_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    <span class="n">abilities</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="s2">&quot;Abilities&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">]</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="n">golds</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="n">gems</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="n">xp</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="n">is_mod</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="n">is_mod2</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="n">is_admin</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="n">nickname_color_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="n">unlocked_skin_ids</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="n">clan_role</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">chests</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="n">db_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="n">unlocked_name_color_ids</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="n">unlocked_emotes</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="s2">&quot;UnlockedEmotes&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">]</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="n">kills_of_weapons</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="s2">&quot;KillsOfWeapons&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">]</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="n">ranked_search_count</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="k">class</span> <span class="nc">Abilities</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="o">...</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="k">class</span> <span class="nc">UnlockedEmotes</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="o">...</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="k">class</span> <span class="nc">KillsOfWeapons</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="o">...</span>
 </span></pre></div>
 
 
@@ -71,6 +188,363 @@
     </div>
     <a class="headerlink" href="#RankedSearchCount"></a>
     
+    
+
+                </section>
+                <section id="AccountLogging">
+                            <input id="AccountLogging-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">AccountLogging</span><wbr>(<span class="base">typing.NamedTuple</span>):
+
+                <label class="view-source-button" for="AccountLogging-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#AccountLogging"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="AccountLogging-9"><a href="#AccountLogging-9"><span class="linenos"> 9</span></a><span class="k">class</span> <span class="nc">AccountLogging</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+</span><span id="AccountLogging-10"><a href="#AccountLogging-10"><span class="linenos">10</span></a>    <span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="AccountLogging-11"><a href="#AccountLogging-11"><span class="linenos">11</span></a>    <span class="n">skin_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-12"><a href="#AccountLogging-12"><span class="linenos">12</span></a>    <span class="n">abilities</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="s2">&quot;Abilities&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">]</span>
+</span><span id="AccountLogging-13"><a href="#AccountLogging-13"><span class="linenos">13</span></a>    <span class="n">golds</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-14"><a href="#AccountLogging-14"><span class="linenos">14</span></a>    <span class="n">gems</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-15"><a href="#AccountLogging-15"><span class="linenos">15</span></a>    <span class="n">xp</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-16"><a href="#AccountLogging-16"><span class="linenos">16</span></a>    <span class="n">is_mod</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-17"><a href="#AccountLogging-17"><span class="linenos">17</span></a>    <span class="n">is_mod2</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-18"><a href="#AccountLogging-18"><span class="linenos">18</span></a>    <span class="n">is_admin</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-19"><a href="#AccountLogging-19"><span class="linenos">19</span></a>    <span class="n">nickname_color_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-20"><a href="#AccountLogging-20"><span class="linenos">20</span></a>    <span class="n">unlocked_skin_ids</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="AccountLogging-21"><a href="#AccountLogging-21"><span class="linenos">21</span></a>    <span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="AccountLogging-22"><a href="#AccountLogging-22"><span class="linenos">22</span></a>    <span class="n">clan_role</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-23"><a href="#AccountLogging-23"><span class="linenos">23</span></a>    <span class="n">chests</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="AccountLogging-24"><a href="#AccountLogging-24"><span class="linenos">24</span></a>    <span class="n">db_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="AccountLogging-25"><a href="#AccountLogging-25"><span class="linenos">25</span></a>    <span class="n">unlocked_name_color_ids</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="AccountLogging-26"><a href="#AccountLogging-26"><span class="linenos">26</span></a>    <span class="n">unlocked_emotes</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="s2">&quot;UnlockedEmotes&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">]</span>
+</span><span id="AccountLogging-27"><a href="#AccountLogging-27"><span class="linenos">27</span></a>    <span class="n">kills_of_weapons</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="s2">&quot;KillsOfWeapons&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">]</span>
+</span><span id="AccountLogging-28"><a href="#AccountLogging-28"><span class="linenos">28</span></a>    <span class="n">ranked_search_count</span><span class="p">:</span> <span class="nb">int</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>AccountLogging(nickname, skin_id, abilities, golds, gems, xp, is_mod, is_mod2, is_admin, nickname_color_id, unlocked_skin_ids, clan_tag, clan_role, chests, db_id, unlocked_name_color_ids, unlocked_emotes, kills_of_weapons, ranked_search_count)</p>
+</div>
+
+
+                            <div id="AccountLogging.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">AccountLogging</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">skin_id</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">abilities</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">ForwardRef</span><span class="p">(</span><span class="s1">&#39;Abilities&#39;</span><span class="p">),</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">loads</span><span class="o">&gt;</span><span class="p">]</span>,</span><span class="param">	<span class="n">golds</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">gems</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">xp</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">is_mod</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">is_mod2</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">is_admin</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">nickname_color_id</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">unlocked_skin_ids</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">clan_role</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">chests</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">db_id</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">unlocked_name_color_ids</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">unlocked_emotes</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">ForwardRef</span><span class="p">(</span><span class="s1">&#39;UnlockedEmotes&#39;</span><span class="p">),</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">loads</span><span class="o">&gt;</span><span class="p">]</span>,</span><span class="param">	<span class="n">kills_of_weapons</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">ForwardRef</span><span class="p">(</span><span class="s1">&#39;KillsOfWeapons&#39;</span><span class="p">),</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">loads</span><span class="o">&gt;</span><span class="p">]</span>,</span><span class="param">	<span class="n">ranked_search_count</span><span class="p">:</span> <span class="nb">int</span></span>)</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.__init__"></a>
+    
+            <div class="docstring"><p>Create new instance of AccountLogging(nickname, skin_id, abilities, golds, gems, xp, is_mod, is_mod2, is_admin, nickname_color_id, unlocked_skin_ids, clan_tag, clan_role, chests, db_id, unlocked_name_color_ids, unlocked_emotes, kills_of_weapons, ranked_search_count)</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.nickname" class="classattr">
+                                <div class="attr variable">
+            <span class="name">nickname</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.nickname"></a>
+    
+            <div class="docstring"><p>Alias for field number 0</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.skin_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">skin_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.skin_id"></a>
+    
+            <div class="docstring"><p>Alias for field number 1</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.abilities" class="classattr">
+                                <div class="attr variable">
+            <span class="name">abilities</span><span class="annotation">: Annotated[<a href="#Abilities">Abilities</a>, &lt;function loads at 0x7d3b6cefd8a0&gt;]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.abilities"></a>
+    
+            <div class="docstring"><p>Alias for field number 2</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.golds" class="classattr">
+                                <div class="attr variable">
+            <span class="name">golds</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.golds"></a>
+    
+            <div class="docstring"><p>Alias for field number 3</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.gems" class="classattr">
+                                <div class="attr variable">
+            <span class="name">gems</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.gems"></a>
+    
+            <div class="docstring"><p>Alias for field number 4</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.xp" class="classattr">
+                                <div class="attr variable">
+            <span class="name">xp</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.xp"></a>
+    
+            <div class="docstring"><p>Alias for field number 5</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.is_mod" class="classattr">
+                                <div class="attr variable">
+            <span class="name">is_mod</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.is_mod"></a>
+    
+            <div class="docstring"><p>Alias for field number 6</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.is_mod2" class="classattr">
+                                <div class="attr variable">
+            <span class="name">is_mod2</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.is_mod2"></a>
+    
+            <div class="docstring"><p>Alias for field number 7</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.is_admin" class="classattr">
+                                <div class="attr variable">
+            <span class="name">is_admin</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.is_admin"></a>
+    
+            <div class="docstring"><p>Alias for field number 8</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.nickname_color_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">nickname_color_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.nickname_color_id"></a>
+    
+            <div class="docstring"><p>Alias for field number 9</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.unlocked_skin_ids" class="classattr">
+                                <div class="attr variable">
+            <span class="name">unlocked_skin_ids</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.unlocked_skin_ids"></a>
+    
+            <div class="docstring"><p>Alias for field number 10</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.clan_tag" class="classattr">
+                                <div class="attr variable">
+            <span class="name">clan_tag</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.clan_tag"></a>
+    
+            <div class="docstring"><p>Alias for field number 11</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.clan_role" class="classattr">
+                                <div class="attr variable">
+            <span class="name">clan_role</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.clan_role"></a>
+    
+            <div class="docstring"><p>Alias for field number 12</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.chests" class="classattr">
+                                <div class="attr variable">
+            <span class="name">chests</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.chests"></a>
+    
+            <div class="docstring"><p>Alias for field number 13</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.db_id" class="classattr">
+                                <div class="attr variable">
+            <span class="name">db_id</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.db_id"></a>
+    
+            <div class="docstring"><p>Alias for field number 14</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.unlocked_name_color_ids" class="classattr">
+                                <div class="attr variable">
+            <span class="name">unlocked_name_color_ids</span><span class="annotation">: str</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.unlocked_name_color_ids"></a>
+    
+            <div class="docstring"><p>Alias for field number 15</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.unlocked_emotes" class="classattr">
+                                <div class="attr variable">
+            <span class="name">unlocked_emotes</span><span class="annotation">: Annotated[<a href="#UnlockedEmotes">UnlockedEmotes</a>, &lt;function loads at 0x7d3b6cefd8a0&gt;]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.unlocked_emotes"></a>
+    
+            <div class="docstring"><p>Alias for field number 16</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.kills_of_weapons" class="classattr">
+                                <div class="attr variable">
+            <span class="name">kills_of_weapons</span><span class="annotation">: Annotated[<a href="#KillsOfWeapons">KillsOfWeapons</a>, &lt;function loads at 0x7d3b6cefd8a0&gt;]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.kills_of_weapons"></a>
+    
+            <div class="docstring"><p>Alias for field number 17</p>
+</div>
+
+
+                            </div>
+                            <div id="AccountLogging.ranked_search_count" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ranked_search_count</span><span class="annotation">: int</span>
+
+        
+    </div>
+    <a class="headerlink" href="#AccountLogging.ranked_search_count"></a>
+    
+            <div class="docstring"><p>Alias for field number 18</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="Abilities">
+                            <input id="Abilities-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">Abilities</span><wbr>(<span class="base">typing.TypedDict</span>):
+
+                <label class="view-source-button" for="Abilities-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Abilities"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Abilities-31"><a href="#Abilities-31"><span class="linenos">31</span></a><span class="k">class</span> <span class="nc">Abilities</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="Abilities-32"><a href="#Abilities-32"><span class="linenos">32</span></a>    <span class="o">...</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="UnlockedEmotes">
+                            <input id="UnlockedEmotes-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">UnlockedEmotes</span><wbr>(<span class="base">typing.TypedDict</span>):
+
+                <label class="view-source-button" for="UnlockedEmotes-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#UnlockedEmotes"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UnlockedEmotes-33"><a href="#UnlockedEmotes-33"><span class="linenos">33</span></a><span class="k">class</span> <span class="nc">UnlockedEmotes</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="UnlockedEmotes-34"><a href="#UnlockedEmotes-34"><span class="linenos">34</span></a>    <span class="o">...</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="KillsOfWeapons">
+                            <input id="KillsOfWeapons-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">KillsOfWeapons</span><wbr>(<span class="base">typing.TypedDict</span>):
+
+                <label class="view-source-button" for="KillsOfWeapons-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#KillsOfWeapons"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="KillsOfWeapons-36"><a href="#KillsOfWeapons-36"><span class="linenos">36</span></a><span class="k">class</span> <span class="nc">KillsOfWeapons</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="KillsOfWeapons-37"><a href="#KillsOfWeapons-37"><span class="linenos">37</span></a>    <span class="o">...</span>
+</span></pre></div>
+
+
     
 
                 </section>

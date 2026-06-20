@@ -1,5 +1,5 @@
-slay.py (not official)
-======================
+slay.py (not official by slay.one)
+==================================
 [![Latest Release](https://badge.gitloft.org/api/service/codeberg/release/syflash/slay.py)](https://codeberg.org/syflash/slay.py/releases/)
 
 > This project is version 0.x.x currently,
@@ -47,6 +47,7 @@ Quick Example
 --------------
 
 Note: First arguement of every event callback is `Connection` object.
+Note 2: All event callback will be triggered in one thread, so better open a new thread for heavy job in event callback function, otherwise the thread will get blocked.
 ```python
 from slay import Connection, Socket, Request, Info
 

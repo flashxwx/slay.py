@@ -17,7 +17,8 @@ response_dict: dict[str, tuple[str, type, int]] = {
     "rsc": ("on_ranked_search_count", Info.RankedSearchCount, 0),
     "logged": ("on_account_logging", Info.AccountLogging, 1),
     "pid": ("on_my_in_game_id", Info.InGameId, 0),
-    "hp": ("on_hp_update", Info.HP, 1)
+    "hp": ("on_hp_update", Info.HP, 1),
+    "rsp": ("on_player_respawn", Info.PlayerRespawn, 1),
 }
 """ message_type: event_name, response_class, parsing_mode
 
@@ -29,6 +30,10 @@ parsing_mode:
     4 - social info mode 1 (the whole message is the info)
     5 - social info mode 2 (the nested dictionary is the info)
 """
+
+in_game_update_response_dict = {
+    "ab2": ("on_ability_cancel", Info.AbilityCancel),
+}
 
 def parse_response_message(type: str, body: str):
     if type == "social":
@@ -86,6 +91,21 @@ def parse_single_info_string(string: str, info_class: type):
 
     for datum_type, datum_str in zip(
         info_class.__annotations__.values(), string.split("$")
+    ):
+        if get_origin(datum_type) is Annotated:
+            datum_type = get_args(datum_type)[1]
+
+        info_buffer.append(datum_type(datum_str))
+        info_counter += 1
+    
+    return info_class(*info_buffer)
+
+def parse_single_info_string2(splitted_string: list[str], info_class: type):
+    info_buffer = []
+    info_counter = 0
+
+    for datum_type, datum_str in zip(
+        info_class.__annotations__.values(), splitted_string
     ):
         if get_origin(datum_type) is Annotated:
             datum_type = get_args(datum_type)[1]
@@ -159,3 +179,23 @@ def parse_listed_object_info_string(string: str):
             info_counter = 0
 
     return response
+
+def in_game_update_info_parser(message: str):
+    splitted_message = message[4:].split("$")
+    splitted_message_length = len(splitted_message)
+    pointer = 0
+
+    while pointer != splitted_message_length:
+        info_name = splitted_message[pointer]
+        response_metadata = in_game_update_response_dict.get(info_name)
+
+        if not response_metadata:
+            pointer += 1
+            continue
+
+        event_name, info_response_class = response_metadata
+        
+        number_of_data = len(info_response_class.__annotations__)
+        yield event_name, parse_single_info_string2(splitted_message[pointer+1:pointer+1+number_of_data], info_response_class)
+
+        pointer += 1
