@@ -36,6 +36,13 @@ def UseAbility(ability: Info.Ability):
 def Respawn():
     return "respawn"
 
+def MessageInGame(content: str):
+
+    if len(content) > 140:
+        raise OverflowError("The length of message in game cannot be over 140.")
+
+    return f"chat{content}"
+
 def CreateGame(
     map_id: int,
     round_minutes: int,

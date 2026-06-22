@@ -123,6 +123,7 @@ class Connection:
         self.on_hp_update = CallbackRegistrar[Info.HP]()
         self.on_player_respawn = CallbackRegistrar[Info.PlayerRespawn]()
         self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
+        self.on_in_game_chat = CallbackRegistrar[Info.InGameChat]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")

@@ -230,3 +230,7 @@ class PlayerRespawn(NamedTuple):
 class AbilityCancel(NamedTuple):
     player_in_game_id: int
     ability: Annotated[Ability, Pipe(int, Ability)]
+
+class InGameChat(NamedTuple):
+    in_game_id: int
+    message: str

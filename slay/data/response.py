@@ -19,6 +19,7 @@ response_dict: dict[str, tuple[str, type, int]] = {
     "pid": ("on_my_in_game_id", Info.InGameId, 0),
     "hp": ("on_hp_update", Info.HP, 1),
     "rsp": ("on_player_respawn", Info.PlayerRespawn, 1),
+    "chat": ("on_in_game_chat", Info.InGameChat, 1),
 }
 """ message_type: event_name, response_class, parsing_mode
 
