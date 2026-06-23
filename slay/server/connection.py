@@ -101,7 +101,7 @@ class Connection:
         
         if enable_replay_cache:
             self.__can_start_record_replay = False
-            self.replay_cache = []
+            self.replay_cache = ["replay-version=4"]
             self.last_replay_cache = []
 
         # Callback Registrars
@@ -297,10 +297,10 @@ class Connection:
         if not self.enable_replay_cache:
             return None
 
-        if type == "last" and len(self.last_replay_cache) > 1:
+        if type == "last" and len(self.last_replay_cache) > 2:
             return json.dumps(self.last_replay_cache)
 
-        elif type == "current" and len(self.replay_cache) > 1:
+        elif type == "current" and len(self.replay_cache) > 2:
             return json.dumps(self.replay_cache)
 
         return None
@@ -338,14 +338,12 @@ class Connection:
                     if len(self.replay_cache) != 0:
                         self.last_replay_cache = self.replay_cache.copy()
                         self.replay_cache.clear()
+                        self.replay_cache.append("replay-version=4")
 
                     self.__can_start_record_replay = True
                     self.replay_cache.append(message)
-                
-                elif messageType == "stats":
-                    self.__can_start_record_replay = False
 
-                elif (messageType != "next-maps") and (messageType != "pid"):
+                elif self.__can_start_record_replay and (messageType != "next-maps") and (messageType != "pid"):
                     self.replay_cache.append(message)
 
         if not event_name:
@@ -353,6 +351,10 @@ class Connection:
         
         if event_name == "on_id":
             self.__reopen_attempts = self.___reopen_attempts
+        
+        elif event_name == "on_game_stats":
+            if response.exit:
+                self.__can_start_record_replay = False
 
         self.__trigger_event_callback(event_name, response)
 

@@ -189,7 +189,7 @@ class GameStats(NamedTuple):
     gold: int
     souls: int
     show: int
-    exit: int
+    exit: Annotated[bool, Pipe(int, bool)]
     chestId: int
 
 class HP(NamedTuple):
