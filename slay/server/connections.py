@@ -36,7 +36,8 @@ class Connections:
     def __init__(
         self, sockets: Collection[Socket],
         category: str = "Connections",
-        event_callback_dict: CallbackDict = None
+        event_callback_dict: CallbackDict = None,
+        enable_replay_cache: bool = False
     ):
         self.sockets = sockets
         self.category = category
@@ -47,7 +48,7 @@ class Connections:
             raise ValueError("Length of sockets arguement cannot be zero.")
 
         for socket in sockets:
-            self.list.append(Connection(socket, category))
+            self.list.append(Connection(socket, category, enable_replay_cache))
 
         if event_callback_dict:
             self.set_event_callback_dict(event_callback_dict)

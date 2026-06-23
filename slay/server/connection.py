@@ -1,7 +1,7 @@
-import time, logging, socket, traceback
+import time, logging, socket, traceback, json
 
 
-from typing import Callable
+from typing import Callable, Literal
 
 from threading import Thread, Lock, Event
 
@@ -56,6 +56,7 @@ class Connection:
         socket: Socket,
         category: str = "",
         event_callback_dict: CallbackDict = None,
+        enable_replay_cache = False
     ):
         self.socket = socket
         self.category = category if category else socket.name
@@ -95,6 +96,13 @@ class Connection:
         self.__reopen_attempts = 0
         self.___reopen_attempts = 0
         self.__close_event = Event()
+
+        self.enable_replay_cache = enable_replay_cache
+        
+        if enable_replay_cache:
+            self.__can_start_record_replay = False
+            self.replay_cache = []
+            self.last_replay_cache = []
 
         # Callback Registrars
 
@@ -284,6 +292,15 @@ class Connection:
             self.__close_event.wait(remaining)
 
         return False
+    
+    def json_from_replay(self, type: Literal["current", "last"] = "current"):
+        if type == "last" and len(self.last_replay_cache) != 0:
+            return json.dumps(self.last_replay_cache)
+
+        elif type == "current" and len(self.replay_cache) != 0:
+            return json.dumps(self.replay_cache)
+
+        return ""
 
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
@@ -303,6 +320,8 @@ class Connection:
             for event_name, response in in_game_update_info_parser(message):
                 self.__trigger_event_callback(event_name, response)
 
+            if self.enable_replay_cache and self.__can_start_record_replay:
+                self.replay_cache.append(message)
             return
         else:
             messageType, _, messageBody = message.partition("$")
@@ -310,6 +329,21 @@ class Connection:
             event_name, response = parse_response_message(
                 messageType, messageBody
             )
+
+            if self.enable_replay_cache:
+                if messageType == "init":
+                    if len(self.replay_cache) != 0:
+                        self.last_replay_cache = self.replay_cache
+                        self.replay_cache.clear()
+
+                    self.__can_start_record_replay = True
+                    self.replay_cache.append(message)
+                
+                elif messageType == "stats":
+                    self.__can_start_record_replay = False
+
+                elif (messageType != "next-maps") and (messageType != "pid"):
+                    self.replay_cache.append(message)
 
         if not event_name:
             return
