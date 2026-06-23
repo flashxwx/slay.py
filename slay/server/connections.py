@@ -48,7 +48,7 @@ class Connections:
             raise ValueError("Length of sockets arguement cannot be zero.")
 
         for socket in sockets:
-            self.list.append(Connection(socket, category, enable_replay_cache))
+            self.list.append(Connection(socket, category, enable_replay_cache=enable_replay_cache))
 
         if event_callback_dict:
             self.set_event_callback_dict(event_callback_dict)

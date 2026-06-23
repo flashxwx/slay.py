@@ -294,13 +294,16 @@ class Connection:
         return False
     
     def json_from_replay(self, type: Literal["current", "last"] = "current"):
+        if not self.enable_replay_cache:
+            return None
+
         if type == "last" and len(self.last_replay_cache) != 0:
             return json.dumps(self.last_replay_cache)
 
         elif type == "current" and len(self.replay_cache) != 0:
             return json.dumps(self.replay_cache)
 
-        return ""
+        return None
 
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
