@@ -1,4 +1,6 @@
-from typing import NamedTuple, Annotated
+import json
+
+from typing import NamedTuple, Annotated, TypedDict
 from enum import Enum
 
 from slay.data.info.decorate import NicknameColor
@@ -54,7 +56,7 @@ class GameProfile(NamedTuple):
     map_thumbnail_data: str
 
 class Game(NamedTuple):
-    map_data: str
+    map_data: dict
     mode: Annotated[GameMode, Pipe(int, GameMode)]
     max_round_ticks: int
     current_tick: int
@@ -149,8 +151,29 @@ class Corpse(NamedTuple):
     y: int
     in_game_id: int
 
+class GameMapData(TypedDict):
+    x: int
+    y: int
+    maxPlayers: int
+    closed: bool
+    invisible: bool
+    defaultTiles: int
+    tiles: list[dict]
+    groundTiles: list[dict]
+    noGridTiles: list[dict]
+    spawningPoints: list
+    spawningPointsRed: list
+    spawningPointsBlue: list
+    waypoints: list
+    type: int
+    ammo: list[dict]
+    noBorder: bool
+    thumbnail: str
+    name: str
+    description: str
+
 class GameInitial(NamedTuple):
-    game_data: Game
+    game_data: Annotated[GameMapData, json.loads]
     players: list[Player]
     summoned_zombies: list[SummonedZombie]
     used_ammo_respawns: list[UsedAmmoRespawn]
