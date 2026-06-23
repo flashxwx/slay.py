@@ -324,31 +324,31 @@ class Connection:
 
         return None
     
-    def __func_for_loop_sub_thread(self, func: Callable):
+    def __func_for_loop_sub_thread(self, func: Callable, *args, **kwargs):
         while self.status != 0:
-            func()
+            func(*args, **kwargs)
         
         self.__thread_end_signal_channel.put(1)
     
-    def __func_for_sub_thread(self, func: Callable):
-        func()
+    def __func_for_sub_thread(self, func: Callable, *args, **kwargs):
+        func(*args, **kwargs)
 
         self.__thread_end_signal_channel.put(1)
 
-    def create_thread(self, func: Callable):
+    def create_thread(self, func: Callable, *args, **kwargs):
         if self.status != 2:
             self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
             return
 
-        Thread(target=self.__func_for_sub_thread, args=(func,)).start()
+        Thread(target=self.__func_for_sub_thread, args=args, kwargs=kwargs).start()
         self.__running_sub_thread_count += 1
     
-    def create_loop_thread(self, func: Callable):
+    def create_loop_thread(self, func: Callable, *args, **kwargs):
         if self.status != 2:
             self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
             return
 
-        Thread(target=self.__func_for_loop_sub_thread, args=(func,)).start()
+        Thread(target=self.__func_for_loop_sub_thread, args=args, kwargs=kwargs).start()
         self.__running_sub_thread_count += 1
 
     def __on_open(self, websocket: WebSocketApp):
