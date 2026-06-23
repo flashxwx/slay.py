@@ -340,7 +340,7 @@ class Connection:
             self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
             return
 
-        Thread(target=self.__func_for_sub_thread, args=args, kwargs=kwargs).start()
+        Thread(target=self.__func_for_sub_thread, args=(func,)+args, kwargs=kwargs).start()
         self.__running_sub_thread_count += 1
     
     def create_loop_thread(self, func: Callable, *args, **kwargs):
@@ -348,7 +348,7 @@ class Connection:
             self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
             return
 
-        Thread(target=self.__func_for_loop_sub_thread, args=args, kwargs=kwargs).start()
+        Thread(target=self.__func_for_loop_sub_thread, args=(func,)+args, kwargs=kwargs).start()
         self.__running_sub_thread_count += 1
 
     def __on_open(self, websocket: WebSocketApp):
