@@ -224,11 +224,11 @@ class HP(NamedTuple):
     murder_weapon_id: int
     attacker_in_game_id: int
     lifesteam_amount: float
-    new_kill_count: int = None
-    new_death_count: int = None
-    multiple_kill_count: int = None
-    kill_streak: int = None
-    victim_kill_streak: int = None
+    new_kill_count: str = None
+    new_death_count: str = None
+    multiple_kill_count: str = None
+    kill_streak: str = None
+    victim_kill_streak: str = None
     killer_souls: float = None
     victim_souls: float = None
     killer_elo: float = None
@@ -237,7 +237,7 @@ class HP(NamedTuple):
     object_x: float = None
     object_y: float = None
     object_aoe: float = None
-    object_id: int = None
+    object_id: str = None
     start_x: float = None
     start_y: float = None
     vector_x: float = None
