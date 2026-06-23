@@ -297,10 +297,10 @@ class Connection:
         if not self.enable_replay_cache:
             return None
 
-        if type == "last" and len(self.last_replay_cache) != 0:
+        if type == "last" and len(self.last_replay_cache) > 1:
             return json.dumps(self.last_replay_cache)
 
-        elif type == "current" and len(self.replay_cache) != 0:
+        elif type == "current" and len(self.replay_cache) > 1:
             return json.dumps(self.replay_cache)
 
         return None
@@ -336,7 +336,7 @@ class Connection:
             if self.enable_replay_cache:
                 if messageType == "init":
                     if len(self.replay_cache) != 0:
-                        self.last_replay_cache = self.replay_cache
+                        self.last_replay_cache = self.replay_cache.copy()
                         self.replay_cache.clear()
 
                     self.__can_start_record_replay = True
