@@ -5,6 +5,8 @@ from typing import Callable, Literal
 
 from threading import Thread, Lock, Event
 
+from queue import Queue
+
 from websocket import WebSocketApp, WebSocketException
 
 import ssl, certifi
@@ -103,6 +105,10 @@ class Connection:
             self.__can_start_record_replay = False
             self.replay_cache = ["replay-version=4"]
             self.last_replay_cache = []
+        
+        self.__thread_end_signal_channel = Queue()
+        self.__running_sub_thread_count = 0
+        self.thread_end_signal_timeout = 3600
 
         # Callback Registrars
 
@@ -173,6 +179,7 @@ class Connection:
 
     def __loop_for_reopen(self, reopen_interval: int):
         while self.__reopen_attempts != 0:
+
             if self.__is_dont_reopen_code:
                 break
 
@@ -185,7 +192,19 @@ class Connection:
             if self.__is_dont_reopen_code:
                 break
             
-            self.status = 0
+            # wait for the end of all sub threads here
+            while True:
+                if self.__running_sub_thread_count == 0:
+                    break
+
+                try:
+                    number = self.__thread_end_signal_channel.get(timeout=self.thread_end_signal_timeout)
+                except:
+                    self.log_adapter.critical(f"Failed to reopen the connection. There's still a running thread (count: {self.__running_sub_thread_count}) after {self.thread_end_signal_timeout} seconds since the connection was closed.")
+                    return
+
+                self.__running_sub_thread_count -= number
+
             self.open()
 
             if self.__is_dont_reopen_code:
@@ -297,13 +316,40 @@ class Connection:
         if not self.enable_replay_cache:
             return None
 
-        if type == "last" and len(self.last_replay_cache) > 2:
+        if type == "last" and len(self.last_replay_cache) > 1:
             return json.dumps(self.last_replay_cache)
 
-        elif type == "current" and len(self.replay_cache) > 2:
+        elif type == "current" and len(self.replay_cache) > 1:
             return json.dumps(self.replay_cache)
 
         return None
+    
+    def __func_for_loop_sub_thread(self, func: Callable):
+        while self.status != 0:
+            func()
+        
+        self.__thread_end_signal_channel.put(1)
+    
+    def __func_for_sub_thread(self, func: Callable):
+        func()
+
+        self.__thread_end_signal_channel.put(1)
+
+    def create_thread(self, func: Callable):
+        if self.status != 2:
+            self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
+            return
+
+        Thread(target=self.__func_for_sub_thread, args=(func,)).start()
+        self.__running_sub_thread_count += 1
+    
+    def create_loop_thread(self, func: Callable):
+        if self.status != 2:
+            self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
+            return
+
+        Thread(target=self.__func_for_loop_sub_thread, args=(func,)).start()
+        self.__running_sub_thread_count += 1
 
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
@@ -335,7 +381,7 @@ class Connection:
 
             if self.enable_replay_cache:
                 if messageType == "init":
-                    if len(self.replay_cache) != 0:
+                    if len(self.replay_cache) > 1:
                         self.last_replay_cache = self.replay_cache.copy()
                         self.replay_cache.clear()
                         self.replay_cache.append("replay-version=4")
@@ -343,7 +389,7 @@ class Connection:
                     self.__can_start_record_replay = True
                     self.replay_cache.append(message)
 
-                elif self.__can_start_record_replay and (messageType != "next-maps") and (messageType != "pid"):
+                elif self.__can_start_record_replay and (messageType != "next-maps") and (messageType != "pid") and (messageType != "stats"):
                     self.replay_cache.append(message)
 
         if not event_name:
