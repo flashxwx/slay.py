@@ -94,7 +94,7 @@ class Connections:
     
     def start(
         self,
-        disable_loop: bool = False,
+        non_blocking: bool = False,
         loop_function: Callable = None,
         end_function: Callable = None,
         sleep_time: int = 10,
@@ -104,7 +104,7 @@ class Connections:
         for connection in self.list:
             connection.start(True, reopen_attempts, reopen_interval)
 
-        if disable_loop:
+        if non_blocking:
             return
         
         self.keep_loop_alive = True

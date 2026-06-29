@@ -160,7 +160,7 @@ class Connection:
     
     def start(
         self,
-        new_thread: bool = False,
+        non_blocking: bool = False,
         reopen_attempts: int = 0,
         reopen_interval: int = 10,
     ):
@@ -172,7 +172,7 @@ class Connection:
         self.__reopen_attempts = reopen_attempts
         self.___reopen_attempts = reopen_attempts
         
-        if new_thread:
+        if non_blocking:
             Thread(target=run).start()
         else:
             run()
