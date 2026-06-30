@@ -182,7 +182,10 @@ def parse_listed_object_info_string(string: str):
     return response
 
 def in_game_update_info_parser(message: str):
-    splitted_message = message[4:].split("$")
+    splitted_message = message.split("$")
+    return int(splitted_message[1]), splitted_message[2:]
+
+def in_game_update_info_generator(splitted_message: list[str]):
     splitted_message_length = len(splitted_message)
     pointer = 0
 

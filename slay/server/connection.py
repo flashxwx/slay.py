@@ -1,7 +1,7 @@
-import time, logging, socket, traceback, json
+import time, logging, socket, traceback, json, datetime as dt
 
 
-from typing import Callable, Literal
+from typing import Callable, Literal, Union
 
 from threading import Thread, Lock, Event
 
@@ -18,7 +18,7 @@ ssl_context.verify_mode = 0
 import slay.data.info as Info
 from slay.server.socket import Socket
 from slay.server.event import CallbackRegistrar, CallbackDict
-from slay.data.response import parse_response_message, in_game_update_info_parser
+from slay.data.response import parse_response_message, in_game_update_info_parser, in_game_update_info_generator
 
 from slay.utils import export
 
@@ -109,6 +109,9 @@ class Connection:
         self.__thread_end_signal_channel = Queue()
         self.__running_sub_thread_count = 0
         self.thread_end_signal_timeout = 3600
+
+        self.game_tick: int = None
+        """ None by default, 20 ticks per second """
 
         # Callback Registrars
 
@@ -353,6 +356,17 @@ class Connection:
     #     Thread(target=self.__func_for_loop_sub_thread, args=(func,)+args, kwargs=kwargs).start()
     #     self.__running_sub_thread_count += 1
 
+    def in_game_time_string(self):
+        if self.game_tick == None:
+            return None
+        
+        if self.game_tick < 0:
+            return None
+
+        total_seconds = self.game_tick // 20
+        minute, second = divmod(total_seconds, 60)
+        return f"{minute}:{"0"+str(second) if second < 10 else second}"
+
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
         self.__close_event.clear()
@@ -368,7 +382,9 @@ class Connection:
             event_name, response = parse_response_message("social", message)
         
         elif message[:3] == "upd":
-            for event_name, response in in_game_update_info_parser(message):
+            self.game_tick, splitted_message = in_game_update_info_parser(message)
+
+            for event_name, response in in_game_update_info_generator(splitted_message):
                 self.__trigger_event_callback(event_name, response)
 
             if self.enable_replay_cache and self.__can_start_record_replay:
