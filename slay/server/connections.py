@@ -79,6 +79,7 @@ class Connections:
         self.on_account_logging = CallbackRegistrar[Info.AccountLogging]()
         self.on_my_in_game_id = CallbackRegistrar[Info.InGameId]()
         self.on_hp_update = CallbackRegistrar[Info.HP]()
+        """ This is still in experimental phase. """
         self.on_player_respawn = CallbackRegistrar[Info.PlayerRespawn]()
         self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
         self.on_in_game_chat = CallbackRegistrar[Info.InGameChat]()

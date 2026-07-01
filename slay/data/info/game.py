@@ -216,13 +216,13 @@ class GameStats(NamedTuple):
     chestId: int
 
 class HP(NamedTuple):
-    victim_in_game_id: int
+    victim_in_game_id: str
     hp: float
     armor: float
     need_create_hit_effect: bool
-    projectile_id: int
-    murder_weapon_id: int
-    attacker_in_game_id: int
+    projectile_id: str
+    murder_weapon_id: str
+    attacker_in_game_id: str
     lifesteam_amount: float
     new_kill_count: str = None
     new_death_count: str = None
