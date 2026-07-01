@@ -356,7 +356,7 @@ class Connection:
     #     Thread(target=self.__func_for_loop_sub_thread, args=(func,)+args, kwargs=kwargs).start()
     #     self.__running_sub_thread_count += 1
 
-    def in_game_time_string(self):
+    def get_game_now_timestamp(self):
         if self.game_tick == None:
             return None
         

@@ -36,6 +36,12 @@ def UseAbility(ability: Info.Ability):
 def Respawn():
     return "respawn"
 
+def UpdateProfileText(text: str):
+    if len(text) > 255:
+        raise OverflowError("The length of profile text cannot be over 255.")
+
+    return f"update-profile-text${text}"
+
 def MessageInGame(content: str):
 
     if len(content) > 140:
