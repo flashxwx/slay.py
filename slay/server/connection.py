@@ -18,7 +18,7 @@ ssl_context.verify_mode = 0
 import slay.data.info as Info
 from slay.server.socket import Socket
 from slay.server.event import CallbackRegistrar, CallbackDict
-from slay.data.response import parse_response_message, in_game_update_info_parser, in_game_update_info_generator
+from slay.data.response import parse_response_body, in_game_update_info_parser, in_game_update_info_generator, response_dict, parse_social_response_message
 
 from slay.utils import export
 
@@ -379,22 +379,36 @@ class Connection:
         self.__trigger_event_callback("on_message", message)
 
         if self.socket == Socket.SOCIAL:
-            event_name, response = parse_response_message("social", message)
+            event_name, response = parse_social_response_message(message)
+
+            if not event_name:
+                return
         
         elif message[:3] == "upd":
             self.game_tick, splitted_message = in_game_update_info_parser(message)
 
-            for event_name, response in in_game_update_info_generator(splitted_message):
+            for event_name, response in in_game_update_info_generator(splitted_message, self.event_callback_dict):
                 self.__trigger_event_callback(event_name, response)
 
             if self.enable_replay_cache and self.__can_start_record_replay:
                 self.replay_cache.append(message)
+
             return
         else:
             messageType, _, messageBody = message.partition("$")
 
-            event_name, response = parse_response_message(
-                messageType, messageBody
+            metadata = response_dict.get(messageType)
+
+            if not metadata:
+                return
+
+            event_name = metadata[0]
+
+            if event_name not in self.event_callback_dict:
+                return
+
+            response = parse_response_body(
+                messageBody, metadata
             )
 
             if self.enable_replay_cache:
@@ -409,16 +423,13 @@ class Connection:
 
                 elif self.__can_start_record_replay and (messageType != "next-maps") and (messageType != "pid") and (messageType != "stats"):
                     self.replay_cache.append(message)
-
-        if not event_name:
-            return
         
-        if event_name == "on_id":
-            self.__reopen_attempts = self.___reopen_attempts
-        
-        elif event_name == "on_game_stats":
-            if response.exit:
-                self.__can_start_record_replay = False
+            if event_name == "on_id":
+                self.__reopen_attempts = self.___reopen_attempts
+            
+            elif event_name == "on_game_stats":
+                if response.exit:
+                    self.__can_start_record_replay = False
 
         self.__trigger_event_callback(event_name, response)
 

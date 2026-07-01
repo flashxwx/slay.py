@@ -36,30 +36,46 @@ in_game_update_response_dict = {
     "ab2": ("on_ability_cancel", Info.AbilityCancel),
 }
 
-def parse_response_message(type: str, body: str):
-    if type == "social":
-        jsoned_body = json.loads(body)
-        type = next(iter(jsoned_body))
+def parse_social_response_message(message: str):
+    jsoned_body = json.loads(message)
+    type = next(iter(jsoned_body))
 
-    response_metadata = response_dict.get(type)
+    metadata = response_dict.get(type)
 
-    if not response_metadata:
+    if not metadata:
         return None, None
+
+    event_name, _, mode = response_dict.get(type)
+
+    if mode == 4:
+        return event_name, jsoned_body
+    elif mode == 5:
+        return event_name, jsoned_body[type]
+
+def parse_response_body(body: str, metadata: tuple[str, type, int]):
+    # if type == "social":
+    #     jsoned_body = json.loads(body)
+    #     type = next(iter(jsoned_body))
+
+    # response_metadata = response_dict.get(type)
+
+    # if not response_metadata:
+    #     return None, None
     
-    event_name, info_class, mode = response_metadata
+    _, info_class, mode = metadata
 
     if mode == 1:
-        return event_name, parse_single_info_string(body, info_class)
+        return parse_single_info_string(body, info_class)
 
     elif mode == 2:
-        return event_name, parse_listed_info_string(body, info_class)
+        return parse_listed_info_string(body, info_class)
 
     elif mode == 3:
         sub_info_classes = list(info_class.__annotations__.values())
 
         splitted_body = body.split("%split%")
 
-        return event_name, info_class(
+        return info_class(
             parse_single_info_string(splitted_body[0], sub_info_classes[0]),
             parse_listed_info_string(
                 splitted_body[1][:-1], get_args(sub_info_classes[1])[0]
@@ -79,12 +95,8 @@ def parse_response_message(type: str, body: str):
                 splitted_body[6][:-1], get_args(sub_info_classes[6])[0]
             ),
         )
-    elif mode == 4:
-        return event_name, jsoned_body
-    elif mode == 5:
-        return event_name, jsoned_body[type]
 
-    return event_name, info_class(body)
+    return info_class(body)
 
 def parse_single_info_string(string: str, info_class: type):
     info_buffer = []
@@ -185,7 +197,7 @@ def in_game_update_info_parser(message: str):
     splitted_message = message.split("$")
     return int(splitted_message[1]), splitted_message[2:]
 
-def in_game_update_info_generator(splitted_message: list[str]):
+def in_game_update_info_generator(splitted_message: list[str], event_callback_dict: dict):
     splitted_message_length = len(splitted_message)
     pointer = 0
 
@@ -198,6 +210,9 @@ def in_game_update_info_generator(splitted_message: list[str]):
             continue
 
         event_name, info_response_class = response_metadata
+
+        if event_name not in event_callback_dict:
+            continue
         
         number_of_data = len(info_response_class.__annotations__)
         yield event_name, parse_single_info_string2(splitted_message[pointer+1:pointer+1+number_of_data], info_response_class)
