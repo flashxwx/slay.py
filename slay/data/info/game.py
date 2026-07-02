@@ -223,7 +223,7 @@ class HP(NamedTuple):
     projectile_id: str
     murder_weapon_id: str
     attacker_in_game_id: str
-    lifesteam_amount: float
+    lifesteal_amount: float = None
     new_kill_count: str = None
     new_death_count: str = None
     multiple_kill_count: str = None
