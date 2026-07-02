@@ -212,9 +212,10 @@ def in_game_update_info_generator(splitted_message: list[str], event_callback_di
         event_name, info_response_class = response_metadata
 
         if event_name not in event_callback_dict:
+            pointer += 1
             continue
         
         number_of_data = len(info_response_class.__annotations__)
         yield event_name, parse_single_info_string2(splitted_message[pointer+1:pointer+1+number_of_data], info_response_class)
 
-        pointer += 1
+        pointer += 1 + number_of_data
