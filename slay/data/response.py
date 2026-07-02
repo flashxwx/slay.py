@@ -201,7 +201,7 @@ def in_game_update_info_generator(splitted_message: list[str], event_callback_di
     splitted_message_length = len(splitted_message)
     pointer = 0
 
-    while pointer != splitted_message_length:
+    while pointer < splitted_message_length:
         info_name = splitted_message[pointer]
         response_metadata = in_game_update_response_dict.get(info_name)
 
@@ -216,6 +216,7 @@ def in_game_update_info_generator(splitted_message: list[str], event_callback_di
             continue
         
         number_of_data = len(info_response_class.__annotations__)
-        yield event_name, parse_single_info_string2(splitted_message[pointer+1:pointer+1+number_of_data], info_response_class)
+        response = parse_single_info_string2(splitted_message[pointer+1:pointer+1+number_of_data], info_response_class)
+        yield event_name, response
 
-        pointer += 1 + number_of_data
+        pointer += 1 + len(response)
