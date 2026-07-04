@@ -62,10 +62,10 @@ def _(connection: Connection):
 
 @eu_server.on_game_list
 def _(connection: Connection, info: list[Info.GameProfile]):
-    if len(game_list) == 0:
+    if len(info) == 0:
         print("There's no game room currently.")
 
-    for game in game_list:
+    for game in info:
         print(f"Mode: {game.mode.name}, Map: {game.map_name}, Player Amount: {game.player_amount}")
 
 eu_server.open()
