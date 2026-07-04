@@ -46,7 +46,7 @@ pip uninstall slay.py
 Quick Examples
 --------------
 
-Note 1: First arguement of every event callback is [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) object.
+Note 1: First argument of every event callback is [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) object.
 And the second argument of game events will be the related information if the event has information return.
 
 Note 2: All event callback will be triggered in one thread, so better open a new thread for heavy job in event callback function, otherwise the thread will get blocked. [Here](#guidance-of-multi-threading) is the guidance for multi-threading.
@@ -75,7 +75,7 @@ To get the player profile, please refer to the following codes:
 ```python
 import slay
 
-player_profile: slay.PlayerProfile = slay.get_player_profile(1562079) # Replace the arguement to player id.
+player_profile: slay.PlayerProfile = slay.get_player_profile(1562079) # Replace the argument to player id.
 
 print(player_profile)
 ```
@@ -168,10 +168,6 @@ Requests
   - corresponding event: `on_me_join`
 - `Request.LeaveGame()`
   - corresponding event: `on_game_stats`
-
-### Social Requests
-- `Request.GlobalChatHistory()` <- limit: int = 15
-  - corresponding event: `on_global_chat_history`
 - `Request.StartMoving()` <- direction: [Info.MovingDirection](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection)
 - `Request.StopMoving()` <- direction: [Info.MovingDirection](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection)
 - `Request.UpdateHeadDirection()` <- direction: [Info.HeadDirection](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HeadDirection)
@@ -180,6 +176,10 @@ Requests
   - corresponding event: `on_player_respawn`
 - `Request.MessageInGame()` <- content: str
   - the length of message content cannot be over 140
+
+### Social Requests
+- `Request.GlobalChatHistory()` <- limit: int = 15
+  - corresponding event: `on_global_chat_history`
 
 ### Other Requests
 - `Request.UpdateProfileText()` <- text: str
@@ -216,14 +216,14 @@ def thread_function(connection: Connection):
 Methods of Event Registration
 -----------------------------
 
-Method 1 (Recommended, because you can hover on `on_open` to see what arguements will be called back.)
+Method 1 (Recommended, because you can hover on `on_open` to see what arguments will be called back.)
 ```python
 @server.on_open
 def _(connection: Connection):
     ...
 ```
 
-Method 2 (This one doesn't provide type annotation for callback arguements but it might looks neat for some people)
+Method 2 (This one doesn't provide type annotation for callback arguments but it might looks neat for some people)
 ```python
 @server.event
 def on_open(connection: Connection):
