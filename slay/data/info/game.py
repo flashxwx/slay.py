@@ -9,7 +9,7 @@ from slay.utils import Pipe
 ConnectionId = int
 InGameId = int
 
-def PlayerId(string: str):
+def Number(string: str):
     try:
         return int(string)
     except:
@@ -120,7 +120,7 @@ class Player(NamedTuple):
     is_zombie: int
     is_fake_corpse: int
     is_zombie_boss: int
-    id: PlayerId
+    id: Number
     db_id: int
     nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
@@ -216,18 +216,18 @@ class GameStats(NamedTuple):
     chestId: int
 
 class HP(NamedTuple):
-    victim_in_game_id: str
+    victim_in_game_id: Number
     hp: float
     armor: float
     need_create_hit_effect: bool
-    projectile_id: str
-    murder_weapon_id: str
-    attacker_in_game_id: str
+    projectile_id: Annotated[int, Number]
+    murder_weapon_id: Annotated[int, Number]
+    attacker_in_game_id: Annotated[int, Number]
     lifesteal_amount: float = None
-    new_kill_count: str = None
-    new_death_count: str = None
-    multiple_kill_count: str = None
-    kill_streak: str = None
+    new_kill_count: Annotated[int, Number] = -1
+    new_death_count: Annotated[int, Number] = -1
+    multiple_kill_count: Annotated[int, Number] = -1
+    kill_streak: Annotated[int, Number] = -1
     victim_kill_streak: str = None
     killer_souls: float = None
     victim_souls: float = None
@@ -237,7 +237,7 @@ class HP(NamedTuple):
     object_x: float = None
     object_y: float = None
     object_aoe: float = None
-    object_id: str = None
+    object_id: Annotated[int, Number] = -1
     start_x: float = None
     start_y: float = None
     vector_x: float = None
