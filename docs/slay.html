@@ -113,7 +113,7 @@ users do so entirely at their own risk and are encouraged to use it responsibly.
 
 <h2 id="quick-examples">Quick Examples</h2>
 
-<p>Note 1: First arguement of every event callback is <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a> object.
+<p>Note 1: First argument of every event callback is <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a> object.
 And the second argument of game events will be the related information if the event has information return.</p>
 
 <p>Note 2: All event callback will be triggered in one thread, so better open a new thread for heavy job in event callback function, otherwise the thread will get blocked. <a href="#guidance-of-multi-threading">Here</a> is the guidance for multi-threading.</p>
@@ -145,7 +145,7 @@ And the second argument of game events will be the related information if the ev
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">slay</span>
 
-<span class="n">player_profile</span><span class="p">:</span> <span class="n">slay</span><span class="o">.</span><span class="n">PlayerProfile</span> <span class="o">=</span> <span class="n">slay</span><span class="o">.</span><span class="n">get_player_profile</span><span class="p">(</span><span class="mi">1562079</span><span class="p">)</span> <span class="c1"># Replace the arguement to player id.</span>
+<span class="n">player_profile</span><span class="p">:</span> <span class="n">slay</span><span class="o">.</span><span class="n">PlayerProfile</span> <span class="o">=</span> <span class="n">slay</span><span class="o">.</span><span class="n">get_player_profile</span><span class="p">(</span><span class="mi">1562079</span><span class="p">)</span> <span class="c1"># Replace the argument to player id.</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">player_profile</span><span class="p">)</span>
 </code></pre>
@@ -306,15 +306,6 @@ And the second argument of game events will be the related information if the ev
 <ul>
 <li>corresponding event: <code>on_game_stats</code></li>
 </ul></li>
-</ul>
-
-<h3 id="social-requests">Social Requests</h3>
-
-<ul>
-<li><code>Request.GlobalChatHistory()</code> &lt;- limit: int = 15
-<ul>
-<li>corresponding event: <code>on_global_chat_history</code></li>
-</ul></li>
 <li><code>Request.StartMoving()</code> &lt;- direction: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection">Info.MovingDirection</a></li>
 <li><code>Request.StopMoving()</code> &lt;- direction: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection">Info.MovingDirection</a></li>
 <li><code>Request.UpdateHeadDirection()</code> &lt;- direction: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HeadDirection">Info.HeadDirection</a></li>
@@ -326,6 +317,15 @@ And the second argument of game events will be the related information if the ev
 <li><code>Request.MessageInGame()</code> &lt;- content: str
 <ul>
 <li>the length of message content cannot be over 140</li>
+</ul></li>
+</ul>
+
+<h3 id="social-requests">Social Requests</h3>
+
+<ul>
+<li><code>Request.GlobalChatHistory()</code> &lt;- limit: int = 15
+<ul>
+<li>corresponding event: <code>on_global_chat_history</code></li>
 </ul></li>
 </ul>
 
@@ -376,7 +376,7 @@ And the second argument of game events will be the related information if the ev
 
 <h2 id="methods-of-event-registration">Methods of Event Registration</h2>
 
-<p>Method 1 (Recommended, because you can hover on <code>on_open</code> to see what arguements will be called back.)</p>
+<p>Method 1 (Recommended, because you can hover on <code>on_open</code> to see what arguments will be called back.)</p>
 
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="nd">@server</span><span class="o">.</span><span class="n">on_open</span>
@@ -385,7 +385,7 @@ And the second argument of game events will be the related information if the ev
 </code></pre>
 </div>
 
-<p>Method 2 (This one doesn't provide type annotation for callback arguements but it might looks neat for some people)</p>
+<p>Method 2 (This one doesn't provide type annotation for callback arguments but it might looks neat for some people)</p>
 
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="nd">@server</span><span class="o">.</span><span class="n">event</span>
