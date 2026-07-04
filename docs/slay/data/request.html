@@ -67,6 +67,12 @@
                     <a class="function" href="#Respawn">Respawn</a>
             </li>
             <li>
+                    <a class="function" href="#UpdateProfileText">UpdateProfileText</a>
+            </li>
+            <li>
+                    <a class="function" href="#MessageInGame">MessageInGame</a>
+            </li>
+            <li>
                     <a class="function" href="#CreateGame">CreateGame</a>
             </li>
     </ul>
@@ -129,14 +135,27 @@
 </span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="k">def</span> <span class="nf">Respawn</span><span class="p">():</span>
 </span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">return</span> <span class="s2">&quot;respawn&quot;</span>
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="p">):</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="k">def</span> <span class="nf">UpdateProfileText</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">:</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of profile text cannot be over 255.&quot;</span><span class="p">)</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;update-profile-text$</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="k">def</span> <span class="nf">MessageInGame</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">140</span><span class="p">:</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of message in game cannot be over 140.&quot;</span><span class="p">)</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;chat</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="p">):</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -369,6 +388,51 @@
     
 
                 </section>
+                <section id="UpdateProfileText">
+                            <input id="UpdateProfileText-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">UpdateProfileText</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">text</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="UpdateProfileText-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#UpdateProfileText"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UpdateProfileText-40"><a href="#UpdateProfileText-40"><span class="linenos">40</span></a><span class="k">def</span> <span class="nf">UpdateProfileText</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="UpdateProfileText-41"><a href="#UpdateProfileText-41"><span class="linenos">41</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">:</span>
+</span><span id="UpdateProfileText-42"><a href="#UpdateProfileText-42"><span class="linenos">42</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of profile text cannot be over 255.&quot;</span><span class="p">)</span>
+</span><span id="UpdateProfileText-43"><a href="#UpdateProfileText-43"><span class="linenos">43</span></a>
+</span><span id="UpdateProfileText-44"><a href="#UpdateProfileText-44"><span class="linenos">44</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;update-profile-text$</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="MessageInGame">
+                            <input id="MessageInGame-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">MessageInGame</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">content</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="MessageInGame-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#MessageInGame"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MessageInGame-46"><a href="#MessageInGame-46"><span class="linenos">46</span></a><span class="k">def</span> <span class="nf">MessageInGame</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="MessageInGame-47"><a href="#MessageInGame-47"><span class="linenos">47</span></a>
+</span><span id="MessageInGame-48"><a href="#MessageInGame-48"><span class="linenos">48</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">140</span><span class="p">:</span>
+</span><span id="MessageInGame-49"><a href="#MessageInGame-49"><span class="linenos">49</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of message in game cannot be over 140.&quot;</span><span class="p">)</span>
+</span><span id="MessageInGame-50"><a href="#MessageInGame-50"><span class="linenos">50</span></a>
+</span><span id="MessageInGame-51"><a href="#MessageInGame-51"><span class="linenos">51</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;chat</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
                 <section id="CreateGame">
                             <input id="CreateGame-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -380,14 +444,14 @@
 
     </div>
     <a class="headerlink" href="#CreateGame"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CreateGame-40"><a href="#CreateGame-40"><span class="linenos">40</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
-</span><span id="CreateGame-41"><a href="#CreateGame-41"><span class="linenos">41</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-42"><a href="#CreateGame-42"><span class="linenos">42</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-43"><a href="#CreateGame-43"><span class="linenos">43</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-44"><a href="#CreateGame-44"><span class="linenos">44</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-45"><a href="#CreateGame-45"><span class="linenos">45</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="CreateGame-46"><a href="#CreateGame-46"><span class="linenos">46</span></a><span class="p">):</span>
-</span><span id="CreateGame-47"><a href="#CreateGame-47"><span class="linenos">47</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CreateGame-53"><a href="#CreateGame-53"><span class="linenos">53</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
+</span><span id="CreateGame-54"><a href="#CreateGame-54"><span class="linenos">54</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-55"><a href="#CreateGame-55"><span class="linenos">55</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-56"><a href="#CreateGame-56"><span class="linenos">56</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-57"><a href="#CreateGame-57"><span class="linenos">57</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-58"><a href="#CreateGame-58"><span class="linenos">58</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="CreateGame-59"><a href="#CreateGame-59"><span class="linenos">59</span></a><span class="p">):</span>
+</span><span id="CreateGame-60"><a href="#CreateGame-60"><span class="linenos">60</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 

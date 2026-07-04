@@ -136,7 +136,7 @@ class Connection:
         self.on_game_stats = CallbackRegistrar[Info.GameStats]()
         self.on_ranked_search_count = CallbackRegistrar[Info.RankedSearchCount]()
         self.on_account_logging = CallbackRegistrar[Info.AccountLogging]()
-        self.on_my_in_game_id = CallbackRegistrar[Info.InGameId]()
+        self.on_me_join = CallbackRegistrar[Info.InGameId]()
         self.on_hp_update = CallbackRegistrar[Info.HP]()
         """ This is still in experimental phase. """
         self.on_player_respawn = CallbackRegistrar[Info.PlayerRespawn]()
@@ -165,8 +165,8 @@ class Connection:
     def start(
         self,
         non_blocking: bool = False,
-        reopen_attempts: int = 0,
-        reopen_interval: int = 10,
+        reopen_attempts: int = 10,
+        reopen_interval: int = 60,
     ):
         def run():
             self.open()
@@ -316,7 +316,7 @@ class Connection:
 
         return False
     
-    def json_from_replay(self, type: Literal["current", "last"] = "current"):
+    def json_from_replay(self, type: Literal["current", "last"]):
         if not self.enable_replay_cache:
             return None
 

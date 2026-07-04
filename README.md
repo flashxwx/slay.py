@@ -2,12 +2,12 @@ slay.py (not official by slay.one)
 ==================================
 [![Latest Release](https://badge.gitloft.org/api/service/codeberg/release/syflash/slay.py)](https://codeberg.org/syflash/slay.py/releases/)
 
-> This project is version 0.x.x currently,
-> so it can be very unstable, every patch version update of it might not compatible to the previous version.
-> All will be stable after releasing version 1.x.x, stay tuned.
-
 A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one servers written in Python.
 More details in [Documentation](https://syflash.codeberg.page/slay.py/docs)
+
+Repository on Codeberg: https://codeberg.org/syflash/slay.py
+
+Repository on Github: https://github.com/flashxwx/slay.py
 
 Disclaimer
 ----------
@@ -43,11 +43,13 @@ To uninstall slay.py, run the following command:
 pip uninstall slay.py
 ```
 
-Quick Example
+Quick Examples
 --------------
 
-Note: First arguement of every event callback is `Connection` object.
-Note 2: All event callback will be triggered in one thread, so better open a new thread for heavy job in event callback function, otherwise the thread will get blocked.
+Note 1: First arguement of every event callback is [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) object.
+And the second argument of game events will be the related information if the event has information return.
+
+Note 2: All event callback will be triggered in one thread, so better open a new thread for heavy job in event callback function, otherwise the thread will get blocked. [Here](#guidance-of-multi-threading) is the guidance for multi-threading.
 ```python
 from slay import Connection, Socket, Request, Info
 
@@ -59,7 +61,7 @@ def _(connection: Connection):
     slay_eu.send(Request.GameList())
 
 @eu_server.on_game_list
-def _(connection: Connection, game_list: list[Info.GameProfile]):
+def _(connection: Connection, info: list[Info.GameProfile]):
     if len(game_list) == 0:
         print("There's no game room currently.")
 
@@ -76,6 +78,139 @@ import slay
 player_profile: slay.PlayerProfile = slay.get_player_profile(1562079) # Replace the arguement to player id.
 
 print(player_profile)
+```
+
+To make the connection save the game replay, please refer to the following codes:
+```python
+
+connection = Connection(Socket.EU, enable_replay_cache=True)
+
+@connection.on_game_init
+def _(connection: Connection, info: Info.GameStats):
+    replay_json = connection.json_from_replay("last")
+
+    if replay_json:
+        with open("replay.json", "w", encoding="utf-8") as file:
+            file.write(replay_json)
+```
+
+To get game now timestamp (not countdown), you can use [Connection.get_game_now_timestamp()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp), it returns None if you are not in game or the game is ended.
+
+Events
+---------------
+
+### Connection Events
+- `on_open`
+  - when the connection is opened.
+- `on_message` -> message: str
+  - when there's a new message from server.
+- `on_error` -> error: Exception
+  - when there's an error from connection callback or connection itself.
+- `on_close` -> code: int, message: str
+  - when the connection is closed.
+
+### Lobby Events (not available while in game)
+- `on_account_logging` -> [Info.AccountLogging](https://syflash.codeberg.page/slay.py/docs/slay/data/info/lobby.html#AccountLogging)
+  - when you logged into an account.
+- `on_game_list` -> list[[Info.GameProfile](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameProfile)]
+  - when there's a game profile list sent from server.
+
+### In-Game Events
+- `on_game_init` -> [Info.GameInitial](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameInitial)
+  - when every beginning of game match.
+  - when you got into a game.
+- `on_me_join` -> in_game_id: int
+  - when you join the game.
+  - when every beginning of game match if you has already joined the game.
+- `on_player_join` -> [Info.NewPlayer](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#NewPlayer)
+  - when a player join the game.
+- `on_player_leave` -> in_game_id: int
+  - when a player leave the game.
+- `on_game_stats` -> [Info.GameStats](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameStats)
+  - when in the end of a match.
+  - when you leave a the game.
+- `on_hp_update` -> [Info.HP](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HP)
+  - when the hp of anything got updated.
+- `on_player_respawn` -> [Info.PlayerRespawn](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#PlayerRespawn)
+  - when a player respawns.
+- `on_ability_cancel` -> [Info.AbilityCancel](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#PlayerAbilityCancel)
+  - when a player cancel their ability, like cancelling the invisibility.
+- `on_in_game_chat` -> [Info.InGameChat](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#InGameChat)
+  - when a message is sent in game.
+
+### Social Events
+- `on_global_chat_history` -> [Info.GlobalChatHistoryDict](https://syflash.codeberg.page/slay.py/docs/slay/data/info/social.html#GlobalChatHistoryDict)
+  - when there's global chat history sent by server.
+
+### Other Events
+- `on_ranked_search_count` -> count: int
+  - when everytime the count is updated
+  - the count will get updated when there's someone searching for ranked match.
+
+Requests
+--------
+
+### Lobby Requests (not available while in game)
+- `Request.LogIn()` <- username: str, password: str
+  - corresponding event: `on_account_logging`
+- `Request.GameList()`
+  - request the list of game profiles.
+  - corresponding event: `on_game_list`
+- `Request.JoinGameRoom()` <- id: int
+  - corresponding event: `on_game_init`
+- `Request.JoinRandomGameRoom()` <- mode: [Info.GameMode](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameMode)
+  - corresponding event: `on_game_init`
+- `Request.CreateGame()` <- map_id: int, round_minutes: int, maximum_number_of_bots: int, mode_id: int, is_private: bool = False
+  - corresponding event: `on_game_init`
+
+### In-Game Requests
+- `Request.JoinGame` <- team_id: int = 1
+  - corresponding event: `on_me_join`
+- `Request.LeaveGame()`
+  - corresponding event: `on_game_stats`
+
+### Social Requests
+- `Request.GlobalChatHistory()` <- limit: int = 15
+  - corresponding event: `on_global_chat_history`
+- `Request.StartMoving()` <- direction: [Info.MovingDirection](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection)
+- `Request.StopMoving()` <- direction: [Info.MovingDirection](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection)
+- `Request.UpdateHeadDirection()` <- direction: [Info.HeadDirection](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HeadDirection)
+- `Request.UseAbility()` <- ability: [Info.Ability](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#Ability)
+- `Request.Respawn()`
+  - corresponding event: `on_player_respawn`
+- `Request.MessageInGame()` <- content: str
+  - the length of message content cannot be over 140
+
+### Other Requests
+- `Request.UpdateProfileText()` <- text: str
+  - the length of text cannot be over 255.
+
+Guidance of Multi-Threading
+---------------------------
+Using the threading tools that [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) provides can make sure that the connection will not reopen until all the threads created by [Connection.create_thread()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.create_thread) are ended.
+
+To make a safe thread in a connection lifetime, you must follow the below standards:
+
+1. Use [Connection.create_thread()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.create_thread) function.
+```python
+def thread_function(connection: Connection):
+    while True:
+        # some works here
+
+@any_event
+def _(connection: Connection, ...):
+    connection.create_thread(thread_function, connection)
+```
+
+2. Replace all time waiting function to [Connection.wait()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.wait) or [Connection.wait_until()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.wait_until).
+```python
+def thread_function(connection: Connection):
+    while True:
+        # some works here
+
+        ok = connection.wait(5) # return false if the connection is closed.
+        if not ok:
+            return
 ```
 
 Methods of Event Registration

@@ -16,7 +16,7 @@ response_dict: dict[str, tuple[str, type, int]] = {
     "stats": ("on_game_stats", Info.GameStats, 1),
     "rsc": ("on_ranked_search_count", Info.RankedSearchCount, 0),
     "logged": ("on_account_logging", Info.AccountLogging, 1),
-    "pid": ("on_my_in_game_id", Info.InGameId, 0),
+    "pid": ("on_me_join", Info.InGameId, 0),
     "hp": ("on_hp_update", Info.HP, 1),
     "rsp": ("on_player_respawn", Info.PlayerRespawn, 1),
     "chat": ("on_in_game_chat", Info.InGameChat, 1),

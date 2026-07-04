@@ -23,13 +23,16 @@
 
             <h2>Contents</h2>
             <ul>
-  <li><a href="#slaypy-not-official">slay.py (not official)</a>
+  <li><a href="#slaypy-not-official-by-slayone">slay.py (not official by slay.one)</a>
   <ul>
     <li><a href="#disclaimer">Disclaimer</a></li>
     <li><a href="#key-features">Key Features</a></li>
     <li><a href="#real-use-cases">Real Use Cases</a></li>
     <li><a href="#installing">Installing</a></li>
-    <li><a href="#quick-example">Quick Example</a></li>
+    <li><a href="#quick-examples">Quick Examples</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#requests">Requests</a></li>
+    <li><a href="#guidance-of-multi-threading">Guidance of Multi-Threading</a></li>
     <li><a href="#methods-of-event-registration">Methods of Event Registration</a></li>
     <li><a href="#links">Links</a></li>
   </ul></li>
@@ -57,18 +60,16 @@
         slay.py
     </h1>
 
-                        <div class="docstring"><h1 id="slaypy-not-official">slay.py (not official)</h1>
+                        <div class="docstring"><h1 id="slaypy-not-official-by-slayone">slay.py (not official by slay.one)</h1>
 
 <p><a href="https://codeberg.org/syflash/slay.py/releases/"><img src="https://badge.gitloft.org/api/service/codeberg/release/syflash/slay.py" alt="Latest Release" /></a></p>
 
-<blockquote>
-  <p>This project is version 0.x.x currently,
-  so it can be very unstable, every patch version update of it might not compatible to the previous version.
-  All will be stable after releasing version 1.x.x, stay tuned.</p>
-</blockquote>
-
 <p>A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one servers written in Python.
 More details in <a href="https://syflash.codeberg.page/slay.py/docs">Documentation</a></p>
+
+<p>Repository on Codeberg: <a href="https://codeberg.org/syflash/slay.py">https://codeberg.org/syflash/slay.py</a></p>
+
+<p>Repository on Github: <a href="https://github.com/flashxwx/slay.py">https://github.com/flashxwx/slay.py</a></p>
 
 <h2 id="disclaimer">Disclaimer</h2>
 
@@ -110,9 +111,12 @@ users do so entirely at their own risk and are encouraged to use it responsibly.
 <pre><code>pip uninstall slay.py
 </code></pre>
 
-<h2 id="quick-example">Quick Example</h2>
+<h2 id="quick-examples">Quick Examples</h2>
 
-<p>Note: First arguement of every event callback is <code>Connection</code> object.</p>
+<p>Note 1: First arguement of every event callback is <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a> object.
+And the second argument of game events will be the related information if the event has information return.</p>
+
+<p>Note 2: All event callback will be triggered in one thread, so better open a new thread for heavy job in event callback function, otherwise the thread will get blocked. <a href="#guidance-of-multi-threading">Here</a> is the guidance for multi-threading.</p>
 
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">slay</span> <span class="kn">import</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">Socket</span><span class="p">,</span> <span class="n">Request</span><span class="p">,</span> <span class="n">Info</span>
@@ -125,7 +129,7 @@ users do so entirely at their own risk and are encouraged to use it responsibly.
     <span class="n">slay_eu</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Request</span><span class="o">.</span><span class="n">GameList</span><span class="p">())</span>
 
 <span class="nd">@eu_server</span><span class="o">.</span><span class="n">on_game_list</span>
-<span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">game_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameProfile</span><span class="p">]):</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameProfile</span><span class="p">]):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">game_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There&#39;s no game room currently.&quot;</span><span class="p">)</span>
 
@@ -144,6 +148,229 @@ users do so entirely at their own risk and are encouraged to use it responsibly.
 <span class="n">player_profile</span><span class="p">:</span> <span class="n">slay</span><span class="o">.</span><span class="n">PlayerProfile</span> <span class="o">=</span> <span class="n">slay</span><span class="o">.</span><span class="n">get_player_profile</span><span class="p">(</span><span class="mi">1562079</span><span class="p">)</span> <span class="c1"># Replace the arguement to player id.</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">player_profile</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>To make the connection save the game replay, please refer to the following codes:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="n">Socket</span><span class="o">.</span><span class="n">EU</span><span class="p">,</span> <span class="n">enable_replay_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nd">@connection</span><span class="o">.</span><span class="n">on_game_init</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">GameStats</span><span class="p">):</span>
+    <span class="n">replay_json</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">json_from_replay</span><span class="p">(</span><span class="s2">&quot;last&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">replay_json</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;replay.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">replay_json</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>To get game now timestamp (not countdown), you can use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp">Connection.get_game_now_timestamp()</a>, it returns None if you are not in game or the game is ended.</p>
+
+<h2 id="events">Events</h2>
+
+<h3 id="connection-events">Connection Events</h3>
+
+<ul>
+<li><code>on_open</code>
+<ul>
+<li>when the connection is opened.</li>
+</ul></li>
+<li><code>on_message</code> -> message: str
+<ul>
+<li>when there's a new message from server.</li>
+</ul></li>
+<li><code>on_error</code> -> error: Exception
+<ul>
+<li>when there's an error from connection callback or connection itself.</li>
+</ul></li>
+<li><code>on_close</code> -> code: int, message: str
+<ul>
+<li>when the connection is closed.</li>
+</ul></li>
+</ul>
+
+<h3 id="lobby-events-not-available-while-in-game">Lobby Events (not available while in game)</h3>
+
+<ul>
+<li><code>on_account_logging</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/lobby.html#AccountLogging">Info.AccountLogging</a>
+<ul>
+<li>when you logged into an account.</li>
+</ul></li>
+<li><code>on_game_list</code> -> list[<a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameProfile">Info.GameProfile</a>]
+<ul>
+<li>when there's a game profile list sent from server.</li>
+</ul></li>
+</ul>
+
+<h3 id="in-game-events">In-Game Events</h3>
+
+<ul>
+<li><code>on_game_init</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameInitial">Info.GameInitial</a>
+<ul>
+<li>when every beginning of game match.</li>
+<li>when you got into a game.</li>
+</ul></li>
+<li><code>on_me_join</code> -> in_game_id: int
+<ul>
+<li>when you join the game.</li>
+<li>when every beginning of game match if you has already joined the game.</li>
+</ul></li>
+<li><code>on_player_join</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#NewPlayer">Info.NewPlayer</a>
+<ul>
+<li>when a player join the game.</li>
+</ul></li>
+<li><code>on_player_leave</code> -> in_game_id: int
+<ul>
+<li>when a player leave the game.</li>
+</ul></li>
+<li><code>on_game_stats</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameStats">Info.GameStats</a>
+<ul>
+<li>when in the end of a match.</li>
+<li>when you leave a the game.</li>
+</ul></li>
+<li><code>on_hp_update</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HP">Info.HP</a>
+<ul>
+<li>when the hp of anything got updated.</li>
+</ul></li>
+<li><code>on_player_respawn</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#PlayerRespawn">Info.PlayerRespawn</a>
+<ul>
+<li>when a player respawns.</li>
+</ul></li>
+<li><code>on_ability_cancel</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#PlayerAbilityCancel">Info.AbilityCancel</a>
+<ul>
+<li>when a player cancel their ability, like cancelling the invisibility.</li>
+</ul></li>
+<li><code>on_in_game_chat</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#InGameChat">Info.InGameChat</a>
+<ul>
+<li>when a message is sent in game.</li>
+</ul></li>
+</ul>
+
+<h3 id="social-events">Social Events</h3>
+
+<ul>
+<li><code>on_global_chat_history</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/social.html#GlobalChatHistoryDict">Info.GlobalChatHistoryDict</a>
+<ul>
+<li>when there's global chat history sent by server.</li>
+</ul></li>
+</ul>
+
+<h3 id="other-events">Other Events</h3>
+
+<ul>
+<li><code>on_ranked_search_count</code> -> count: int
+<ul>
+<li>when everytime the count is updated</li>
+<li>the count will get updated when there's someone searching for ranked match.</li>
+</ul></li>
+</ul>
+
+<h2 id="requests">Requests</h2>
+
+<h3 id="lobby-requests-not-available-while-in-game">Lobby Requests (not available while in game)</h3>
+
+<ul>
+<li><code>Request.LogIn()</code> &lt;- username: str, password: str
+<ul>
+<li>corresponding event: <code>on_account_logging</code></li>
+</ul></li>
+<li><code>Request.GameList()</code>
+<ul>
+<li>request the list of game profiles.</li>
+<li>corresponding event: <code>on_game_list</code></li>
+</ul></li>
+<li><code>Request.JoinGameRoom()</code> &lt;- id: int
+<ul>
+<li>corresponding event: <code>on_game_init</code></li>
+</ul></li>
+<li><code>Request.JoinRandomGameRoom()</code> &lt;- mode: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameMode">Info.GameMode</a>
+<ul>
+<li>corresponding event: <code>on_game_init</code></li>
+</ul></li>
+<li><code>Request.CreateGame()</code> &lt;- map_id: int, round_minutes: int, maximum_number_of_bots: int, mode_id: int, is_private: bool = False
+<ul>
+<li>corresponding event: <code>on_game_init</code></li>
+</ul></li>
+</ul>
+
+<h3 id="in-game-requests">In-Game Requests</h3>
+
+<ul>
+<li><code>Request.JoinGame</code> &lt;- team_id: int = 1
+<ul>
+<li>corresponding event: <code>on_me_join</code></li>
+</ul></li>
+<li><code>Request.LeaveGame()</code>
+<ul>
+<li>corresponding event: <code>on_game_stats</code></li>
+</ul></li>
+</ul>
+
+<h3 id="social-requests">Social Requests</h3>
+
+<ul>
+<li><code>Request.GlobalChatHistory()</code> &lt;- limit: int = 15
+<ul>
+<li>corresponding event: <code>on_global_chat_history</code></li>
+</ul></li>
+<li><code>Request.StartMoving()</code> &lt;- direction: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection">Info.MovingDirection</a></li>
+<li><code>Request.StopMoving()</code> &lt;- direction: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#MovingDirection">Info.MovingDirection</a></li>
+<li><code>Request.UpdateHeadDirection()</code> &lt;- direction: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HeadDirection">Info.HeadDirection</a></li>
+<li><code>Request.UseAbility()</code> &lt;- ability: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#Ability">Info.Ability</a></li>
+<li><code>Request.Respawn()</code>
+<ul>
+<li>corresponding event: <code>on_player_respawn</code></li>
+</ul></li>
+<li><code>Request.MessageInGame()</code> &lt;- content: str
+<ul>
+<li>the length of message content cannot be over 140</li>
+</ul></li>
+</ul>
+
+<h3 id="other-requests">Other Requests</h3>
+
+<ul>
+<li><code>Request.UpdateProfileText()</code> &lt;- text: str
+<ul>
+<li>the length of text cannot be over 255.</li>
+</ul></li>
+</ul>
+
+<h2 id="guidance-of-multi-threading">Guidance of Multi-Threading</h2>
+
+<p>Using the threading tools that <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a> provides can make sure that the connection will not reopen until all the threads created by <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.create_thread">Connection.create_thread()</a> are ended.</p>
+
+<p>To make a safe thread in a connection lifetime, you must follow the below standards:</p>
+
+<ol>
+<li>Use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.create_thread">Connection.create_thread()</a> function.</li>
+</ol>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">thread_function</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># some works here</span>
+
+<span class="nd">@any_event</span>
+<span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">create_thread</span><span class="p">(</span><span class="n">thread_function</span><span class="p">,</span> <span class="n">connection</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<ol start="2">
+<li>Replace all time waiting function to <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.wait">Connection.wait()</a> or <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.wait_until">Connection.wait_until()</a>.</li>
+</ol>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">thread_function</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># some works here</span>
+
+        <span class="n">ok</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># return false if the connection is closed.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+            <span class="k">return</span>
 </code></pre>
 </div>
 
