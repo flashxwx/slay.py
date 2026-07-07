@@ -7,7 +7,7 @@ from threading import Thread, Lock, Event
 
 from queue import Queue
 
-from websocket import WebSocketApp, WebSocketException
+from websocket import WebSocketApp, WebSocketException, WebSocketTimeoutException
 
 import ssl, certifi
 
@@ -438,11 +438,17 @@ class Connection:
         if error.args[0] == "'NoneType' object has no attribute 'sock'":
             return
 
+        if isinstance(error, TimeoutError):
+            return
+
         self.websocket_error = error
 
-        error_str = ''.join(
-            traceback.format_exception(type(error), error, error.__traceback__)
-        )
+        if isinstance(error, WebSocketTimeoutException):
+            error_str = f"Timeout: {error}"
+        else:
+            error_str = ''.join(
+                traceback.format_exception(type(error), error, error.__traceback__)
+            )
 
         self.log_adapter.error(error_str)
 
