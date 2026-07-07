@@ -222,7 +222,7 @@ def thread_function(connection: Connection):
 
 More Features
 -------------
-1. Assign value to each [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) in [Connections](https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections) (add "c_" as the variable prefix).
+1. Assign value to each [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) in [Connections](https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections) (add "c_" as the variable prefix) (v0.7.2 feature).
 ```python
 from slay import Connections, Socket
 
