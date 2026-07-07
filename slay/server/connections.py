@@ -17,6 +17,12 @@ class Connections:
             value.name = name
             value.connection_obj = self
         
+        if name.startswith("c_"):
+            for connection in self.list:
+                connection.__setattr__(name, value)
+            
+            return
+        
         if name.startswith("on_"):
             try:
                 old_value: CallbackRegistrar | any = self.__getattribute__(name)

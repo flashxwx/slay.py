@@ -3,7 +3,7 @@ slay.py (not official by slay.one)
 [![Latest Release](https://badge.gitloft.org/api/service/codeberg/release/syflash/slay.py)](https://codeberg.org/syflash/slay.py/releases/)
 
 A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one servers written in Python.
-More details in [Documentation](https://syflash.codeberg.page/slay.py/docs)
+More details in [Documentation](https://syflash.codeberg.page/slay.py/docs).
 
 Repository on Codeberg: https://codeberg.org/syflash/slay.py
 
@@ -69,6 +69,13 @@ def _(connection: Connection, info: list[Info.GameProfile]):
         print(f"Mode: {game.mode.name}, Map: {game.map_name}, Player Amount: {game.player_amount}")
 
 eu_server.open()
+```
+
+To make one logic apply to multiple servers, please refer to the following codes:
+```python
+from slay import Connections, Socket
+
+connections = Connections((Socket.EU, Socket.AM, Socket.ASIA))
 ```
 
 To get the player profile, please refer to the following codes:
@@ -211,6 +218,20 @@ def thread_function(connection: Connection):
         ok = connection.wait(5) # return false if the connection is closed.
         if not ok:
             return
+```
+
+More Features
+-------------
+1. Assign value to each [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) in [Connections](https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections) (add "c_" as the variable prefix).
+```python
+from slay import Connections, Socket
+
+connections = Connections((Socket.EU, Socket.AM, Socket.ASIA))
+
+connections.c_boolean = True
+connections.list[0].c_boolean = False
+
+print([connection.c_boolean for connection in connections.list]) # prints out "[False, True, True]"
 ```
 
 Methods of Event Registration
