@@ -33,6 +33,7 @@
     <li><a href="#events">Events</a></li>
     <li><a href="#requests">Requests</a></li>
     <li><a href="#guidance-of-multi-threading">Guidance of Multi-Threading</a></li>
+    <li><a href="#more-features">More Features</a></li>
     <li><a href="#methods-of-event-registration">Methods of Event Registration</a></li>
     <li><a href="#links">Links</a></li>
   </ul></li>
@@ -65,7 +66,7 @@
 <p><a href="https://codeberg.org/syflash/slay.py/releases/"><img src="https://badge.gitloft.org/api/service/codeberg/release/syflash/slay.py" alt="Latest Release" /></a></p>
 
 <p>A modern, easy to use, feature-rich, and type annotation ready API wrapper for Slay.one servers written in Python.
-More details in <a href="https://syflash.codeberg.page/slay.py/docs">Documentation</a></p>
+More details in <a href="https://syflash.codeberg.page/slay.py/docs">Documentation</a>.</p>
 
 <p>Repository on Codeberg: <a href="https://codeberg.org/syflash/slay.py">https://codeberg.org/syflash/slay.py</a></p>
 
@@ -140,6 +141,15 @@ And the second argument of game events will be the related information if the ev
 </code></pre>
 </div>
 
+<p>To make one logic apply to multiple connections, please refer to the following codes:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">slay</span> <span class="kn">import</span> <span class="n">Connections</span><span class="p">,</span> <span class="n">Socket</span>
+
+<span class="n">connections</span> <span class="o">=</span> <span class="n">Connections</span><span class="p">((</span><span class="n">Socket</span><span class="o">.</span><span class="n">EU</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">AM</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">ASIA</span><span class="p">))</span>
+</code></pre>
+</div>
+
 <p>To get the player profile, please refer to the following codes:</p>
 
 <div class="pdoc-code codehilite">
@@ -166,7 +176,7 @@ And the second argument of game events will be the related information if the ev
 </code></pre>
 </div>
 
-<p>To get game now timestamp (not countdown), you can use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp">Connection.get_game_now_timestamp()</a>, it returns None if you are not in game or the game is ended.</p>
+<p>To view for more features, go <a href="#more-features">here</a>.</p>
 
 <h2 id="events">Events</h2>
 
@@ -373,6 +383,28 @@ And the second argument of game events will be the related information if the ev
             <span class="k">return</span>
 </code></pre>
 </div>
+
+<h2 id="more-features">More Features</h2>
+
+<ol>
+<li>Assign value to each <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a> in <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections">Connections</a> (add "c_" as the variable prefix).</li>
+</ol>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">slay</span> <span class="kn">import</span> <span class="n">Connections</span><span class="p">,</span> <span class="n">Socket</span>
+
+<span class="n">connections</span> <span class="o">=</span> <span class="n">Connections</span><span class="p">((</span><span class="n">Socket</span><span class="o">.</span><span class="n">EU</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">AM</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">ASIA</span><span class="p">))</span>
+
+<span class="n">connections</span><span class="o">.</span><span class="n">c_boolean</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">connections</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">c_boolean</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="nb">print</span><span class="p">([</span><span class="n">connection</span><span class="o">.</span><span class="n">c_boolean</span> <span class="k">for</span> <span class="n">connection</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">list</span><span class="p">])</span> <span class="c1"># prints out &quot;[False, True, True]&quot;</span>
+</code></pre>
+</div>
+
+<ol start="2">
+<li>To get game now timestamp (not countdown), you can use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp">Connection.get_game_now_timestamp()</a>, it returns None if you are not in game or the game is ended.</li>
+</ol>
 
 <h2 id="methods-of-event-registration">Methods of Event Registration</h2>
 
