@@ -71,7 +71,7 @@ def _(connection: Connection, info: list[Info.GameProfile]):
 eu_server.open()
 ```
 
-To make one logic apply to multiple servers, please refer to the following codes:
+To make one logic apply to multiple connections, please refer to the following codes:
 ```python
 from slay import Connections, Socket
 
@@ -101,7 +101,7 @@ def _(connection: Connection, info: Info.GameStats):
             file.write(replay_json)
 ```
 
-To get game now timestamp (not countdown), you can use [Connection.get_game_now_timestamp()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp), it returns None if you are not in game or the game is ended.
+To view for more features, go [here](#more-features).
 
 Events
 ---------------
@@ -233,6 +233,8 @@ connections.list[0].c_boolean = False
 
 print([connection.c_boolean for connection in connections.list]) # prints out "[False, True, True]"
 ```
+
+2. To get game now timestamp (not countdown), you can use [Connection.get_game_now_timestamp()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp), it returns None if you are not in game or the game is ended.
 
 Methods of Event Registration
 -----------------------------
