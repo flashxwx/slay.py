@@ -244,7 +244,7 @@ sub_connections = Connections((Socket.EU, Socket.AM, Socket.ASIA), "sub")
 # logging message will have category marked.
 ```
 4. To set a timeout of an event waiting, you can use [Connection.setup_response_event_timeout_func()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func).
-Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes:
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (v0.7.4 feature):
 ```python
 def fail_to_join_game_room(connection: Connection):
     connection.close()
