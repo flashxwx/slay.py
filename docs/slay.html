@@ -220,7 +220,7 @@ And the second argument of game events will be the related information if the ev
 <li><code>on_game_init</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameInitial">Info.GameInitial</a>
 <ul>
 <li>when every beginning of game match.</li>
-<li>when you got into a game.</li>
+<li>when you got into a game room.</li>
 </ul></li>
 <li><code>on_me_join</code> -> in_game_id: int
 <ul>
@@ -404,7 +404,31 @@ And the second argument of game events will be the related information if the ev
 
 <ol start="2">
 <li>To get game now timestamp (not countdown), you can use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp">Connection.get_game_now_timestamp()</a>, it returns None if you are not in game or the game is ended.</li>
+<li>Using Category feature for better reading experience while troubleshooting in log.</li>
 </ol>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">slay</span> <span class="kn">import</span> <span class="n">Connections</span><span class="p">,</span> <span class="n">Socket</span>
+
+<span class="n">main_connections</span> <span class="o">=</span> <span class="n">Connections</span><span class="p">((</span><span class="n">Socket</span><span class="o">.</span><span class="n">EU</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">AM</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">ASIA</span><span class="p">),</span> <span class="s2">&quot;main&quot;</span><span class="p">)</span>
+<span class="n">sub_connections</span> <span class="o">=</span> <span class="n">Connections</span><span class="p">((</span><span class="n">Socket</span><span class="o">.</span><span class="n">EU</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">AM</span><span class="p">,</span> <span class="n">Socket</span><span class="o">.</span><span class="n">ASIA</span><span class="p">),</span> <span class="s2">&quot;sub&quot;</span><span class="p">)</span>
+
+<span class="c1"># logging message will have category marked.</span>
+</code></pre>
+</div>
+
+<ol start="4">
+<li>To set a timeout of an event waiting, you can use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func">Connection.setup_response_event_timeout_func()</a>.
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes:</li>
+</ol>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">fail_to_join_game_room</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">connection</span><span class="o">.</span><span class="n">setup_response_event_timeout_func</span><span class="p">(</span><span class="s2">&quot;on_game_init&quot;</span><span class="p">,</span> <span class="n">fail_to_join_game_room</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">connection</span><span class="p">,))</span>
+</code></pre>
+</div>
 
 <h2 id="methods-of-event-registration">Methods of Event Registration</h2>
 

@@ -199,7 +199,7 @@ class NewPlayer(NamedTuple):
     is_zombie: int
     uid: int
     world_elo: float
-    nickname_color_id: int
+    nickname_color_id: int # -> nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
 class GameStats(NamedTuple):
     xp_gained: int

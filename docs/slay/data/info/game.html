@@ -1012,7 +1012,7 @@
 </span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a>    <span class="n">is_zombie</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a>    <span class="n">uid</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a>    <span class="n">world_elo</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a>    <span class="n">nickname_color_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a>    <span class="n">nickname_color_id</span><span class="p">:</span> <span class="nb">int</span> <span class="c1"># -&gt; nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]</span>
 </span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a>
 </span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a><span class="k">class</span> <span class="nc">GameStats</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
 </span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>    <span class="n">xp_gained</span><span class="p">:</span> <span class="nb">int</span>
@@ -1531,7 +1531,7 @@
                             </div>
                             <div id="GameProfile.mode" class="classattr">
                                 <div class="attr variable">
-            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x74d244122d80&gt;]</span>
+            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x7ef3b798f020&gt;]</span>
 
         
     </div>
@@ -1892,7 +1892,7 @@
                             </div>
                             <div id="Game.map_data" class="classattr">
                                 <div class="attr variable">
-            <span class="name">map_data</span><span class="annotation">: Annotated[<a href="#GameMapData">GameMapData</a>, &lt;function loads at 0x74d24565d8a0&gt;]</span>
+            <span class="name">map_data</span><span class="annotation">: Annotated[<a href="#GameMapData">GameMapData</a>, &lt;function loads at 0x7ef3b81c18a0&gt;]</span>
 
         
     </div>
@@ -1905,7 +1905,7 @@
                             </div>
                             <div id="Game.mode" class="classattr">
                                 <div class="attr variable">
-            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x74d2439b2780&gt;]</span>
+            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x7ef3b6529ac0&gt;]</span>
 
         
     </div>
@@ -2422,7 +2422,7 @@
                             </div>
                             <div id="Player.id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">id</span><span class="annotation">: &lt;function Number at 0x74d2439ab6a0&gt;</span>
+            <span class="name">id</span><span class="annotation">: &lt;function Number at 0x7ef3b6538ae0&gt;</span>
 
         
     </div>
@@ -2448,7 +2448,7 @@
                             </div>
                             <div id="Player.nickname_color" class="classattr">
                                 <div class="attr variable">
-            <span class="name">nickname_color</span><span class="annotation">: Annotated[<a href="decorate.html#NicknameColor">slay.data.info.decorate.NicknameColor</a>, &lt;slay.utils.Pipe object at 0x74d2439b2e70&gt;]</span>
+            <span class="name">nickname_color</span><span class="annotation">: Annotated[<a href="decorate.html#NicknameColor">slay.data.info.decorate.NicknameColor</a>, &lt;slay.utils.Pipe object at 0x7ef3b652a180&gt;]</span>
 
         
     </div>
@@ -3316,7 +3316,7 @@
 </span><span id="NewPlayer-200"><a href="#NewPlayer-200"><span class="linenos">200</span></a>    <span class="n">is_zombie</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="NewPlayer-201"><a href="#NewPlayer-201"><span class="linenos">201</span></a>    <span class="n">uid</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="NewPlayer-202"><a href="#NewPlayer-202"><span class="linenos">202</span></a>    <span class="n">world_elo</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="NewPlayer-203"><a href="#NewPlayer-203"><span class="linenos">203</span></a>    <span class="n">nickname_color_id</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="NewPlayer-203"><a href="#NewPlayer-203"><span class="linenos">203</span></a>    <span class="n">nickname_color_id</span><span class="p">:</span> <span class="nb">int</span> <span class="c1"># -&gt; nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]</span>
 </span></pre></div>
 
 
@@ -3750,7 +3750,7 @@
                             </div>
                             <div id="GameStats.exit" class="classattr">
                                 <div class="attr variable">
-            <span class="name">exit</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x74d2439ca300&gt;]</span>
+            <span class="name">exit</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x7ef3b6551b20&gt;]</span>
 
         
     </div>
@@ -3837,7 +3837,7 @@
                             </div>
                             <div id="HP.victim_in_game_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">victim_in_game_id</span><span class="annotation">: &lt;function Number at 0x74d2439ab6a0&gt;</span>
+            <span class="name">victim_in_game_id</span><span class="annotation">: &lt;function Number at 0x7ef3b6538ae0&gt;</span>
 
         
     </div>
@@ -3889,7 +3889,7 @@
                             </div>
                             <div id="HP.projectile_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">projectile_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">projectile_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -3902,7 +3902,7 @@
                             </div>
                             <div id="HP.murder_weapon_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">murder_weapon_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">murder_weapon_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -3915,7 +3915,7 @@
                             </div>
                             <div id="HP.attacker_in_game_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">attacker_in_game_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">attacker_in_game_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -3941,7 +3941,7 @@
                             </div>
                             <div id="HP.new_kill_count" class="classattr">
                                 <div class="attr variable">
-            <span class="name">new_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">new_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -3954,7 +3954,7 @@
                             </div>
                             <div id="HP.new_death_count" class="classattr">
                                 <div class="attr variable">
-            <span class="name">new_death_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">new_death_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -3967,7 +3967,7 @@
                             </div>
                             <div id="HP.multiple_kill_count" class="classattr">
                                 <div class="attr variable">
-            <span class="name">multiple_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">multiple_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -3980,7 +3980,7 @@
                             </div>
                             <div id="HP.kill_streak" class="classattr">
                                 <div class="attr variable">
-            <span class="name">kill_streak</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">kill_streak</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -4110,7 +4110,7 @@
                             </div>
                             <div id="HP.object_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">object_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x74d2439ab6a0&gt;]</span>
+            <span class="name">object_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7ef3b6538ae0&gt;]</span>
 
         
     </div>
@@ -4265,7 +4265,7 @@
                             </div>
                             <div id="PlayerRespawn.has_turned_zombie" class="classattr">
                                 <div class="attr variable">
-            <span class="name">has_turned_zombie</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x74d2439cb2c0&gt;]</span>
+            <span class="name">has_turned_zombie</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x7ef3b6552ab0&gt;]</span>
 
         
     </div>
@@ -4327,7 +4327,7 @@
                             </div>
                             <div id="AbilityCancel.ability" class="classattr">
                                 <div class="attr variable">
-            <span class="name">ability</span><span class="annotation">: Annotated[<a href="#Ability">Ability</a>, &lt;slay.utils.Pipe object at 0x74d2439cb7a0&gt;]</span>
+            <span class="name">ability</span><span class="annotation">: Annotated[<a href="#Ability">Ability</a>, &lt;slay.utils.Pipe object at 0x7ef3b6552f90&gt;]</span>
 
         
     </div>

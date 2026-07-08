@@ -125,7 +125,7 @@ Events
 ### In-Game Events
 - `on_game_init` -> [Info.GameInitial](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameInitial)
   - when every beginning of game match.
-  - when you got into a game.
+  - when you got into a game room.
 - `on_me_join` -> in_game_id: int
   - when you join the game.
   - when every beginning of game match if you has already joined the game.
@@ -233,8 +233,24 @@ connections.list[0].c_boolean = False
 
 print([connection.c_boolean for connection in connections.list]) # prints out "[False, True, True]"
 ```
-
 2. To get game now timestamp (not countdown), you can use [Connection.get_game_now_timestamp()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.get_game_now_timestamp), it returns None if you are not in game or the game is ended.
+3. Using Category feature for better reading experience while troubleshooting in log.
+```python
+from slay import Connections, Socket
+
+main_connections = Connections((Socket.EU, Socket.AM, Socket.ASIA), "main")
+sub_connections = Connections((Socket.EU, Socket.AM, Socket.ASIA), "sub")
+
+# logging message will have category marked.
+```
+4. To set a timeout of an event waiting, you can use [Connection.setup_response_event_timeout_func()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func).
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes:
+```python
+def fail_to_join_game_room(connection: Connection):
+    connection.close()
+
+connection.setup_response_event_timeout_func("on_game_init", fail_to_join_game_room, args=(connection,))
+```
 
 Methods of Event Registration
 -----------------------------

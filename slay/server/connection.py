@@ -1,4 +1,5 @@
 import time, logging, socket, traceback, json, datetime as dt
+import rel, signal
 
 
 from typing import Callable, Literal, Union
@@ -113,6 +114,10 @@ class Connection:
         self.game_tick: int = None
         """ None by default, 20 ticks per second """
 
+        self.__event_name_queues: set[Queue] = set()
+
+        self.__on_main = True
+
         # Callback Registrars
 
         self.on_open = CallbackRegistrar()
@@ -177,6 +182,7 @@ class Connection:
         self.___reopen_attempts = reopen_attempts
         
         if non_blocking:
+            self.__on_main = False
             Thread(target=run).start()
         else:
             run()
@@ -224,6 +230,10 @@ class Connection:
 
             self.log_adapter.critical(str(self.websocket_error.args[1]))
 
+    def __signal_handler(self):
+        self.__is_dont_reopen_code = True
+        rel.abort()
+
     def open(self, new_thread: bool = False):
         with self.status_lock:
             if self.status == 1:
@@ -265,7 +275,13 @@ class Connection:
 
             return
 
-        self.websocket.run_forever(**run_forever_kwargs)
+        if self.__on_main:
+            signal.signal(signal.SIGINT, self.__signal_handler)
+            self.websocket.run_forever(**run_forever_kwargs, dispatcher=rel)
+            rel.signal(2, self.__signal_handler)
+            rel.dispatch()
+        else:
+            self.websocket.run_forever(**run_forever_kwargs)
 
     def send(self, message: str):
         if self.status != 2:
@@ -294,6 +310,9 @@ class Connection:
         
         self.__is_dont_reopen_code = True
         self.websocket.close()
+
+        if self.__on_main:
+            rel.abort()
     
     def wait(self, seconds: float) -> bool:
         is_closed = self.__close_event.wait(seconds)
@@ -368,6 +387,41 @@ class Connection:
         minute, second = divmod(total_seconds, 60)
         return f"{minute}:{"0"+str(second) if second < 10 else second}"
 
+    def __func_for_response_event_timeout(
+        self, event_name_queue: Queue, target_event_name: str,
+        timeout_func: Callable, timeout: float,
+        args: tuple[any] = None, kwargs: dict[str, any] = None
+    ):
+        start_at = time.time()
+
+        while True:
+            try:
+                event_name = event_name_queue.get(timeout=timeout)
+
+                if event_name == target_event_name:
+                    break
+
+                if (time.time() - start_at) > timeout:
+                    raise TimeoutError
+            except:
+                timeout_func(*args if args else (), **kwargs if kwargs else {})
+                break
+
+        self.__event_name_queues.remove(event_name_queue)
+
+    def setup_response_event_timeout_func(
+        self, event_name: str, timeout_func: Callable, timeout: float = 10,
+        args: tuple[any] = None, kwargs: dict[str, any] = None
+    ):
+        event_name_queue = Queue()
+        self.__event_name_queues.add(event_name_queue)
+
+        Thread(
+            target=self.__func_for_response_event_timeout,
+            args=(event_name_queue, event_name, timeout_func, timeout, args, kwargs),
+            daemon=True
+        ).start()
+
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
         self.__close_event.clear()
@@ -406,6 +460,8 @@ class Connection:
             event_name = metadata[0]
 
             if event_name not in self.event_callback_dict:
+                for event_name_queue in self.__event_name_queues:
+                    event_name_queue.put_nowait(event_name)
                 return
 
             response = parse_response_body(
@@ -456,7 +512,7 @@ class Connection:
 
     def __on_close(self, websocket: WebSocketApp, code: int, message: str):
         error = self.websocket_error
-
+  
         if hasattr(self.websocket_error, "args"):
             if len(error.args) == 0:
                 self.websocket_error.args = (None, None)
@@ -483,6 +539,9 @@ class Connection:
     def __trigger_event_callback(
         self, event_name: str, *args: any, **kwargs: any
     ):
+        for event_name_queue in self.__event_name_queues:
+            event_name_queue.put_nowait(event_name)
+
         event_callback = self.event_callback_dict.get(event_name)
 
         if not event_callback:
