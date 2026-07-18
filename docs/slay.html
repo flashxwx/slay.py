@@ -294,6 +294,7 @@ And the second argument of game events will be the related information if the ev
 <li><code>Request.JoinGameRoom()</code> &lt;- id: int
 <ul>
 <li>corresponding event: <code>on_game_init</code></li>
+<li>server will not respond if the game room not found</li>
 </ul></li>
 <li><code>Request.JoinRandomGameRoom()</code> &lt;- mode: <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameMode">Info.GameMode</a>
 <ul>
@@ -418,8 +419,26 @@ And the second argument of game events will be the related information if the ev
 </div>
 
 <ol start="4">
+<li>To use built in logger in <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a>, please refer to the following codes:</li>
+</ol>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="n">Connection</span><span class="o">.</span><span class="n">logger</span> <span class="c1"># This is the logger of all Connection</span>
+<span class="n">Connection</span><span class="o">.</span><span class="n">setup_log_file</span><span class="p">(</span><span class="s2">&quot;slay.log&quot;</span><span class="p">)</span>
+
+<span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="n">Socket</span><span class="o">.</span><span class="n">EU</span><span class="p">)</span>
+
+<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<ol start="5">
 <li>To set a timeout of an event waiting, you can use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func">Connection.setup_response_event_timeout_func()</a>.
-Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (v0.7.4 feature):</li>
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4 feature):</li>
 </ol>
 
 <div class="pdoc-code codehilite">

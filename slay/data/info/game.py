@@ -9,6 +9,9 @@ from slay.utils import Pipe
 ConnectionId = int
 InGameId = int
 
+def SecondsFromGameTicks(ticks: int):
+    return ticks / 20
+
 def Number(string: str):
     try:
         return int(string)
@@ -197,7 +200,7 @@ class NewPlayer(NamedTuple):
     mp_regeneration_rate: float
     invisible_costing_rate: float
     is_zombie: int
-    uid: int
+    uid: int # -> may need to change to id, or change the others to uid
     world_elo: float
     nickname_color_id: int # -> nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 

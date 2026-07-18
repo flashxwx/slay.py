@@ -106,56 +106,58 @@
 </span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="k">return</span> <span class="s2">&quot;req-games-list&quot;</span>
 </span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="k">def</span> <span class="nf">JoinGameRoom</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot; Server will not respond if the game room not found &quot;&quot;&quot;</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinTeam$</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="k">def</span> <span class="nf">LogIn</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;login$</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">def</span> <span class="nf">StartMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;kd$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="k">def</span> <span class="nf">StopMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ku$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="k">def</span> <span class="nf">JoinRandomGameRoom</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">GameMode</span><span class="p">):</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinRandomGame$undefined$</span><span class="si">{</span><span class="n">mode</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="k">def</span> <span class="nf">UpdateHeadDirection</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">HeadDirection</span><span class="p">):</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;dirU$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="k">def</span> <span class="nf">UseAbility</span><span class="p">(</span><span class="n">ability</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">Ability</span><span class="p">):</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ab$</span><span class="si">{</span><span class="n">ability</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="k">def</span> <span class="nf">Respawn</span><span class="p">():</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">return</span> <span class="s2">&quot;respawn&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="k">def</span> <span class="nf">UpdateProfileText</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">:</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of profile text cannot be over 255.&quot;</span><span class="p">)</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;update-profile-text$</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinTeam$</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="k">def</span> <span class="nf">LogIn</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;login$</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="k">def</span> <span class="nf">StartMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;kd$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="k">def</span> <span class="nf">StopMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ku$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="k">def</span> <span class="nf">JoinRandomGameRoom</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">GameMode</span><span class="p">):</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinRandomGame$undefined$</span><span class="si">{</span><span class="n">mode</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="k">def</span> <span class="nf">UpdateHeadDirection</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">HeadDirection</span><span class="p">):</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;dirU$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="k">def</span> <span class="nf">UseAbility</span><span class="p">(</span><span class="n">ability</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">Ability</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ab$</span><span class="si">{</span><span class="n">ability</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="k">def</span> <span class="nf">Respawn</span><span class="p">():</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">return</span> <span class="s2">&quot;respawn&quot;</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="k">def</span> <span class="nf">UpdateProfileText</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">:</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of profile text cannot be over 255.&quot;</span><span class="p">)</span>
 </span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="k">def</span> <span class="nf">MessageInGame</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;update-profile-text$</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
 </span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">140</span><span class="p">:</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of message in game cannot be over 140.&quot;</span><span class="p">)</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;chat</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="k">def</span> <span class="nf">MessageInGame</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">140</span><span class="p">:</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of message in game cannot be over 140.&quot;</span><span class="p">)</span>
 </span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="p">):</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;chat</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="p">):</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -210,11 +212,15 @@
     </div>
     <a class="headerlink" href="#JoinGameRoom"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="JoinGameRoom-10"><a href="#JoinGameRoom-10"><span class="linenos">10</span></a><span class="k">def</span> <span class="nf">JoinGameRoom</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-</span><span id="JoinGameRoom-11"><a href="#JoinGameRoom-11"><span class="linenos">11</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="JoinGameRoom-11"><a href="#JoinGameRoom-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot; Server will not respond if the game room not found &quot;&quot;&quot;</span>
+</span><span id="JoinGameRoom-12"><a href="#JoinGameRoom-12"><span class="linenos">12</span></a>
+</span><span id="JoinGameRoom-13"><a href="#JoinGameRoom-13"><span class="linenos">13</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;join-game$</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>Server will not respond if the game room not found</p>
+</div>
+
 
                 </section>
                 <section id="JoinGame">
@@ -228,8 +234,8 @@
 
     </div>
     <a class="headerlink" href="#JoinGame"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinGame-13"><a href="#JoinGame-13"><span class="linenos">13</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="JoinGame-14"><a href="#JoinGame-14"><span class="linenos">14</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinTeam$</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinGame-15"><a href="#JoinGame-15"><span class="linenos">15</span></a><span class="k">def</span> <span class="nf">JoinGame</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="JoinGame-16"><a href="#JoinGame-16"><span class="linenos">16</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinTeam$</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -247,8 +253,8 @@
 
     </div>
     <a class="headerlink" href="#LeaveGame"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="LeaveGame-16"><a href="#LeaveGame-16"><span class="linenos">16</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
-</span><span id="LeaveGame-17"><a href="#LeaveGame-17"><span class="linenos">17</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="LeaveGame-18"><a href="#LeaveGame-18"><span class="linenos">18</span></a><span class="k">def</span> <span class="nf">LeaveGame</span><span class="p">():</span>
+</span><span id="LeaveGame-19"><a href="#LeaveGame-19"><span class="linenos">19</span></a>    <span class="k">return</span> <span class="s2">&quot;leave-game&quot;</span>
 </span></pre></div>
 
 
@@ -266,8 +272,8 @@
 
     </div>
     <a class="headerlink" href="#LogIn"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="LogIn-19"><a href="#LogIn-19"><span class="linenos">19</span></a><span class="k">def</span> <span class="nf">LogIn</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="LogIn-20"><a href="#LogIn-20"><span class="linenos">20</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;login$</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="LogIn-21"><a href="#LogIn-21"><span class="linenos">21</span></a><span class="k">def</span> <span class="nf">LogIn</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="LogIn-22"><a href="#LogIn-22"><span class="linenos">22</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;login$</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -285,8 +291,8 @@
 
     </div>
     <a class="headerlink" href="#StartMoving"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="StartMoving-22"><a href="#StartMoving-22"><span class="linenos">22</span></a><span class="k">def</span> <span class="nf">StartMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
-</span><span id="StartMoving-23"><a href="#StartMoving-23"><span class="linenos">23</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;kd$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StartMoving-24"><a href="#StartMoving-24"><span class="linenos">24</span></a><span class="k">def</span> <span class="nf">StartMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="StartMoving-25"><a href="#StartMoving-25"><span class="linenos">25</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;kd$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -304,8 +310,8 @@
 
     </div>
     <a class="headerlink" href="#StopMoving"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="StopMoving-25"><a href="#StopMoving-25"><span class="linenos">25</span></a><span class="k">def</span> <span class="nf">StopMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
-</span><span id="StopMoving-26"><a href="#StopMoving-26"><span class="linenos">26</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ku$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StopMoving-27"><a href="#StopMoving-27"><span class="linenos">27</span></a><span class="k">def</span> <span class="nf">StopMoving</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">MovingDirection</span><span class="p">):</span>
+</span><span id="StopMoving-28"><a href="#StopMoving-28"><span class="linenos">28</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ku$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -323,8 +329,8 @@
 
     </div>
     <a class="headerlink" href="#JoinRandomGameRoom"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinRandomGameRoom-28"><a href="#JoinRandomGameRoom-28"><span class="linenos">28</span></a><span class="k">def</span> <span class="nf">JoinRandomGameRoom</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">GameMode</span><span class="p">):</span>
-</span><span id="JoinRandomGameRoom-29"><a href="#JoinRandomGameRoom-29"><span class="linenos">29</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinRandomGame$undefined$</span><span class="si">{</span><span class="n">mode</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="JoinRandomGameRoom-30"><a href="#JoinRandomGameRoom-30"><span class="linenos">30</span></a><span class="k">def</span> <span class="nf">JoinRandomGameRoom</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">GameMode</span><span class="p">):</span>
+</span><span id="JoinRandomGameRoom-31"><a href="#JoinRandomGameRoom-31"><span class="linenos">31</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;joinRandomGame$undefined$</span><span class="si">{</span><span class="n">mode</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -342,8 +348,8 @@
 
     </div>
     <a class="headerlink" href="#UpdateHeadDirection"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="UpdateHeadDirection-31"><a href="#UpdateHeadDirection-31"><span class="linenos">31</span></a><span class="k">def</span> <span class="nf">UpdateHeadDirection</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">HeadDirection</span><span class="p">):</span>
-</span><span id="UpdateHeadDirection-32"><a href="#UpdateHeadDirection-32"><span class="linenos">32</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;dirU$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UpdateHeadDirection-33"><a href="#UpdateHeadDirection-33"><span class="linenos">33</span></a><span class="k">def</span> <span class="nf">UpdateHeadDirection</span><span class="p">(</span><span class="n">direction</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">HeadDirection</span><span class="p">):</span>
+</span><span id="UpdateHeadDirection-34"><a href="#UpdateHeadDirection-34"><span class="linenos">34</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;dirU$</span><span class="si">{</span><span class="n">direction</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -361,8 +367,8 @@
 
     </div>
     <a class="headerlink" href="#UseAbility"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="UseAbility-34"><a href="#UseAbility-34"><span class="linenos">34</span></a><span class="k">def</span> <span class="nf">UseAbility</span><span class="p">(</span><span class="n">ability</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">Ability</span><span class="p">):</span>
-</span><span id="UseAbility-35"><a href="#UseAbility-35"><span class="linenos">35</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ab$</span><span class="si">{</span><span class="n">ability</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UseAbility-36"><a href="#UseAbility-36"><span class="linenos">36</span></a><span class="k">def</span> <span class="nf">UseAbility</span><span class="p">(</span><span class="n">ability</span><span class="p">:</span> <span class="n">Info</span><span class="o">.</span><span class="n">Ability</span><span class="p">):</span>
+</span><span id="UseAbility-37"><a href="#UseAbility-37"><span class="linenos">37</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ab$</span><span class="si">{</span><span class="n">ability</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -380,8 +386,8 @@
 
     </div>
     <a class="headerlink" href="#Respawn"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Respawn-37"><a href="#Respawn-37"><span class="linenos">37</span></a><span class="k">def</span> <span class="nf">Respawn</span><span class="p">():</span>
-</span><span id="Respawn-38"><a href="#Respawn-38"><span class="linenos">38</span></a>    <span class="k">return</span> <span class="s2">&quot;respawn&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Respawn-39"><a href="#Respawn-39"><span class="linenos">39</span></a><span class="k">def</span> <span class="nf">Respawn</span><span class="p">():</span>
+</span><span id="Respawn-40"><a href="#Respawn-40"><span class="linenos">40</span></a>    <span class="k">return</span> <span class="s2">&quot;respawn&quot;</span>
 </span></pre></div>
 
 
@@ -399,11 +405,11 @@
 
     </div>
     <a class="headerlink" href="#UpdateProfileText"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="UpdateProfileText-40"><a href="#UpdateProfileText-40"><span class="linenos">40</span></a><span class="k">def</span> <span class="nf">UpdateProfileText</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="UpdateProfileText-41"><a href="#UpdateProfileText-41"><span class="linenos">41</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">:</span>
-</span><span id="UpdateProfileText-42"><a href="#UpdateProfileText-42"><span class="linenos">42</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of profile text cannot be over 255.&quot;</span><span class="p">)</span>
-</span><span id="UpdateProfileText-43"><a href="#UpdateProfileText-43"><span class="linenos">43</span></a>
-</span><span id="UpdateProfileText-44"><a href="#UpdateProfileText-44"><span class="linenos">44</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;update-profile-text$</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="UpdateProfileText-42"><a href="#UpdateProfileText-42"><span class="linenos">42</span></a><span class="k">def</span> <span class="nf">UpdateProfileText</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="UpdateProfileText-43"><a href="#UpdateProfileText-43"><span class="linenos">43</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">:</span>
+</span><span id="UpdateProfileText-44"><a href="#UpdateProfileText-44"><span class="linenos">44</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of profile text cannot be over 255.&quot;</span><span class="p">)</span>
+</span><span id="UpdateProfileText-45"><a href="#UpdateProfileText-45"><span class="linenos">45</span></a>
+</span><span id="UpdateProfileText-46"><a href="#UpdateProfileText-46"><span class="linenos">46</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;update-profile-text$</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -421,12 +427,12 @@
 
     </div>
     <a class="headerlink" href="#MessageInGame"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MessageInGame-46"><a href="#MessageInGame-46"><span class="linenos">46</span></a><span class="k">def</span> <span class="nf">MessageInGame</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="MessageInGame-47"><a href="#MessageInGame-47"><span class="linenos">47</span></a>
-</span><span id="MessageInGame-48"><a href="#MessageInGame-48"><span class="linenos">48</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">140</span><span class="p">:</span>
-</span><span id="MessageInGame-49"><a href="#MessageInGame-49"><span class="linenos">49</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of message in game cannot be over 140.&quot;</span><span class="p">)</span>
-</span><span id="MessageInGame-50"><a href="#MessageInGame-50"><span class="linenos">50</span></a>
-</span><span id="MessageInGame-51"><a href="#MessageInGame-51"><span class="linenos">51</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;chat</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MessageInGame-48"><a href="#MessageInGame-48"><span class="linenos">48</span></a><span class="k">def</span> <span class="nf">MessageInGame</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="MessageInGame-49"><a href="#MessageInGame-49"><span class="linenos">49</span></a>
+</span><span id="MessageInGame-50"><a href="#MessageInGame-50"><span class="linenos">50</span></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">140</span><span class="p">:</span>
+</span><span id="MessageInGame-51"><a href="#MessageInGame-51"><span class="linenos">51</span></a>        <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;The length of message in game cannot be over 140.&quot;</span><span class="p">)</span>
+</span><span id="MessageInGame-52"><a href="#MessageInGame-52"><span class="linenos">52</span></a>
+</span><span id="MessageInGame-53"><a href="#MessageInGame-53"><span class="linenos">53</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;chat</span><span class="si">{</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -444,14 +450,14 @@
 
     </div>
     <a class="headerlink" href="#CreateGame"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="CreateGame-53"><a href="#CreateGame-53"><span class="linenos">53</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
-</span><span id="CreateGame-54"><a href="#CreateGame-54"><span class="linenos">54</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-55"><a href="#CreateGame-55"><span class="linenos">55</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-56"><a href="#CreateGame-56"><span class="linenos">56</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-57"><a href="#CreateGame-57"><span class="linenos">57</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="CreateGame-58"><a href="#CreateGame-58"><span class="linenos">58</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="CreateGame-59"><a href="#CreateGame-59"><span class="linenos">59</span></a><span class="p">):</span>
-</span><span id="CreateGame-60"><a href="#CreateGame-60"><span class="linenos">60</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="CreateGame-55"><a href="#CreateGame-55"><span class="linenos">55</span></a><span class="k">def</span> <span class="nf">CreateGame</span><span class="p">(</span>
+</span><span id="CreateGame-56"><a href="#CreateGame-56"><span class="linenos">56</span></a>    <span class="n">map_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-57"><a href="#CreateGame-57"><span class="linenos">57</span></a>    <span class="n">round_minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-58"><a href="#CreateGame-58"><span class="linenos">58</span></a>    <span class="n">maximum_number_of_bots</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-59"><a href="#CreateGame-59"><span class="linenos">59</span></a>    <span class="n">mode_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="CreateGame-60"><a href="#CreateGame-60"><span class="linenos">60</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="CreateGame-61"><a href="#CreateGame-61"><span class="linenos">61</span></a><span class="p">):</span>
+</span><span id="CreateGame-62"><a href="#CreateGame-62"><span class="linenos">62</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 

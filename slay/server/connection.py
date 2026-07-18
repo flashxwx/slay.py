@@ -141,12 +141,13 @@ class Connection:
         self.on_game_stats = CallbackRegistrar[Info.GameStats]()
         self.on_ranked_search_count = CallbackRegistrar[Info.RankedSearchCount]()
         self.on_account_logging = CallbackRegistrar[Info.AccountLogging]()
-        self.on_me_join = CallbackRegistrar[Info.InGameId]()
+        self.on_me_join = CallbackRegistrar[Info.InGameId]() # may need to change the event name to "on_my_in_game_id"
         self.on_hp_update = CallbackRegistrar[Info.HP]()
         """ This is still in experimental phase. """
         self.on_player_respawn = CallbackRegistrar[Info.PlayerRespawn]()
         self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
         self.on_in_game_chat = CallbackRegistrar[Info.InGameChat]()
+        self.on_server_message = CallbackRegistrar[Info.ServerMessage]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")
@@ -459,15 +460,9 @@ class Connection:
 
             event_name = metadata[0]
 
-            if event_name not in self.event_callback_dict:
-                for event_name_queue in self.__event_name_queues:
-                    event_name_queue.put_nowait(event_name)
-                return
-
-            response = parse_response_body(
-                messageBody, metadata
-            )
-
+            for event_name_queue in self.__event_name_queues:
+                event_name_queue.put_nowait(event_name)
+            
             if self.enable_replay_cache:
                 if messageType == "init":
                     if len(self.replay_cache) > 1:
@@ -480,13 +475,25 @@ class Connection:
 
                 elif self.__can_start_record_replay and (messageType != "next-maps") and (messageType != "pid") and (messageType != "stats"):
                     self.replay_cache.append(message)
-        
+
             if event_name == "on_id":
                 self.__reopen_attempts = self.___reopen_attempts
             
-            elif event_name == "on_game_stats":
+            if event_name == "on_game_stats":
+                response = parse_response_body(messageBody, metadata)
                 if response.exit:
                     self.__can_start_record_replay = False
+            elif event_name == "on_server_message":
+                response = parse_response_body(messageBody, metadata)
+                if response.type == "success":
+                    self.log_adapter.info(response.content)
+                elif response.type == "error":
+                    self.log_adapter.error(response.content)
+            else:
+                if event_name not in self.event_callback_dict:
+                    return
+
+                response = parse_response_body(messageBody, metadata)
 
         self.__trigger_event_callback(event_name, response)
 

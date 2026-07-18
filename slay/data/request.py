@@ -7,6 +7,8 @@ def GameList():
     return "req-games-list"
 
 def JoinGameRoom(id: int):
+    """ Server will not respond if the game room not found """
+
     return f"join-game${id}"
 
 def JoinGame(team_id: int = 1):

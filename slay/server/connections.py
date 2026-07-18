@@ -89,6 +89,7 @@ class Connections:
         self.on_player_respawn = CallbackRegistrar[Info.PlayerRespawn]()
         self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
         self.on_in_game_chat = CallbackRegistrar[Info.InGameChat]()
+        self.on_server_message = CallbackRegistrar[Info.ServerMessage]()
 
     def set_event_callback_dict(self, callback_dict: CallbackDict):
         """ Each event callback can be a single callable object

@@ -165,6 +165,7 @@ Requests
   - corresponding event: `on_game_list`
 - `Request.JoinGameRoom()` <- id: int
   - corresponding event: `on_game_init`
+  - server will not respond if the game room not found
 - `Request.JoinRandomGameRoom()` <- mode: [Info.GameMode](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameMode)
   - corresponding event: `on_game_init`
 - `Request.CreateGame()` <- map_id: int, round_minutes: int, maximum_number_of_bots: int, mode_id: int, is_private: bool = False
@@ -243,8 +244,21 @@ sub_connections = Connections((Socket.EU, Socket.AM, Socket.ASIA), "sub")
 
 # logging message will have category marked.
 ```
-4. To set a timeout of an event waiting, you can use [Connection.setup_response_event_timeout_func()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func).
-Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (v0.7.4 feature):
+4. To use built in logger in [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection), please refer to the following codes:
+```python
+Connection.logger # This is the logger of all Connection
+Connection.setup_log_file("slay.log")
+
+connection = Connection(Socket.EU)
+
+connection.log_adapter.debug("Something.")
+connection.log_adapter.info("Something.")
+connection.log_adapter.warning("Something.")
+connection.log_adapter.error("Something.")
+connection.log_adapter.critical("Something.")
+```
+5. To set a timeout of an event waiting, you can use [Connection.setup_response_event_timeout_func()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func).
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4 feature):
 ```python
 def fail_to_join_game_room(connection: Connection):
     connection.close()
