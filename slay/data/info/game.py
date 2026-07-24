@@ -47,6 +47,10 @@ class GameMode(Enum):
     def id(self) -> int:
         return self.value
 
+    @property
+    def text(self) -> str:
+        return self.name.replace("_", " ").title()
+
 class GameProfile(NamedTuple):
     id: int
     map_name: str
@@ -123,7 +127,7 @@ class Player(NamedTuple):
     is_zombie: int
     is_fake_corpse: int
     is_zombie_boss: int
-    id: Number
+    id: Annotated[int, Number]
     db_id: int
     nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
@@ -219,7 +223,7 @@ class GameStats(NamedTuple):
     chestId: int
 
 class HP(NamedTuple):
-    victim_in_game_id: Number
+    victim_in_game_id: Annotated[int, Number]
     hp: float
     armor: float
     need_create_hit_effect: bool

@@ -201,7 +201,7 @@ And the second argument of game events will be the related information if the ev
 </ul></li>
 </ul>
 
-<h3 id="lobby-events-not-available-while-in-game">Lobby Events (not available while in game)</h3>
+<h3 id="lobby-events">Lobby Events</h3>
 
 <ul>
 <li><code>on_account_logging</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/lobby.html#AccountLogging">Info.AccountLogging</a>
@@ -388,7 +388,7 @@ And the second argument of game events will be the related information if the ev
 <h2 id="more-features">More Features</h2>
 
 <ol>
-<li>Assign value to each <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a> in <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections">Connections</a> (add "c_" as the variable prefix) (v0.7.2 feature).</li>
+<li>Assign value to each <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection">Connection</a> in <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections">Connections</a> (add "c_" as the variable prefix) (v0.7.2+ feature).</li>
 </ol>
 
 <div class="pdoc-code codehilite">
@@ -438,7 +438,7 @@ And the second argument of game events will be the related information if the ev
 
 <ol start="5">
 <li>To set a timeout of an event waiting, you can use <a href="https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func">Connection.setup_response_event_timeout_func()</a>.
-Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4 feature):</li>
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4+ feature):</li>
 </ol>
 
 <div class="pdoc-code codehilite">

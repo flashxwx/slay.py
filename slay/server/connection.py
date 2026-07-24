@@ -75,6 +75,7 @@ class Connection:
         
         connection_max_sequence_dict[self.category] = self.sequence
 
+        self.internal_logging_switch = True
         self.log_adapter = logging.LoggerAdapter(
             self.logger,
             {
@@ -111,6 +112,7 @@ class Connection:
         self.__running_sub_thread_count = 0
         self.thread_end_signal_timeout = 3600
 
+        self.max_round_ticks: int = None
         self.game_tick: int = None
         """ None by default, 20 ticks per second """
 
@@ -194,9 +196,10 @@ class Connection:
             if self.__is_dont_reopen_code:
                 break
 
-            self.log_adapter.info(
-                f"Trying to reopen in {reopen_interval} seconds"
-            )
+            if self.internal_logging_switch:
+                self.log_adapter.info(
+                    f"Trying to reopen in {reopen_interval} seconds"
+                )
 
             time.sleep(reopen_interval)
 
@@ -211,7 +214,8 @@ class Connection:
                 try:
                     number = self.__thread_end_signal_channel.get(timeout=self.thread_end_signal_timeout)
                 except:
-                    self.log_adapter.critical(f"Failed to reopen the connection. There's still a running thread (count: {self.__running_sub_thread_count}) after {self.thread_end_signal_timeout} seconds since the connection was closed.")
+                    if self.internal_logging_switch:
+                        self.log_adapter.critical(f"Failed to reopen the connection. There's still a running thread (count: {self.__running_sub_thread_count}) after {self.thread_end_signal_timeout} seconds since the connection was closed.")
                     return
 
                 self.__running_sub_thread_count -= number
@@ -229,7 +233,8 @@ class Connection:
             if self.__is_dont_reopen_code:
                 return
 
-            self.log_adapter.critical(str(self.websocket_error.args[1]))
+            if self.internal_logging_switch:
+                self.log_adapter.critical(str(self.websocket_error.args[1]))
 
     def __signal_handler(self):
         self.__is_dont_reopen_code = True
@@ -238,14 +243,16 @@ class Connection:
     def open(self, new_thread: bool = False):
         with self.status_lock:
             if self.status == 1:
-                self.log_adapter.warning(
-                    "Cannot open a connection that is being opened."
-                )
+                if self.internal_logging_switch:
+                    self.log_adapter.warning(
+                        "Cannot open a connection that is being opened."
+                    )
                 return
             if self.status == 2:
-                self.log_adapter.warning(
-                    "Cannot open a connection that is already opened."
-                )
+                if self.internal_logging_switch:
+                    self.log_adapter.warning(
+                        "Cannot open a connection that is already opened."
+                    )
                 return
 
             self.status = 1
@@ -286,9 +293,10 @@ class Connection:
 
     def send(self, message: str):
         if self.status != 2:
-            self.log_adapter.warning(
-                "Cannot send message when the connection isn't opened."
-            )
+            if self.internal_logging_switch:
+                self.log_adapter.warning(
+                    "Cannot send message when the connection isn't opened."
+                )
             return
 
         self.websocket.send(message)
@@ -296,15 +304,17 @@ class Connection:
     def close(self):
         with self.status_lock:
             if self.status == 0:
-                self.log_adapter.warning(
-                    "Cannot close a connection that is already closed."
-                )
+                if self.internal_logging_switch:
+                    self.log_adapter.warning(
+                        "Cannot close a connection that is already closed."
+                    )
                 return
 
             if self.status == 3:
-                self.log_adapter.warning(
-                    "Cannot close a connection that is being closed."
-                )
+                if self.internal_logging_switch:
+                    self.log_adapter.warning(
+                        "Cannot close a connection that is being closed."
+                    )
                 return
 
             self.status = 3
@@ -362,7 +372,8 @@ class Connection:
 
     def create_thread(self, func: Callable, *args, **kwargs):
         if self.status != 2:
-            self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
+            if self.internal_logging_switch:
+                self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
             return
 
         Thread(target=self.__func_for_sub_thread, args=(func,)+args, kwargs=kwargs).start()
@@ -380,11 +391,13 @@ class Connection:
     def get_game_now_timestamp(self):
         if self.game_tick == None:
             return None
-        
-        if self.game_tick < 0:
-            return None
 
-        total_seconds = self.game_tick // 20
+        if self.game_tick < 0:
+            game_tick = abs(self.game_tick) + self.max_round_tick
+        else:
+            game_tick = self.game_tick
+
+        total_seconds = game_tick // 20
         minute, second = divmod(total_seconds, 60)
         return f"{minute}:{"0"+str(second) if second < 10 else second}"
 
@@ -427,7 +440,8 @@ class Connection:
         self.status = 2
         self.__close_event.clear()
 
-        self.log_adapter.info("Connection has been opened.")
+        if self.internal_logging_switch:
+            self.log_adapter.info("Connection has been opened.")
 
         self.__trigger_event_callback("on_open")
 
@@ -464,7 +478,7 @@ class Connection:
                 event_name_queue.put_nowait(event_name)
             
             if self.enable_replay_cache:
-                if messageType == "init":
+                if messageType == "next-maps":
                     if len(self.replay_cache) > 1:
                         self.last_replay_cache = self.replay_cache.copy()
                         self.replay_cache.clear()
@@ -473,22 +487,32 @@ class Connection:
                     self.__can_start_record_replay = True
                     self.replay_cache.append(message)
 
-                elif self.__can_start_record_replay and (messageType != "next-maps") and (messageType != "pid") and (messageType != "stats"):
+                elif self.__can_start_record_replay and (messageType != "pid") and (messageType != "stats") and (messageType != "init"):
                     self.replay_cache.append(message)
 
             if event_name == "on_id":
                 self.__reopen_attempts = self.___reopen_attempts
-            
-            if event_name == "on_game_stats":
+
+            if event_name == "on_game_init":
+                response: Info.GameInitial = parse_response_body(messageBody, metadata)
+
+                self.max_round_tick = response.game_data.max_round_ticks
+
+            elif event_name == "on_game_stats":
                 response = parse_response_body(messageBody, metadata)
                 if response.exit:
                     self.__can_start_record_replay = False
+                    self.game_max_tick = None
+                    self.game_tick = None
+
             elif event_name == "on_server_message":
                 response = parse_response_body(messageBody, metadata)
                 if response.type == "success":
-                    self.log_adapter.info(response.content)
+                    if self.internal_logging_switch:
+                        self.log_adapter.info(response.content)
                 elif response.type == "error":
-                    self.log_adapter.error(response.content)
+                    if self.internal_logging_switch:
+                        self.log_adapter.error(response.content)
             else:
                 if event_name not in self.event_callback_dict:
                     return
@@ -513,7 +537,8 @@ class Connection:
                 traceback.format_exception(type(error), error, error.__traceback__)
             )
 
-        self.log_adapter.error(error_str)
+        if self.internal_logging_switch:
+            self.log_adapter.error(error_str)
 
         self.__trigger_event_callback("on_error", error)
 
@@ -536,12 +561,16 @@ class Connection:
         self.status = 0
         self.__close_event.set()
 
-        self.log_adapter.info(f"Connection has been closed [Code: {code}].")
+        if self.internal_logging_switch:
+            self.log_adapter.info(f"Connection has been closed [Code: {code}].")
 
         if code in websocket_dont_reopen_codes:
             self.__is_dont_reopen_code = True
 
         self.__trigger_event_callback("on_close", code, message)
+
+        if self.__on_main:
+            rel.stop()
     
     def __trigger_event_callback(
         self, event_name: str, *args: any, **kwargs: any

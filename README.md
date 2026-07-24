@@ -116,7 +116,7 @@ Events
 - `on_close` -> code: int, message: str
   - when the connection is closed.
 
-### Lobby Events (not available while in game)
+### Lobby Events
 - `on_account_logging` -> [Info.AccountLogging](https://syflash.codeberg.page/slay.py/docs/slay/data/info/lobby.html#AccountLogging)
   - when you logged into an account.
 - `on_game_list` -> list[[Info.GameProfile](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameProfile)]
@@ -223,7 +223,7 @@ def thread_function(connection: Connection):
 
 More Features
 -------------
-1. Assign value to each [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) in [Connections](https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections) (add "c_" as the variable prefix) (v0.7.2 feature).
+1. Assign value to each [Connection](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection) in [Connections](https://syflash.codeberg.page/slay.py/docs/slay/server/connections.html#Connections) (add "c_" as the variable prefix) (v0.7.2+ feature).
 ```python
 from slay import Connections, Socket
 
@@ -258,7 +258,7 @@ connection.log_adapter.error("Something.")
 connection.log_adapter.critical("Something.")
 ```
 5. To set a timeout of an event waiting, you can use [Connection.setup_response_event_timeout_func()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func).
-Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4 feature):
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4+ feature):
 ```python
 def fail_to_join_game_room(connection: Connection):
     connection.close()
