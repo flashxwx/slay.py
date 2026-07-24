@@ -1,7 +1,6 @@
 import time, logging, socket, traceback, json, datetime as dt
 import rel, signal
 
-
 from typing import Callable, Literal, Union
 
 from threading import Thread, Lock, Event
@@ -75,8 +74,10 @@ class Connection:
         
         connection_max_sequence_dict[self.category] = self.sequence
 
-        self.internal_logging_switch = True
-        self.log_adapter = logging.LoggerAdapter(
+        self.logging_level = logging.INFO
+        """ Use logging.[LEVEL] in python std lib to set this variable. """
+
+        self.__log_adapter = logging.LoggerAdapter(
             self.logger,
             {
                 "socket": socket.name,
@@ -196,10 +197,7 @@ class Connection:
             if self.__is_dont_reopen_code:
                 break
 
-            if self.internal_logging_switch:
-                self.log_adapter.info(
-                    f"Trying to reopen in {reopen_interval} seconds"
-                )
+            self.log("INFO", f"Trying to reopen in {reopen_interval} seconds")
 
             time.sleep(reopen_interval)
 
@@ -214,8 +212,7 @@ class Connection:
                 try:
                     number = self.__thread_end_signal_channel.get(timeout=self.thread_end_signal_timeout)
                 except:
-                    if self.internal_logging_switch:
-                        self.log_adapter.critical(f"Failed to reopen the connection. There's still a running thread (count: {self.__running_sub_thread_count}) after {self.thread_end_signal_timeout} seconds since the connection was closed.")
+                    self.log("FATAL", f"Failed to reopen the connection. There's still a running thread (count: {self.__running_sub_thread_count}) after {self.thread_end_signal_timeout} seconds since the connection was closed.")
                     return
 
                 self.__running_sub_thread_count -= number
@@ -233,8 +230,7 @@ class Connection:
             if self.__is_dont_reopen_code:
                 return
 
-            if self.internal_logging_switch:
-                self.log_adapter.critical(str(self.websocket_error.args[1]))
+            self.log("FATAL", str(self.websocket_error.args[1]))
 
     def __signal_handler(self):
         self.__is_dont_reopen_code = True
@@ -243,16 +239,10 @@ class Connection:
     def open(self, new_thread: bool = False):
         with self.status_lock:
             if self.status == 1:
-                if self.internal_logging_switch:
-                    self.log_adapter.warning(
-                        "Cannot open a connection that is being opened."
-                    )
+                self.log("WARNING", "Cannot open a connection that is being opened.")
                 return
             if self.status == 2:
-                if self.internal_logging_switch:
-                    self.log_adapter.warning(
-                        "Cannot open a connection that is already opened."
-                    )
+                self.log("WARNING", "Cannot open a connection that is already opened.")
                 return
 
             self.status = 1
@@ -293,10 +283,7 @@ class Connection:
 
     def send(self, message: str):
         if self.status != 2:
-            if self.internal_logging_switch:
-                self.log_adapter.warning(
-                    "Cannot send message when the connection isn't opened."
-                )
+            self.log("WARNING", "Cannot send message when the connection isn't opened.")
             return
 
         self.websocket.send(message)
@@ -304,17 +291,11 @@ class Connection:
     def close(self):
         with self.status_lock:
             if self.status == 0:
-                if self.internal_logging_switch:
-                    self.log_adapter.warning(
-                        "Cannot close a connection that is already closed."
-                    )
+                self.log("WARNING", "Cannot close a connection that is already closed.")
                 return
 
             if self.status == 3:
-                if self.internal_logging_switch:
-                    self.log_adapter.warning(
-                        "Cannot close a connection that is being closed."
-                    )
+                self.log("WARNING", "Cannot close a connection that is being closed.")
                 return
 
             self.status = 3
@@ -373,7 +354,7 @@ class Connection:
     def create_thread(self, func: Callable, *args, **kwargs):
         if self.status != 2:
             if self.internal_logging_switch:
-                self.log_adapter.warning("Cannot use 'Connection.create_thread' outside connection lifetime.")
+                self.log("WARNING", "Cannot use 'Connection.create_thread' outside connection lifetime.")
             return
 
         Thread(target=self.__func_for_sub_thread, args=(func,)+args, kwargs=kwargs).start()
@@ -436,12 +417,29 @@ class Connection:
             daemon=True
         ).start()
 
+    def log(self, level_str: Literal["DEBUG","INFO", "WARNING", "ERROR", "FATAL"], message: str):
+        match level_str:
+            case "DEBUG":
+                if self.logging_level >= logging.DEBUG:
+                    self.__log_adapter.debug(message)
+            case "INFO":
+                if self.logging_level >= logging.INFO:
+                    self.__log_adapter.info(message)
+            case "WARNING":
+                if self.logging_level >= logging.WARNING:
+                    self.__log_adapter.warning(message)
+            case "ERROR":
+                if self.logging_level >= logging.ERROR:
+                    self.__log_adapter.error(message)
+            case "FATAL":
+                if self.logging_level >= logging.CRITICAL:
+                    self.__log_adapter.critical(message)
+
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
         self.__close_event.clear()
 
-        if self.internal_logging_switch:
-            self.log_adapter.info("Connection has been opened.")
+        self.log("INFO", "Connection has been opened.")
 
         self.__trigger_event_callback("on_open")
 
@@ -508,11 +506,10 @@ class Connection:
             elif event_name == "on_server_message":
                 response = parse_response_body(messageBody, metadata)
                 if response.type == "success":
-                    if self.internal_logging_switch:
-                        self.log_adapter.info(response.content)
+                    self.log("INFO", response.content)
                 elif response.type == "error":
                     if self.internal_logging_switch:
-                        self.log_adapter.error(response.content)
+                        self.log("ERROR", response.content)
             else:
                 if event_name not in self.event_callback_dict:
                     return
@@ -538,7 +535,7 @@ class Connection:
             )
 
         if self.internal_logging_switch:
-            self.log_adapter.error(error_str)
+            self.log("ERROR", error_str)
 
         self.__trigger_event_callback("on_error", error)
 
@@ -561,8 +558,7 @@ class Connection:
         self.status = 0
         self.__close_event.set()
 
-        if self.internal_logging_switch:
-            self.log_adapter.info(f"Connection has been closed [Code: {code}].")
+        self.log("INFO", f"Connection has been closed [Code: {code}].")
 
         if code in websocket_dont_reopen_codes:
             self.__is_dont_reopen_code = True
