@@ -353,8 +353,7 @@ class Connection:
 
     def create_thread(self, func: Callable, *args, **kwargs):
         if self.status != 2:
-            if self.internal_logging_switch:
-                self.log("WARNING", "Cannot use 'Connection.create_thread' outside connection lifetime.")
+            self.log("WARNING", "Cannot use 'Connection.create_thread' outside connection lifetime.")
             return
 
         Thread(target=self.__func_for_sub_thread, args=(func,)+args, kwargs=kwargs).start()
@@ -421,19 +420,19 @@ class Connection:
         match level_str:
             case "DEBUG":
                 if self.logging_level >= logging.DEBUG:
-                    self.__log_adapter.debug(message)
+                    self.__log_adapter.debug(message, stacklevel=2)
             case "INFO":
                 if self.logging_level >= logging.INFO:
-                    self.__log_adapter.info(message)
+                    self.__log_adapter.info(message, stacklevel=2)
             case "WARNING":
                 if self.logging_level >= logging.WARNING:
-                    self.__log_adapter.warning(message)
+                    self.__log_adapter.warning(message, stacklevel=2)
             case "ERROR":
                 if self.logging_level >= logging.ERROR:
-                    self.__log_adapter.error(message)
+                    self.__log_adapter.error(message, stacklevel=2)
             case "FATAL":
                 if self.logging_level >= logging.CRITICAL:
-                    self.__log_adapter.critical(message)
+                    self.__log_adapter.critical(message, stacklevel=2)
 
     def __on_open(self, websocket: WebSocketApp):
         self.status = 2
@@ -508,8 +507,7 @@ class Connection:
                 if response.type == "success":
                     self.log("INFO", response.content)
                 elif response.type == "error":
-                    if self.internal_logging_switch:
-                        self.log("ERROR", response.content)
+                    self.log("ERROR", response.content)
             else:
                 if event_name not in self.event_callback_dict:
                     return
@@ -534,8 +532,7 @@ class Connection:
                 traceback.format_exception(type(error), error, error.__traceback__)
             )
 
-        if self.internal_logging_switch:
-            self.log("ERROR", error_str)
+        self.log("ERROR", error_str)
 
         self.__trigger_event_callback("on_error", error)
 

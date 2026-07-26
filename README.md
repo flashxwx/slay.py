@@ -58,7 +58,7 @@ eu_server = Connection(Socket.EU)
 @eu_server.on_open
 def _(connection: Connection):
     print(f"Connection of {connection.category} [{connection.sequence}] is up.")
-    slay_eu.send(Request.GameList())
+    eu_server.send(Request.GameList())
 
 @eu_server.on_game_list
 def _(connection: Connection, info: list[Info.GameProfile]):
