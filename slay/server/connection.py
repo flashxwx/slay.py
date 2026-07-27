@@ -491,19 +491,33 @@ class Connection:
                 self.__reopen_attempts = self.___reopen_attempts
 
             if event_name == "on_game_init":
-                response: Info.GameInitial = parse_response_body(messageBody, metadata)
+                try:
+                    response = parse_response_body(messageBody, metadata)
+                except Exception as e:
+                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
+                    raise e
 
                 self.max_round_tick = response.game_data.max_round_ticks
 
             elif event_name == "on_game_stats":
-                response = parse_response_body(messageBody, metadata)
+                try:
+                    response = parse_response_body(messageBody, metadata)
+                except Exception as e:
+                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
+                    raise e
+
                 if response.exit:
                     self.__can_start_record_replay = False
                     self.game_max_tick = None
                     self.game_tick = None
 
             elif event_name == "on_server_message":
-                response = parse_response_body(messageBody, metadata)
+                try:
+                    response = parse_response_body(messageBody, metadata)
+                except Exception as e:
+                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
+                    raise e
+
                 if response.type == "success":
                     self.log("INFO", response.content)
                 elif response.type == "error":
@@ -512,7 +526,11 @@ class Connection:
                 if event_name not in self.event_callback_dict:
                     return
 
-                response = parse_response_body(messageBody, metadata)
+                try:
+                    response = parse_response_body(messageBody, metadata)
+                except Exception as e:
+                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
+                    raise e
 
         self.__trigger_event_callback(event_name, response)
 
