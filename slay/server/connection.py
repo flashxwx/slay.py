@@ -58,7 +58,8 @@ class Connection:
         socket: Socket,
         category: str = "",
         event_callback_dict: CallbackDict = None,
-        enable_replay_cache = False
+        enable_replay_cache = False,
+        sequence: int = None, # move this up and below category in v1.0.0, and add a star sign after socket
     ):
         self.socket = socket
         self.category = category if category else socket.name
@@ -67,12 +68,15 @@ class Connection:
             self.category
         )
 
-        if connection_max_sequence:
-            self.sequence = connection_max_sequence + 1
+        if sequence == None:
+            if connection_max_sequence:
+                self.sequence = connection_max_sequence + 1
+            else:
+                self.sequence = 1
+            
+            connection_max_sequence_dict[self.category] = self.sequence
         else:
-            self.sequence = 1
-        
-        connection_max_sequence_dict[self.category] = self.sequence
+            self.sequence = sequence
 
         self.logging_level = logging.INFO
         """ Use logging.[LEVEL] in python std lib to set this variable. """
