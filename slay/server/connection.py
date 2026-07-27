@@ -419,19 +419,19 @@ class Connection:
     def log(self, level_str: Literal["DEBUG","INFO", "WARNING", "ERROR", "FATAL"], message: str):
         match level_str:
             case "DEBUG":
-                if self.logging_level >= logging.DEBUG:
+                if self.logging_level <= logging.DEBUG:
                     self.__log_adapter.debug(message, stacklevel=2)
             case "INFO":
-                if self.logging_level >= logging.INFO:
+                if self.logging_level <= logging.INFO:
                     self.__log_adapter.info(message, stacklevel=2)
             case "WARNING":
-                if self.logging_level >= logging.WARNING:
+                if self.logging_level <= logging.WARNING:
                     self.__log_adapter.warning(message, stacklevel=2)
             case "ERROR":
-                if self.logging_level >= logging.ERROR:
+                if self.logging_level <= logging.ERROR:
                     self.__log_adapter.error(message, stacklevel=2)
             case "FATAL":
-                if self.logging_level >= logging.CRITICAL:
+                if self.logging_level <= logging.CRITICAL:
                     self.__log_adapter.critical(message, stacklevel=2)
 
     def __on_open(self, websocket: WebSocketApp):
