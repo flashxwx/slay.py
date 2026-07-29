@@ -1,5 +1,7 @@
 import sys
 
+Undefined = type
+
 class Pipe:
     def __init__(self, *converters):
         self.converters = converters

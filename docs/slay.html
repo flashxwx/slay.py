@@ -127,7 +127,7 @@ And the second argument of game events will be the related information if the ev
 <span class="nd">@eu_server</span><span class="o">.</span><span class="n">on_open</span>
 <span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection of </span><span class="si">{</span><span class="n">connection</span><span class="o">.</span><span class="n">category</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">connection</span><span class="o">.</span><span class="n">sequence</span><span class="si">}</span><span class="s2">] is up.&quot;</span><span class="p">)</span>
-    <span class="n">slay_eu</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Request</span><span class="o">.</span><span class="n">GameList</span><span class="p">())</span>
+    <span class="n">eu_server</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">Request</span><span class="o">.</span><span class="n">GameList</span><span class="p">())</span>
 
 <span class="nd">@eu_server</span><span class="o">.</span><span class="n">on_game_list</span>
 <span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Info</span><span class="o">.</span><span class="n">GameProfile</span><span class="p">]):</span>
@@ -428,11 +428,11 @@ And the second argument of game events will be the related information if the ev
 
 <span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="n">Socket</span><span class="o">.</span><span class="n">EU</span><span class="p">)</span>
 
-<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
-<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
-<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
-<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
-<span class="n">connection</span><span class="o">.</span><span class="n">log_adapter</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;CRITICAL&quot;</span><span class="p">,</span> <span class="s2">&quot;Something.&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 

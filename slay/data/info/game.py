@@ -4,7 +4,7 @@ from typing import NamedTuple, Annotated, TypedDict
 from enum import Enum
 
 from slay.data.info.decorate import NicknameColor
-from slay.utils import Pipe
+from slay.utils import Pipe, Undefined
 
 ConnectionId = int
 InGameId = int
@@ -62,10 +62,10 @@ class GameProfile(NamedTuple):
     tag: str
     map_thumbnail_data: str
 
-class GameMapData(TypedDict):
+class GameMapData(TypedDict, total=False):
     x: int
     y: int
-    maxPlayers: int
+    maxPlayers: int | Undefined
     closed: bool
     invisible: bool
     defaultTiles: int
@@ -80,7 +80,7 @@ class GameMapData(TypedDict):
     ammo: list[dict]
     noBorder: bool
     thumbnail: str
-    name: str
+    name: str | Undefined
     description: str
 
 class Game(NamedTuple):

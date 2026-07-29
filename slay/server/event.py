@@ -1,5 +1,5 @@
 from typing import (
-    Callable, TypedDict, ParamSpec, Generic, Concatenate, TYPE_CHECKING
+    Callable, TypedDict, ParamSpec, Generic, Concatenate, TYPE_CHECKING, Literal
 )
 
 from websocket import WebSocketException
@@ -16,6 +16,15 @@ SingleCallback= Callable[Concatenate["Connection", CallbackArguements], None]
 CallbackList = list[SingleCallback]
 
 Callback = SingleCallback[CallbackArguements] | CallbackList[CallbackArguements]
+
+EventName = Literal[
+    "on_open", "on_message", "on_error", "on_close", "on_id",
+    "on_game_list", "on_game_init", "on_player_join",
+    "on_player_leave", "on_game_stats", "on_ranked_search_count",
+    "on_account_logging", "on_me_join", "on_hp_update", "on_player_respawn",
+    "on_ability_cancel", "on_in_game_chat", "on_server_message",
+    "on_global_chat_history"
+]
 
 class CallbackDict(TypedDict, total=False):
     on_open: Callback[...]

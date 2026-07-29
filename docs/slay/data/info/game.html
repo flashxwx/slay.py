@@ -823,7 +823,7 @@
 </span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a>
 </span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="kn">from</span> <span class="nn">slay.data.info.decorate</span> <span class="kn">import</span> <span class="n">NicknameColor</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="kn">from</span> <span class="nn">slay.utils</span> <span class="kn">import</span> <span class="n">Pipe</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="kn">from</span> <span class="nn">slay.utils</span> <span class="kn">import</span> <span class="n">Pipe</span><span class="p">,</span> <span class="n">Undefined</span>
 </span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a>
 </span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="n">ConnectionId</span> <span class="o">=</span> <span class="nb">int</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="n">InGameId</span> <span class="o">=</span> <span class="nb">int</span>
@@ -881,10 +881,10 @@
 </span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>    <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>    <span class="n">map_thumbnail_data</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="k">class</span> <span class="nc">GameMapData</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="k">class</span> <span class="nc">GameMapData</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 </span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>    <span class="n">maxPlayers</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>    <span class="n">maxPlayers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Undefined</span>
 </span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>    <span class="n">closed</span><span class="p">:</span> <span class="nb">bool</span>
 </span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>    <span class="n">invisible</span><span class="p">:</span> <span class="nb">bool</span>
 </span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>    <span class="n">defaultTiles</span><span class="p">:</span> <span class="nb">int</span>
@@ -899,7 +899,7 @@
 </span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>    <span class="n">ammo</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
 </span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>    <span class="n">noBorder</span><span class="p">:</span> <span class="nb">bool</span>
 </span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>    <span class="n">thumbnail</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Undefined</span>
 </span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
 </span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="k">class</span> <span class="nc">Game</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
@@ -1585,7 +1585,7 @@
                             </div>
                             <div id="GameProfile.mode" class="classattr">
                                 <div class="attr variable">
-            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x7da437706240&gt;]</span>
+            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x7c213afbe570&gt;]</span>
 
         
     </div>
@@ -1660,10 +1660,10 @@
 
     </div>
     <a class="headerlink" href="#GameMapData"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="GameMapData-66"><a href="#GameMapData-66"><span class="linenos">66</span></a><span class="k">class</span> <span class="nc">GameMapData</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="GameMapData-66"><a href="#GameMapData-66"><span class="linenos">66</span></a><span class="k">class</span> <span class="nc">GameMapData</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 </span><span id="GameMapData-67"><a href="#GameMapData-67"><span class="linenos">67</span></a>    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="GameMapData-68"><a href="#GameMapData-68"><span class="linenos">68</span></a>    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="GameMapData-69"><a href="#GameMapData-69"><span class="linenos">69</span></a>    <span class="n">maxPlayers</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="GameMapData-69"><a href="#GameMapData-69"><span class="linenos">69</span></a>    <span class="n">maxPlayers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Undefined</span>
 </span><span id="GameMapData-70"><a href="#GameMapData-70"><span class="linenos">70</span></a>    <span class="n">closed</span><span class="p">:</span> <span class="nb">bool</span>
 </span><span id="GameMapData-71"><a href="#GameMapData-71"><span class="linenos">71</span></a>    <span class="n">invisible</span><span class="p">:</span> <span class="nb">bool</span>
 </span><span id="GameMapData-72"><a href="#GameMapData-72"><span class="linenos">72</span></a>    <span class="n">defaultTiles</span><span class="p">:</span> <span class="nb">int</span>
@@ -1678,7 +1678,7 @@
 </span><span id="GameMapData-81"><a href="#GameMapData-81"><span class="linenos">81</span></a>    <span class="n">ammo</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
 </span><span id="GameMapData-82"><a href="#GameMapData-82"><span class="linenos">82</span></a>    <span class="n">noBorder</span><span class="p">:</span> <span class="nb">bool</span>
 </span><span id="GameMapData-83"><a href="#GameMapData-83"><span class="linenos">83</span></a>    <span class="n">thumbnail</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="GameMapData-84"><a href="#GameMapData-84"><span class="linenos">84</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="GameMapData-84"><a href="#GameMapData-84"><span class="linenos">84</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Undefined</span>
 </span><span id="GameMapData-85"><a href="#GameMapData-85"><span class="linenos">85</span></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
 </span></pre></div>
 
@@ -1709,7 +1709,7 @@
                             </div>
                             <div id="GameMapData.maxPlayers" class="classattr">
                                 <div class="attr variable">
-            <span class="name">maxPlayers</span><span class="annotation">: int</span>
+            <span class="name">maxPlayers</span><span class="annotation">: int | type</span>
 
         
     </div>
@@ -1874,7 +1874,7 @@
                             </div>
                             <div id="GameMapData.name" class="classattr">
                                 <div class="attr variable">
-            <span class="name">name</span><span class="annotation">: str</span>
+            <span class="name">name</span><span class="annotation">: str | type</span>
 
         
     </div>
@@ -1946,7 +1946,7 @@
                             </div>
                             <div id="Game.map_data" class="classattr">
                                 <div class="attr variable">
-            <span class="name">map_data</span><span class="annotation">: Annotated[<a href="#GameMapData">GameMapData</a>, &lt;function loads at 0x7da43925d8a0&gt;]</span>
+            <span class="name">map_data</span><span class="annotation">: Annotated[<a href="#GameMapData">GameMapData</a>, &lt;function loads at 0x7c213ca5d8a0&gt;]</span>
 
         
     </div>
@@ -1959,7 +1959,7 @@
                             </div>
                             <div id="Game.mode" class="classattr">
                                 <div class="attr variable">
-            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x7da43756dd90&gt;]</span>
+            <span class="name">mode</span><span class="annotation">: Annotated[<a href="#GameMode">GameMode</a>, &lt;slay.utils.Pipe object at 0x7c213adc5f70&gt;]</span>
 
         
     </div>
@@ -2476,7 +2476,7 @@
                             </div>
                             <div id="Player.id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -2502,7 +2502,7 @@
                             </div>
                             <div id="Player.nickname_color" class="classattr">
                                 <div class="attr variable">
-            <span class="name">nickname_color</span><span class="annotation">: Annotated[<a href="decorate.html#NicknameColor">slay.data.info.decorate.NicknameColor</a>, &lt;slay.utils.Pipe object at 0x7da43756e5d0&gt;]</span>
+            <span class="name">nickname_color</span><span class="annotation">: Annotated[<a href="decorate.html#NicknameColor">slay.data.info.decorate.NicknameColor</a>, &lt;slay.utils.Pipe object at 0x7c213adc6570&gt;]</span>
 
         
     </div>
@@ -3804,7 +3804,7 @@
                             </div>
                             <div id="GameStats.exit" class="classattr">
                                 <div class="attr variable">
-            <span class="name">exit</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x7da437591a00&gt;]</span>
+            <span class="name">exit</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x7c213ade99d0&gt;]</span>
 
         
     </div>
@@ -3891,7 +3891,7 @@
                             </div>
                             <div id="HP.victim_in_game_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">victim_in_game_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">victim_in_game_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -3943,7 +3943,7 @@
                             </div>
                             <div id="HP.projectile_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">projectile_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">projectile_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -3956,7 +3956,7 @@
                             </div>
                             <div id="HP.murder_weapon_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">murder_weapon_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">murder_weapon_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -3969,7 +3969,7 @@
                             </div>
                             <div id="HP.attacker_in_game_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">attacker_in_game_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">attacker_in_game_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -3995,7 +3995,7 @@
                             </div>
                             <div id="HP.new_kill_count" class="classattr">
                                 <div class="attr variable">
-            <span class="name">new_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">new_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -4008,7 +4008,7 @@
                             </div>
                             <div id="HP.new_death_count" class="classattr">
                                 <div class="attr variable">
-            <span class="name">new_death_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">new_death_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -4021,7 +4021,7 @@
                             </div>
                             <div id="HP.multiple_kill_count" class="classattr">
                                 <div class="attr variable">
-            <span class="name">multiple_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">multiple_kill_count</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -4034,7 +4034,7 @@
                             </div>
                             <div id="HP.kill_streak" class="classattr">
                                 <div class="attr variable">
-            <span class="name">kill_streak</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">kill_streak</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -4164,7 +4164,7 @@
                             </div>
                             <div id="HP.object_id" class="classattr">
                                 <div class="attr variable">
-            <span class="name">object_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7da4375b0e00&gt;]</span>
+            <span class="name">object_id</span><span class="annotation">: Annotated[int, &lt;function Number at 0x7c213ac10e00&gt;]</span>
 
         
     </div>
@@ -4319,7 +4319,7 @@
                             </div>
                             <div id="PlayerRespawn.has_turned_zombie" class="classattr">
                                 <div class="attr variable">
-            <span class="name">has_turned_zombie</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x7da437592960&gt;]</span>
+            <span class="name">has_turned_zombie</span><span class="annotation">: Annotated[bool, &lt;slay.utils.Pipe object at 0x7c213adea8d0&gt;]</span>
 
         
     </div>
@@ -4381,7 +4381,7 @@
                             </div>
                             <div id="AbilityCancel.ability" class="classattr">
                                 <div class="attr variable">
-            <span class="name">ability</span><span class="annotation">: Annotated[<a href="#Ability">Ability</a>, &lt;slay.utils.Pipe object at 0x7da438a35fa0&gt;]</span>
+            <span class="name">ability</span><span class="annotation">: Annotated[<a href="#Ability">Ability</a>, &lt;slay.utils.Pipe object at 0x7c213b13dfa0&gt;]</span>
 
         
     </div>

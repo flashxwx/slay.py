@@ -5,7 +5,7 @@ from typing import Callable, Literal, Union
 
 from threading import Thread, Lock, Event
 
-from queue import Queue
+from queue import Queue, Empty
 
 from websocket import WebSocketApp, WebSocketException, WebSocketTimeoutException
 
@@ -17,7 +17,7 @@ ssl_context.verify_mode = 0
 
 import slay.data.info as Info
 from slay.server.socket import Socket
-from slay.server.event import CallbackRegistrar, CallbackDict
+from slay.server.event import CallbackRegistrar, CallbackDict, EventName
 from slay.data.response import parse_response_body, in_game_update_info_parser, in_game_update_info_generator, response_dict, parse_social_response_message
 
 from slay.utils import export
@@ -121,7 +121,10 @@ class Connection:
         self.game_tick: int = None
         """ None by default, 20 ticks per second """
 
-        self.__event_name_queues: set[Queue] = set()
+        # self.__event_name_queues: set[Queue] = set()
+        self.__event_success_events: dict[str, Event] = {}
+        self.__event_response_queues: dict[str, set[Queue]] = {}
+        self.__event_response_queues_lock: Lock = Lock()
 
         self.__on_main = True
 
@@ -292,6 +295,55 @@ class Connection:
 
         self.websocket.send(message)
 
+    def request_from_outside(
+        self, message: str, response_event_name: EventName,
+        timeout: float = 10, check_interval: int = 1
+    ):
+        def clear():
+            with self.__event_response_queues_lock:
+                queues.remove(queue)
+
+                if len(queues) == 0:
+                    self.__event_response_queues.pop(response_event_name)
+
+        end = time.time() + timeout
+        queue = Queue()
+
+
+        with self.__event_response_queues_lock:
+            queues = self.__event_response_queues.get(response_event_name)
+
+            if isinstance(queues, set):
+                queues.add(queue)
+            else:
+                queues = self.__event_response_queues[response_event_name] = {queue}
+
+        for n in range(int(timeout // check_interval)):
+            if self.status == 2:
+                self.send(message)
+                break
+
+            time.sleep(check_interval)
+
+        if self.status != 2:
+            clear()
+            raise ConnectionError("Connection isn't opened, failed to request from outside.")
+
+        wait_more = end - time.time()
+
+        if wait_more <= 0:
+            raise TimeoutError("Connection didn't respond to the request before time.")
+
+        try:
+            response = queue.get(timeout=wait_more)
+        except Empty:
+            clear()
+            raise TimeoutError("Connection didn't respond to the request before time.")
+
+        clear()
+
+        return response
+
     def close(self):
         with self.status_lock:
             if self.status == 0:
@@ -386,37 +438,24 @@ class Connection:
         return f"{minute}:{"0"+str(second) if second < 10 else second}"
 
     def __func_for_response_event_timeout(
-        self, event_name_queue: Queue, target_event_name: str,
-        timeout_func: Callable, timeout: float,
-        args: tuple[any] = None, kwargs: dict[str, any] = None
+        self, event: Event, target_event_name: str,
+        timeout_func: Callable[["Connection"], None], timeout: float,
     ):
-        start_at = time.time()
+        is_timeout = not event.wait(timeout)
 
-        while True:
-            try:
-                event_name = event_name_queue.get(timeout=timeout)
+        if is_timeout:
+            timeout_func(self)
 
-                if event_name == target_event_name:
-                    break
-
-                if (time.time() - start_at) > timeout:
-                    raise TimeoutError
-            except:
-                timeout_func(*args if args else (), **kwargs if kwargs else {})
-                break
-
-        self.__event_name_queues.remove(event_name_queue)
+        self.__event_success_events.pop(target_event_name)
 
     def setup_response_event_timeout_func(
-        self, event_name: str, timeout_func: Callable, timeout: float = 10,
-        args: tuple[any] = None, kwargs: dict[str, any] = None
+        self, event_name: EventName, timeout_func: Callable[["Connection"], None], timeout: float = 10
     ):
-        event_name_queue = Queue()
-        self.__event_name_queues.add(event_name_queue)
+        event = self.__event_success_events[event_name] = Event()
 
         Thread(
             target=self.__func_for_response_event_timeout,
-            args=(event_name_queue, event_name, timeout_func, timeout, args, kwargs),
+            args=(event, event_name, timeout_func, timeout),
             daemon=True
         ).start()
 
@@ -452,6 +491,13 @@ class Connection:
         if self.socket == Socket.SOCIAL:
             event_name, response = parse_social_response_message(message)
 
+            if event := self.__event_success_events.get(event_name):
+                event.set()
+
+            if queues := self.__event_response_queues.get(event_name):
+                for queue in queues:
+                    queue.put(response)
+
             if not event_name:
                 return
         
@@ -459,6 +505,13 @@ class Connection:
             self.game_tick, splitted_message = in_game_update_info_parser(message)
 
             for event_name, response in in_game_update_info_generator(splitted_message, self.event_callback_dict):
+                if event := self.__event_success_events.get(event_name):
+                    event.set()
+
+                if queues := self.__event_response_queues.get(event_name):
+                    for queue in queues:
+                        queue.put(response)
+
                 self.__trigger_event_callback(event_name, response)
 
             if self.enable_replay_cache and self.__can_start_record_replay:
@@ -475,8 +528,10 @@ class Connection:
 
             event_name = metadata[0]
 
-            for event_name_queue in self.__event_name_queues:
-                event_name_queue.put_nowait(event_name)
+            # for event_name_queue in self.__event_name_queues:
+            #     event_name_queue.put_nowait(event_name)
+            if event := self.__event_success_events.get(event_name):
+                event.set()
             
             if self.enable_replay_cache:
                 if messageType == "next-maps":
@@ -494,7 +549,18 @@ class Connection:
             if event_name == "on_id":
                 self.__reopen_attempts = self.___reopen_attempts
 
-            if event_name == "on_game_init":
+
+            if queues := self.__event_response_queues.get(event_name):
+                try:
+                    response = parse_response_body(messageBody, metadata)
+                except Exception as e:
+                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
+                    raise e
+
+                for queue in queues:
+                    queue.put(response)
+
+            elif event_name == "on_game_init":
                 try:
                     response = parse_response_body(messageBody, metadata)
                 except Exception as e:
@@ -590,9 +656,6 @@ class Connection:
     def __trigger_event_callback(
         self, event_name: str, *args: any, **kwargs: any
     ):
-        for event_name_queue in self.__event_name_queues:
-            event_name_queue.put_nowait(event_name)
-
         event_callback = self.event_callback_dict.get(event_name)
 
         if not event_callback:

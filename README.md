@@ -251,11 +251,11 @@ Connection.setup_log_file("slay.log")
 
 connection = Connection(Socket.EU)
 
-connection.log_adapter.debug("Something.")
-connection.log_adapter.info("Something.")
-connection.log_adapter.warning("Something.")
-connection.log_adapter.error("Something.")
-connection.log_adapter.critical("Something.")
+connection.log("DEBUG", "Something.")
+connection.log("INFO", "Something.")
+connection.log("WARNING", "Something.")
+connection.log("ERROR", "Something.")
+connection.log("CRITICAL", "Something.")
 ```
 5. To set a timeout of an event waiting, you can use [Connection.setup_response_event_timeout_func()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func).
 Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4+ feature):
