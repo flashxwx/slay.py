@@ -258,12 +258,21 @@ connection.log("ERROR", "Something.")
 connection.log("CRITICAL", "Something.")
 ```
 5. To set a timeout of an event waiting, you can use [Connection.setup_response_event_timeout_func()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.setup_response_event_timeout_func).
-Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v0.7.4+ feature):
+Sometimes server doesn't respond to a request, so you use this feature to set a timeout function for an event waiting. Refer to the following codes (non-blocking) (v8.0.0+ feature):
 ```python
-def fail_to_join_game_room(connection: Connection):
+def fail_to_join_game_room(connection: Connection): # the function must have connection parameter, it will always pass the connection argument to this function.
     connection.close()
 
-connection.setup_response_event_timeout_func("on_game_init", fail_to_join_game_room, args=(connection,))
+connection.setup_response_event_timeout_func("on_game_init", fail_to_join_game_room) # default timeout is 10 seconds.
+```
+6. Request from outside of event callback function, please refer to function [Connection.request_from_outside()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.request_from_outside) (v8.0.0+feature):
+```python
+try:
+  response = connection.request_from_outside(Request.GameList(), "on_game_list") # this line will block the process until getting response or timeout. default timeout is 10 seconds.
+except TimeoutError:
+  ... # here run if after timeout (when connection is opened).
+except ConnectionError:
+  ... # here run if connection isn't opened after timeout.
 ```
 
 Methods of Event Registration

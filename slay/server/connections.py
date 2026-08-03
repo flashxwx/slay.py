@@ -107,7 +107,7 @@ class Connections:
         end_function: Callable = None,
         sleep_time: int = 10,
         reopen_attempts: int = 0,
-        reopen_interval: int = 10
+        reopen_interval: int = 60
     ):
         for connection in self.list:
             connection.start(True, reopen_attempts, reopen_interval)

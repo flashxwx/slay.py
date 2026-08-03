@@ -3,6 +3,7 @@ import json
 from typing import NamedTuple, Annotated, TypedDict
 from enum import Enum
 
+from slay.data.info.utils import xNumber, xFloat, xBool
 from slay.data.info.decorate import NicknameColor
 from slay.utils import Pipe, Undefined
 
@@ -11,12 +12,6 @@ InGameId = int
 
 def SecondsFromGameTicks(ticks: int):
     return ticks / 20
-
-def Number(string: str):
-    try:
-        return int(string)
-    except:
-        return -1
 
 class Ability(Enum):
     INVISIBILITY = 4
@@ -127,7 +122,7 @@ class Player(NamedTuple):
     is_zombie: int
     is_fake_corpse: int
     is_zombie_boss: int
-    id: Annotated[int, Number]
+    id: Annotated[int, xNumber]
     db_id: int
     nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
@@ -223,28 +218,28 @@ class GameStats(NamedTuple):
     chestId: int
 
 class HP(NamedTuple):
-    victim_in_game_id: Annotated[int, Number]
+    victim_in_game_id: Annotated[int, xNumber]
     hp: float
     armor: float
-    need_create_hit_effect: bool
-    projectile_id: Annotated[int, Number]
-    murder_weapon_id: Annotated[int, Number]
-    attacker_in_game_id: Annotated[int, Number]
+    need_create_hit_effect: Annotated[bool, xBool] # can be "undefined"
+    projectile_id: Annotated[int, xNumber]
+    murder_weapon_id: Annotated[int, xNumber]
+    attacker_in_game_id: Annotated[int, xNumber]
     lifesteal_amount: float = None
-    new_kill_count: Annotated[int, Number] = -1
-    new_death_count: Annotated[int, Number] = -1
-    multiple_kill_count: Annotated[int, Number] = -1
-    kill_streak: Annotated[int, Number] = -1
+    new_kill_count: Annotated[int, xNumber] = -1
+    new_death_count: Annotated[int, xNumber] = -1 # can be "undefined"
+    multiple_kill_count: Annotated[int, xNumber] = -1 # can be "undefined"
+    kill_streak: Annotated[int, xNumber] = -1
     victim_kill_streak: str = None
     killer_souls: float = None
-    victim_souls: float = None
+    victim_souls: Annotated[float, xFloat] = None # can be "undefined"
     killer_elo: float = None
-    victim_elo: float = None
+    victim_elo: Annotated[float, xFloat] = None # can be "undefined"
     has_splash: bool = None
     object_x: float = None
     object_y: float = None
     object_aoe: float = None
-    object_id: Annotated[int, Number] = -1
+    object_id: Annotated[int, xNumber] = -1
     start_x: float = None
     start_y: float = None
     vector_x: float = None

@@ -204,7 +204,7 @@ class Connection:
             if self.__is_dont_reopen_code:
                 break
 
-            self.log("INFO", f"Trying to reopen in {reopen_interval} seconds")
+            self.log("INFO", f"Trying to reopen in {reopen_interval} seconds, left {self.__reopen_attempts-1} reopen attempts.")
 
             time.sleep(reopen_interval)
 
