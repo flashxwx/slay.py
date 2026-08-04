@@ -517,9 +517,24 @@ class Connection:
             if self.enable_replay_cache and self.__can_start_record_replay:
                 self.replay_cache.append(message)
 
+                if self.game_tick == -1:
+                    self.__can_start_record_replay = False
             return
         else:
             messageType, _, messageBody = message.partition("$")
+
+            if self.enable_replay_cache:
+                if messageType == "init":
+                    if len(self.replay_cache) > 1:
+                        self.last_replay_cache = self.replay_cache.copy()
+                        self.replay_cache.clear()
+                        self.replay_cache.append("replay-version=4")
+
+                    self.__can_start_record_replay = True
+                    self.replay_cache.append(message)
+
+                elif self.__can_start_record_replay and (messageType != "pid") and (messageType != "stats") and (messageType != "next-maps"):
+                    self.replay_cache.append(message)
 
             metadata = response_dict.get(messageType)
 
@@ -532,26 +547,9 @@ class Connection:
             #     event_name_queue.put_nowait(event_name)
             if event := self.__event_success_events.get(event_name):
                 event.set()
-            
-            if self.enable_replay_cache:
-                if messageType == "init":
-                    self.__can_start_record_replay = True
-                    self.replay_cache.append(message)
-
-                if messageType == "next-maps":
-                    if len(self.replay_cache) > 1:
-                        self.last_replay_cache = self.replay_cache.copy()
-                        self.replay_cache.clear()
-                        self.replay_cache.append("replay-version=4")
-
-                    self.__can_start_record_replay = False
-
-                elif self.__can_start_record_replay and (messageType != "pid") and (messageType != "stats"):
-                    self.replay_cache.append(message)
 
             if event_name == "on_id":
                 self.__reopen_attempts = self.___reopen_attempts
-
 
             if queues := self.__event_response_queues.get(event_name):
                 try:
