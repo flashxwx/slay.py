@@ -534,16 +534,19 @@ class Connection:
                 event.set()
             
             if self.enable_replay_cache:
+                if messageType == "init":
+                    self.__can_start_record_replay = True
+                    self.replay_cache.append(message)
+
                 if messageType == "next-maps":
                     if len(self.replay_cache) > 1:
                         self.last_replay_cache = self.replay_cache.copy()
                         self.replay_cache.clear()
                         self.replay_cache.append("replay-version=4")
 
-                    self.__can_start_record_replay = True
-                    self.replay_cache.append(message)
+                    self.__can_start_record_replay = False
 
-                elif self.__can_start_record_replay and (messageType != "pid") and (messageType != "stats") and (messageType != "init"):
+                elif self.__can_start_record_replay and (messageType != "pid") and (messageType != "stats"):
                     self.replay_cache.append(message)
 
             if event_name == "on_id":
