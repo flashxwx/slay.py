@@ -233,9 +233,9 @@ class HP(NamedTuple):
     victim_kill_streak: str = None
     killer_souls: float = None
     victim_souls: Annotated[float, xFloat] = None # can be "undefined"
-    killer_elo: float = None
+    killer_elo: Annotated[float, xFloat] = None
     victim_elo: Annotated[float, xFloat] = None # can be "undefined"
-    has_splash: bool = None
+    has_splash: Annotated[bool, xBool] = None
     object_x: float = None
     object_y: float = None
     object_aoe: float = None
