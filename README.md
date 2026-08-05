@@ -134,8 +134,12 @@ Events
 - `on_player_leave` -> in_game_id: int
   - when a player leave the game.
 - `on_game_stats` -> [Info.GameStats](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameStats)
-  - when in the end of a match.
-  - when you leave a the game.
+  - when in the end of a match (not available for spectator).
+  - when you leave a game.
+- `on_round_end`
+  - when the round ends, not including the game settlement phase.
+- `on_game_settlement_end`
+  - when in the end of game settlement.
 - `on_hp_update` -> [Info.HP](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HP)
   - when the hp of anything got updated.
 - `on_player_respawn` -> [Info.PlayerRespawn](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#PlayerRespawn)

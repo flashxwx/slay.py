@@ -237,8 +237,16 @@ And the second argument of game events will be the related information if the ev
 </ul></li>
 <li><code>on_game_stats</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameStats">Info.GameStats</a>
 <ul>
-<li>when in the end of a match.</li>
-<li>when you leave a the game.</li>
+<li>when in the end of a match (not available for spectator).</li>
+<li>when you leave a game.</li>
+</ul></li>
+<li><code>on_round_end</code>
+<ul>
+<li>when the round ends, not including the game settlement phase.</li>
+</ul></li>
+<li><code>on_game_settlement_end</code>
+<ul>
+<li>when in the end of game settlement.</li>
 </ul></li>
 <li><code>on_hp_update</code> -> <a href="https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HP">Info.HP</a>
 <ul>

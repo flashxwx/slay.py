@@ -153,11 +153,12 @@ class Connection:
         self.on_account_logging = CallbackRegistrar[Info.AccountLogging]()
         self.on_me_join = CallbackRegistrar[Info.InGameId]() # may need to change the event name to "on_my_in_game_id"
         self.on_hp_update = CallbackRegistrar[Info.HP]()
-        """ This is still in experimental phase. """
         self.on_player_respawn = CallbackRegistrar[Info.PlayerRespawn]()
         self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
         self.on_in_game_chat = CallbackRegistrar[Info.InGameChat]()
         self.on_server_message = CallbackRegistrar[Info.ServerMessage]()
+        self.on_round_end = CallbackRegistrar()
+        self.on_game_settlement_end = CallbackRegistrar()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")
@@ -429,7 +430,7 @@ class Connection:
             return None
 
         if self.game_tick < 0:
-            game_tick = abs(self.game_tick) + self.max_round_tick
+            game_tick = abs(self.game_tick) + self.max_round_ticks
         else:
             game_tick = self.game_tick
 
@@ -485,6 +486,13 @@ class Connection:
 
         self.__trigger_event_callback("on_open")
 
+    def __x_get_response(self, messageBody, metadata):
+        try:
+            return parse_response_body(messageBody, metadata)
+        except Exception as e:
+            self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
+            raise e
+
     def __on_message(self, websocket: WebSocketApp, message: str):
         self.__trigger_event_callback("on_message", message)
 
@@ -517,8 +525,12 @@ class Connection:
             if self.enable_replay_cache and self.__can_start_record_replay:
                 self.replay_cache.append(message)
 
-                if self.game_tick == -1:
-                    self.__can_start_record_replay = False
+            if self.game_tick == -1:
+                self.__can_start_record_replay = False
+                self.__trigger_event_callback("on_game_settlement_end")
+            elif self.game_tick == self.max_round_ticks:
+                self.__trigger_event_callback("on_round_end")
+
             return
         else:
             messageType, _, messageBody = message.partition("$")
@@ -551,31 +563,24 @@ class Connection:
             if event_name == "on_id":
                 self.__reopen_attempts = self.___reopen_attempts
 
+            response = None
+
             if queues := self.__event_response_queues.get(event_name):
-                try:
-                    response = parse_response_body(messageBody, metadata)
-                except Exception as e:
-                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
-                    raise e
+                if not response:
+                    response = self.__x_get_response(messageBody, metadata)
 
                 for queue in queues:
                     queue.put(response)
 
-            elif event_name == "on_game_init":
-                try:
-                    response = parse_response_body(messageBody, metadata)
-                except Exception as e:
-                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
-                    raise e
+            if event_name == "on_game_init":
+                if not response:
+                    response = self.__x_get_response(messageBody, metadata)
 
-                self.max_round_tick = response.game_data.max_round_ticks
+                self.max_round_ticks = response.game_data.max_round_ticks
 
             elif event_name == "on_game_stats":
-                try:
-                    response = parse_response_body(messageBody, metadata)
-                except Exception as e:
-                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
-                    raise e
+                if not response:
+                    response = self.__x_get_response(messageBody, metadata)
 
                 if response.exit:
                     self.__can_start_record_replay = False
@@ -583,11 +588,8 @@ class Connection:
                     self.game_tick = None
 
             elif event_name == "on_server_message":
-                try:
-                    response = parse_response_body(messageBody, metadata)
-                except Exception as e:
-                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
-                    raise e
+                if not response:
+                    response = self.__x_get_response(messageBody, metadata)
 
                 if response.type == "success":
                     self.log("INFO", response.content)
@@ -597,11 +599,8 @@ class Connection:
                 if event_name not in self.event_callback_dict:
                     return
 
-                try:
-                    response = parse_response_body(messageBody, metadata)
-                except Exception as e:
-                    self.log("ERROR", f"Failed to parse a response body [{metadata}]: {messageBody}")
-                    raise e
+                if not response:
+                    response = self.__x_get_response(messageBody, metadata)
 
         self.__trigger_event_callback(event_name, response)
 
