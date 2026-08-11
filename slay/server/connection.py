@@ -7,7 +7,7 @@ from threading import Thread, Lock, Event
 
 from queue import Queue, Empty
 
-from websocket import WebSocketApp, WebSocketException, WebSocketTimeoutException
+from websocket import WebSocketApp, WebSocketException, WebSocketTimeoutException, WebSocketConnectionClosedException
 
 import ssl, certifi
 
@@ -122,6 +122,7 @@ class Connection:
         """ None by default, 20 ticks per second """
 
         # self.__event_name_queues: set[Queue] = set()
+        self.request_from_outside_count = 0
         self.__event_success_events: dict[str, Event] = {}
         self.__event_response_queues: dict[str, set[Queue]] = {}
         self.__event_response_queues_lock: Lock = Lock()
@@ -297,53 +298,50 @@ class Connection:
         self.websocket.send(message)
 
     def request_from_outside(
-        self, message: str, response_event_name: EventName,
-        timeout: float = 10, check_interval: int = 1
+        self, message: str, response_event_name,
+        timeout: float = 10.0, check_interval: float = 1.0
     ):
-        def clear():
-            with self.__event_response_queues_lock:
-                queues.remove(queue)
+        self.request_from_outside_count += 1
 
-                if len(queues) == 0:
-                    self.__event_response_queues.pop(response_event_name)
-
-        end = time.time() + timeout
         queue = Queue()
-
-
         with self.__event_response_queues_lock:
-            queues = self.__event_response_queues.get(response_event_name)
-
-            if isinstance(queues, set):
-                queues.add(queue)
-            else:
-                queues = self.__event_response_queues[response_event_name] = {queue}
-
-        for n in range(int(timeout // check_interval)):
-            if self.status == 2:
-                self.send(message)
-                break
-
-            time.sleep(check_interval)
-
-        if self.status != 2:
-            clear()
-            raise ConnectionError("Connection isn't opened, failed to request from outside.")
-
-        wait_more = end - time.time()
-
-        if wait_more <= 0:
-            raise TimeoutError("Connection didn't respond to the request before time.")
+            queues = self.__event_response_queues.setdefault(response_event_name, set())
+            queues.add(queue)
 
         try:
-            response = queue.get(timeout=wait_more)
-        except Empty:
-            clear()
-            raise TimeoutError("Connection didn't respond to the request before time.")
+            start_time = time.time()
+            end_time = start_time + timeout
 
-        clear()
+            while self.status != 2:
+                remaining_timeout = end_time - time.time()
+                if remaining_timeout <= 0:
+                    raise ConnectionError("Connection isn't opened, failed to request from outside.")
 
-        return response
+                sleep_time = min(check_interval, remaining_timeout)
+                time.sleep(sleep_time)
+
+            self.send(message)
+
+            remaining_timeout = end_time - time.time()
+            if remaining_timeout <= 0:
+                raise TimeoutError("Connection didn't respond to the request before time.")
+
+            try:
+                response = queue.get(timeout=remaining_timeout)
+            except Empty:
+                raise TimeoutError("Connection didn't respond to the request before time.")
+
+            return response
+
+        finally:
+            with self.__event_response_queues_lock:
+                queues = self.__event_response_queues.get(response_event_name)
+                if queues is not None:
+                    queues.discard(queue)
+                    if not queues:
+                        self.__event_response_queues.pop(response_event_name, None)
+
+            self.request_from_outside_count -= 1
 
     def close(self):
         with self.status_lock:
@@ -615,6 +613,8 @@ class Connection:
 
         if isinstance(error, WebSocketTimeoutException):
             error_str = f"Timeout: {error}"
+        elif isinstance(error, WebSocketConnectionClosedException):
+            error_str = str(WebSocketConnectionClosedException)
         else:
             error_str = ''.join(
                 traceback.format_exception(type(error), error, error.__traceback__)
