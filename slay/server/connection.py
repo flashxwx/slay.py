@@ -160,6 +160,8 @@ class Connection:
         self.on_server_message = CallbackRegistrar[Info.ServerMessage]()
         self.on_round_end = CallbackRegistrar()
         self.on_game_settlement_end = CallbackRegistrar()
+        self.on_clan_info = CallbackRegistrar[Info.ClanInfo]()
+        self.on_clan_member_list = CallbackRegistrar[list[Info.ClanMember]]()
 
     def setup_log_file(path: str):
         fileHandler = logging.FileHandler(path, encoding="utf-8")
@@ -298,7 +300,7 @@ class Connection:
         self.websocket.send(message)
 
     def request_from_outside(
-        self, message: str, response_event_name,
+        self, message: str, response_event_name: EventName,
         timeout: float = 10.0, check_interval: float = 1.0
     ):
         self.request_from_outside_count += 1

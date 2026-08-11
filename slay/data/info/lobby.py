@@ -2,6 +2,7 @@ import json
 from typing import NamedTuple, TypedDict, Annotated
 
 from slay.utils import Pipe
+from slay.data.info.utils import xNumber
 
 RankedSearchCount = int
 
@@ -26,6 +27,20 @@ class AccountLogging(NamedTuple):
     kills_of_weapons: Annotated["KillsOfWeapons", json.loads]
     ranked_search_count: int
 
+class ClanInfo(NamedTuple):
+    tag: str
+    nickname: str
+    member_count: int
+    clan_role: Annotated[int, xNumber]
+    elo: float
+    id: int
+    application_count: int
+    description: str
+
+class ClanMember(NamedTuple):
+    id: int
+    nickname: str
+    role_level: int 
 
 class Abilities(TypedDict):
     ...

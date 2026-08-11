@@ -20,7 +20,9 @@ response_dict: dict[str, tuple[str, type, int]] = {
     "hp": ("on_hp_update", Info.HP, 1),
     "rsp": ("on_player_respawn", Info.PlayerRespawn, 1),
     "chat": ("on_in_game_chat", Info.InGameChat, 1),
-    "svrMsg": ("on_server_message", Info.ServerMessage, 1)
+    "svrMsg": ("on_server_message", Info.ServerMessage, 1),
+    "clanInfo": ("on_clan_info", Info.ClanInfo, 1),
+    "memberList": ("on_clan_member_list", Info.ClanMember, 6)
 }
 """ message_type: event_name, response_class, parsing_mode
 
@@ -31,6 +33,7 @@ parsing_mode:
     3 - game initial info
     4 - social info mode 1 (the whole message is the info)
     5 - social info mode 2 (the nested dictionary is the info)
+    6 - clan member list
 """
 
 in_game_update_response_dict = {
@@ -96,6 +99,10 @@ def parse_response_body(body: str, metadata: tuple[str, type, int]):
                 splitted_body[6][:-1], get_args(sub_info_classes[6])[0]
             ),
         )
+    elif mode == 6:
+        first_datum, rest_of_body = body.split("$", 1)
+
+        return parse_listed_info_string(rest_of_body, info_class)
 
     return info_class(body)
 

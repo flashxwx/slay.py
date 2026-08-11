@@ -23,7 +23,7 @@ EventName = Literal[
     "on_player_leave", "on_game_stats", "on_ranked_search_count",
     "on_account_logging", "on_me_join", "on_hp_update", "on_player_respawn",
     "on_ability_cancel", "on_in_game_chat", "on_server_message",
-    "on_global_chat_history"
+    "on_global_chat_history", "on_clan_info", "on_clan_member_list"
 ]
 
 class CallbackDict(TypedDict, total=False):

@@ -59,3 +59,12 @@ def CreateGame(
     is_private: bool = False,
 ):
     return f"create-game${map_id}${round_minutes}${maximum_number_of_bots}${mode_id}${int(is_private)}"
+
+def ClanInfo(clan_tag: str):
+    if clan_tag:
+        return f"myClanInfo${clan_tag}"
+    else:
+        return "myClanInfo"
+
+def ClanMemberList(clan_tag: str):
+    return f"getMemberList${clan_tag}"
