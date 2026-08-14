@@ -21,7 +21,7 @@ response_dict: dict[str, tuple[str, type, int]] = {
     "rsp": ("on_player_respawn", Info.PlayerRespawn, 1),
     "chat": ("on_in_game_chat", Info.InGameChat, 1),
     "svrMsg": ("on_server_message", Info.ServerMessage, 1),
-    "clanInfo": ("on_clan_info", Info.ClanInfo, 1),
+    "clanInfo": ("on_clan_info", Info.Clan, 1),
     "memberList": ("on_clan_member_list", Info.ClanMember, 6)
 }
 """ message_type: event_name, response_class, parsing_mode

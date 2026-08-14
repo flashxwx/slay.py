@@ -160,7 +160,7 @@ class Connection:
         self.on_server_message = CallbackRegistrar[Info.ServerMessage]()
         self.on_round_end = CallbackRegistrar()
         self.on_game_settlement_end = CallbackRegistrar()
-        self.on_clan_info = CallbackRegistrar[Info.ClanInfo]()
+        self.on_clan_info = CallbackRegistrar[Info.Clan]()
         self.on_clan_member_list = CallbackRegistrar[list[Info.ClanMember]]()
 
     def setup_log_file(path: str):
@@ -383,6 +383,12 @@ class Connection:
             self.__close_event.wait(remaining)
 
         return False
+
+    def is_alive(self) -> bool:
+        if self.status == 2:
+            return True
+        else:
+            return False
     
     def json_from_replay(self, type: Literal["current", "last"]):
         if not self.enable_replay_cache:
@@ -604,7 +610,7 @@ class Connection:
 
         self.__trigger_event_callback(event_name, response)
 
-    def __on_error(self, websocket: WebSocketApp, error: WebSocketException):
+    def __on_error(self, websocket: WebSocketApp, error: Exception):
         if error.args[0] == "'NoneType' object has no attribute 'sock'":
             return
 
@@ -613,10 +619,8 @@ class Connection:
 
         self.websocket_error = error
 
-        if isinstance(error, WebSocketTimeoutException):
-            error_str = f"Timeout: {error}"
-        elif isinstance(error, WebSocketConnectionClosedException):
-            error_str = str(WebSocketConnectionClosedException)
+        if isinstance(error, WebSocketException):
+            error_str = str(error)
         else:
             error_str = ''.join(
                 traceback.format_exception(type(error), error, error.__traceback__)

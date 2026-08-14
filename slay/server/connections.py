@@ -90,7 +90,7 @@ class Connections:
         self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
         self.on_in_game_chat = CallbackRegistrar[Info.InGameChat]()
         self.on_server_message = CallbackRegistrar[Info.ServerMessage]()
-        self.on_clan_info = CallbackRegistrar[Info.ClanInfo]()
+        self.on_clan_info = CallbackRegistrar[Info.Clan]()
         self.on_clan_member_list = CallbackRegistrar[list[Info.ClanMember]]()
 
     def set_event_callback_dict(self, callback_dict: CallbackDict):

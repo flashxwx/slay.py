@@ -206,7 +206,7 @@ To make a safe thread in a connection lifetime, you must follow the below standa
 1. Use [Connection.create_thread()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.create_thread) function.
 ```python
 def thread_function(connection: Connection):
-    while True:
+    while connection.is_alive():
         # some works here
 
 @any_event
@@ -217,7 +217,7 @@ def _(connection: Connection, ...):
 2. Replace all time waiting function to [Connection.wait()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.wait) or [Connection.wait_until()](https://syflash.codeberg.page/slay.py/docs/slay/server/connection.html#Connection.wait_until).
 ```python
 def thread_function(connection: Connection):
-    while True:
+    while connection.is_alive():
         # some works here
 
         ok = connection.wait(5) # return false if the connection is closed.

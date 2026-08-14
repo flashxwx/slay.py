@@ -27,9 +27,9 @@ class AccountLogging(NamedTuple):
     kills_of_weapons: Annotated["KillsOfWeapons", json.loads]
     ranked_search_count: int
 
-class ClanInfo(NamedTuple):
+class Clan(NamedTuple):
     tag: str
-    nickname: str
+    name: str
     member_count: int
     clan_role: Annotated[int, xNumber]
     elo: float
