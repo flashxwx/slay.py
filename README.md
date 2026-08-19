@@ -137,7 +137,7 @@ Events
   - when in the end of a match (not available for spectator).
   - when you leave a game.
 - `on_round_end`
-  - when the round ends, not including the game settlement phase.
+  - when the round ends, before game settlement phase.
 - `on_game_settlement_end`
   - when in the end of game settlement.
 - `on_hp_update` -> [Info.HP](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#HP)

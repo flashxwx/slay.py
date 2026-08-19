@@ -158,7 +158,7 @@ class Connection:
         self.on_ability_cancel = CallbackRegistrar[Info.AbilityCancel]()
         self.on_in_game_chat = CallbackRegistrar[Info.InGameChat]()
         self.on_server_message = CallbackRegistrar[Info.ServerMessage]()
-        self.on_round_end = CallbackRegistrar()
+        self.on_game_round_end = CallbackRegistrar()
         self.on_game_settlement_end = CallbackRegistrar()
         self.on_clan_info = CallbackRegistrar[Info.Clan]()
         self.on_clan_member_list = CallbackRegistrar[list[Info.ClanMember]]()
