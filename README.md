@@ -136,7 +136,7 @@ Events
 - `on_game_stats` -> [Info.GameStats](https://syflash.codeberg.page/slay.py/docs/slay/data/info/game.html#GameStats)
   - when in the end of a match (not available for spectator).
   - when you leave a game.
-- `on_round_end`
+- `on_game_round_end`
   - when the round ends, before game settlement phase.
 - `on_game_settlement_end`
   - when in the end of game settlement.
