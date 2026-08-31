@@ -535,7 +535,7 @@ class Connection:
                 self.__can_start_record_replay = False
                 self.__trigger_event_callback("on_game_settlement_end")
             elif self.game_tick == self.max_round_ticks:
-                self.__trigger_event_callback("on_round_end")
+                self.__trigger_event_callback("on_game_round_end")
 
             return
         else:
