@@ -24,7 +24,7 @@ Key Features
 
 Real Use Cases
 --------------
-- Kbps Discord Bot
+- Kbps Discord Bot (Github repo: https://github.com/flashxwx/kbps)
 
 Installing
 ----------

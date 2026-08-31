@@ -123,6 +123,7 @@ class Player(NamedTuple):
     is_fake_corpse: int
     is_zombie_boss: int
     id: Annotated[int, xNumber]
+    """ 0 means no id (like guests and bots) """
     db_id: int
     nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 
@@ -200,6 +201,7 @@ class NewPlayer(NamedTuple):
     invisible_costing_rate: float
     is_zombie: int
     uid: int # -> may need to change to id, or change the others to uid
+    """ 0 means no id (like guests and bots) """
     world_elo: float
     nickname_color_id: int # -> nickname_color: Annotated[NicknameColor, Pipe(int, NicknameColor)]
 

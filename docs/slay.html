@@ -90,7 +90,7 @@ users do so entirely at their own risk and are encouraged to use it responsibly.
 <h2 id="real-use-cases">Real Use Cases</h2>
 
 <ul>
-<li>Kbps Discord Bot</li>
+<li>Kbps Discord Bot (Github repo: <a href="https://github.com/flashxwx/kbps">https://github.com/flashxwx/kbps</a>)</li>
 </ul>
 
 <h2 id="installing">Installing</h2>
@@ -242,7 +242,7 @@ And the second argument of game events will be the related information if the ev
 </ul></li>
 <li><code>on_round_end</code>
 <ul>
-<li>when the round ends, not including the game settlement phase.</li>
+<li>when the round ends, before game settlement phase.</li>
 </ul></li>
 <li><code>on_game_settlement_end</code>
 <ul>
@@ -369,7 +369,7 @@ And the second argument of game events will be the related information if the ev
 
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="k">def</span> <span class="nf">thread_function</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">connection</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
         <span class="c1"># some works here</span>
 
 <span class="nd">@any_event</span>
@@ -384,7 +384,7 @@ And the second argument of game events will be the related information if the ev
 
 <div class="pdoc-code codehilite">
 <pre><span></span><code><span class="k">def</span> <span class="nf">thread_function</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">Connection</span><span class="p">):</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">connection</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
         <span class="c1"># some works here</span>
 
         <span class="n">ok</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># return false if the connection is closed.</span>

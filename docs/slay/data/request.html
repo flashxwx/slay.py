@@ -75,6 +75,12 @@
             <li>
                     <a class="function" href="#CreateGame">CreateGame</a>
             </li>
+            <li>
+                    <a class="function" href="#ClanInfo">ClanInfo</a>
+            </li>
+            <li>
+                    <a class="function" href="#ClanMemberList">ClanMemberList</a>
+            </li>
     </ul>
 
 
@@ -158,6 +164,15 @@
 </span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="p">):</span>
 </span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="k">def</span> <span class="nf">ClanInfo</span><span class="p">(</span><span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>    <span class="k">if</span> <span class="n">clan_tag</span><span class="p">:</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;myClanInfo$</span><span class="si">{</span><span class="n">clan_tag</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>        <span class="k">return</span> <span class="s2">&quot;myClanInfo&quot;</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="k">def</span> <span class="nf">ClanMemberList</span><span class="p">(</span><span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;getMemberList$</span><span class="si">{</span><span class="n">clan_tag</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
@@ -458,6 +473,47 @@
 </span><span id="CreateGame-60"><a href="#CreateGame-60"><span class="linenos">60</span></a>    <span class="n">is_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="CreateGame-61"><a href="#CreateGame-61"><span class="linenos">61</span></a><span class="p">):</span>
 </span><span id="CreateGame-62"><a href="#CreateGame-62"><span class="linenos">62</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;create-game$</span><span class="si">{</span><span class="n">map_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">round_minutes</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">maximum_number_of_bots</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="n">mode_id</span><span class="si">}</span><span class="s2">$</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">is_private</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="ClanInfo">
+                            <input id="ClanInfo-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">ClanInfo</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="ClanInfo-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ClanInfo"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ClanInfo-64"><a href="#ClanInfo-64"><span class="linenos">64</span></a><span class="k">def</span> <span class="nf">ClanInfo</span><span class="p">(</span><span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ClanInfo-65"><a href="#ClanInfo-65"><span class="linenos">65</span></a>    <span class="k">if</span> <span class="n">clan_tag</span><span class="p">:</span>
+</span><span id="ClanInfo-66"><a href="#ClanInfo-66"><span class="linenos">66</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;myClanInfo$</span><span class="si">{</span><span class="n">clan_tag</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="ClanInfo-67"><a href="#ClanInfo-67"><span class="linenos">67</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="ClanInfo-68"><a href="#ClanInfo-68"><span class="linenos">68</span></a>        <span class="k">return</span> <span class="s2">&quot;myClanInfo&quot;</span>
+</span></pre></div>
+
+
+    
+
+                </section>
+                <section id="ClanMemberList">
+                            <input id="ClanMemberList-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">ClanMemberList</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="ClanMemberList-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ClanMemberList"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ClanMemberList-70"><a href="#ClanMemberList-70"><span class="linenos">70</span></a><span class="k">def</span> <span class="nf">ClanMemberList</span><span class="p">(</span><span class="n">clan_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ClanMemberList-71"><a href="#ClanMemberList-71"><span class="linenos">71</span></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;getMemberList$</span><span class="si">{</span><span class="n">clan_tag</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
